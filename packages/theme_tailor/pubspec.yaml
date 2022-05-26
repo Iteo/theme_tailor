@@ -1,0 +1,22 @@
+name: theme_tailor
+description: Theme Tailor generator. Theming utility
+version: 0.0.1
+homepage: none
+publish_to: none
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+
+dependencies:
+  analyzer: ^4.1.0
+  build: ^2.3.0
+  collection: ^1.16.0
+  meta: ^1.7.0
+  source_gen: ^1.2.2
+  theme_tailor_annotation:
+    path: ../theme_tailor_annotation
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
