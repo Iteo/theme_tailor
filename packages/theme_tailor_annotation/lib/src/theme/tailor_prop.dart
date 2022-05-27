@@ -1,14 +1,14 @@
-import 'package:meta/meta_meta.dart';
+// import 'package:meta/meta_meta.dart';
 
 import '../model/theme_encoder.dart';
 
-@Target({TargetKind.classType})
+// @Target({TargetKind.classType})
 abstract class TailorProp<T> {
   const TailorProp(
     this.prop,
-    this.values,
+    this.values, [
     this.encoder,
-  );
+  ]);
 
   /// Name of the prop in the generated theme
   final String prop;

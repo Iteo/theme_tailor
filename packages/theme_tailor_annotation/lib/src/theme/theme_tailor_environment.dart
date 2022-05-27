@@ -1,5 +1,5 @@
-const light = ThemeTailorEnvironment(ThemeTailorEnvironment.light);
-const dark = ThemeTailorEnvironment(ThemeTailorEnvironment.dark);
+const tailorLight = ThemeTailorEnvironment(ThemeTailorEnvironment.light);
+const tailorDark = ThemeTailorEnvironment(ThemeTailorEnvironment.dark);
 
 class ThemeTailorEnvironment {
   const ThemeTailorEnvironment(this.name);

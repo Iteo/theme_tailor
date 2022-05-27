@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      cached:
+        generate_for:
+          - example/**
+builders:
+  theme_tailor:
+    import: "package:theme_tailor/theme_tailor.dart"
+    builder_factories: ["themeTailorBuilder"]
+    build_extensions: { ".dart": [".tailor.dart"] }
+    auto_apply: dependents
+    build_to: source
