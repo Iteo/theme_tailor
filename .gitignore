@@ -1,0 +1,15 @@
+.fvm
+.vscode
+.idea
+.DS_Store
+
+coverage/
+*.class
+*.log
+*.pyc
+*.swp
+.atom/
+.buildlog/
+.history
+.svn/
+coverage.lcov

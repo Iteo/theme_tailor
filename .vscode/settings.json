@@ -1,8 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://json.schemastore.org/sourcehut-build-0.65.0.json": [
-            "file:///Users/pfranitza/Desktop/theme_tailor/packages/theme_tailor/build.yaml",
-            "file:///Users/pfranitza/Desktop/theme_tailor/packages/theme_tailor_test/pubspec.yaml"
-        ]
-    }
-}

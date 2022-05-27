@@ -1,0 +1,34 @@
+name: theme_tailor
+
+packages:
+  - packages/**
+scripts:
+  get:
+    run: melos exec dart pub get
+
+  generate:
+    run: melos exec --depends-on="build_runner" dart run build_runner build  --delete-conflicting-outputs
+
+  test:
+    run: melos exec --dir-exists="test" dart test
+
+  test:coverage:
+    run: melos exec  -c 1 --fail-fast -- "\$MELOS_ROOT_PATH/scripts/coverage.sh"
+    description: Run Dart tests for a specific package in this project.
+    select-package:
+      dir-exists: test
+
+  analyze:
+    run: melos exec dart analyze
+
+  get:fvm:
+    run: melos exec fvm dart pub get
+
+  test:fvm:
+    run: melos exec --dir-exists="test" dart test
+
+  analyze:fvm:
+    run: melos exec fvm dart analyze
+
+  generate:fvm:
+    run: melos exec --depends-on="build_runner" fvm dart run build_runner build --delete-conflicting-outputs
