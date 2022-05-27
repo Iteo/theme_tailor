@@ -1,11 +1,13 @@
 name: theme_tailor_annotation
-description: A new Flutter package project.
+description: |
+  Theme Tailor annotations.
+  This package does nothing without Theme Tailor Generator
 version: 0.0.1
 homepage: none
 publish_to: none
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
-# dependencies:
-# flutter:
-#   sdk: flutter
+
+dependencies:
+  meta: ^1.7.0

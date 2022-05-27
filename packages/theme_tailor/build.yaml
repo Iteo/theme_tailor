@@ -4,6 +4,7 @@ targets:
       cached:
         generate_for:
           - example/**
+
 builders:
   theme_tailor:
     import: "package:theme_tailor/theme_tailor.dart"

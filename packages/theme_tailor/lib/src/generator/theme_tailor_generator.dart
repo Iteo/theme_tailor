@@ -5,11 +5,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<ThemeTailor> {
   @override
-  String generateForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) {
-    return '/// JPRDL';
+  generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
+    return '/// Test';
   }
 }

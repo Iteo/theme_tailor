@@ -1,4 +1,4 @@
-// import 'package:meta/meta_meta.dart';
+import 'package:meta/meta_meta.dart';
 
 import 'theme_tailor_environment.dart';
 
@@ -7,7 +7,7 @@ const tailor = ThemeTailor([
   ThemeTailorEnvironment.dark,
 ]);
 
-// @Target({TargetKind.classType})
+@Target({TargetKind.classType})
 class ThemeTailor {
   const ThemeTailor(this.themes);
 
