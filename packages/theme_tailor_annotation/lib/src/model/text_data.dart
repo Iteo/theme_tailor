@@ -1,6 +1,6 @@
 /// Utility data class for creating TextStyles
 class TextData {
-  TextData({
+  const TextData({
     this.fontFamily,
     this.size,
     this.lineHeight,

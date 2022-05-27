@@ -21,6 +21,6 @@ class AppColors {
 
 @tailor
 @TailorColor('appBar', [AppColors.blue, AppColors.orange])
-@TailorText('h1', [TextStyle(), TextStyle()])
+@TailorText('h1', [TextData(), TextData()])
 @TailorProp('appBar', [AppColors.blue, AppColors.orange], encoder: ColorEncoder())
 class _$CustomThemeExtensionLightDark {}
