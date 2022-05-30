@@ -72,17 +72,11 @@ class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
   Lerp<SuperThemeEnum> get lerp => (a, b, t) => t < 0.5 ? a : b;
 
   @override
-  Stringify<SuperThemeEnum> get stringify =>
-      (v) => '${v.name} index: ${v.index}';
+  Stringify<SuperThemeEnum> get stringify => (v) => '${v.name} index: ${v.index}';
 }
 
 const themes = ['light', 'superLight', 'dark', 'superDark'];
-const themesEnums = [
-  SuperThemeEnum.light,
-  SuperThemeEnum.superLight,
-  SuperThemeEnum.dark,
-  SuperThemeEnum.superDark
-];
+const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
 
 /// Multiple themes
 // @Tailor([
@@ -145,8 +139,7 @@ class TextDataEncoder extends ThemeEncoder<TextData, TextStyle> {
   Stringify<TextStyle> get stringify => (v) => v.toString();
 
   @override
-  TransformData<TextData, TextStyle>? get transformData =>
-      (v, i) => v.toTextStyle(colors[i]);
+  TransformData<TextData, TextStyle>? get transformData => (v, i) => v.toTextStyle(colors[i]);
 }
 
 const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
@@ -154,8 +147,7 @@ const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
 @Tailor([
   TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
       encoder: TextDataEncoder([AppColors.orange, AppColors.blue])),
-  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
-      encoder: textDataEncoderBlackWhite),
+  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)], encoder: textDataEncoderBlackWhite),
   TailorProp<int, double>('luckyNumber', [7, 8], encoder: NumerEncoder()),
 ], [])
 class _$CustomThemeExtensionLightDark2 {}

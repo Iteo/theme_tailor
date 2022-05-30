@@ -34,12 +34,8 @@ class ThemeExtensionClassTemplate extends Template {
   }
 
   String _generateMethodCopyWith() {
-    final params = config.fields
-        .map((e) => '${DartTypeNullableTemplate(e.type).generate()} ${e.name},')
-        .join();
-    final fields = config.fields
-        .map((e) => '${e.name}: ${e.name} ?? this.${e.name},')
-        .join();
+    final params = config.fields.map((e) => '${DartTypeNullableTemplate(e.type).generate()} ${e.name},').join();
+    final fields = config.fields.map((e) => '${e.name}: ${e.name} ?? this.${e.name},').join();
     return '''
     @override
     ThemeExtension<${config.className}> copyWith({$params}){
@@ -52,9 +48,7 @@ class ThemeExtensionClassTemplate extends Template {
     const simpleLerp = 'T simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;';
     final lerpFunctions = [simpleLerp].join();
 
-    final fields = config.fields
-        .map((e) => '${e.name}: simpleLerp(${e.name}, other.${e.name}, t),')
-        .join();
+    final fields = config.fields.map((e) => '${e.name}: simpleLerp(${e.name}, other.${e.name}, t),').join();
 
     return '''
     @override

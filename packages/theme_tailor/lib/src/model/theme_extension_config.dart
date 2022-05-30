@@ -10,19 +10,11 @@ class ThemeExtensionConfig {
     this.fields,
   );
 
-  factory ThemeExtensionConfig.fromData(
-      ClassElement element, ConstantReader annotation) {
+  factory ThemeExtensionConfig.fromData(ClassElement element, ConstantReader annotation) {
     final name = element.displayName.formatClassName();
-    final themeNames = annotation
-        .read('themes')
-        .listValue
-        .map((e) => e.toString())
-        .toList(growable: false);
+    final themeNames = annotation.read('themes').listValue.map((e) => e.toString()).toList(growable: false);
 
-    final props = annotation
-        .read('props')
-        .listValue
-        .map(ThemeExtensionField.fromDartObject);
+    final props = annotation.read('props').listValue.map(ThemeExtensionField.fromDartObject);
 
     return ThemeExtensionConfig(name, themeNames, props);
   }

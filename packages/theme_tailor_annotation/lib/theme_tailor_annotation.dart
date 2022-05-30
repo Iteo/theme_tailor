@@ -26,8 +26,7 @@ abstract class SimpleThemeEncoder<TOut> extends ThemeEncoder<TOut, TOut> {
 
   /// Only [ThemeEncoder] can transform data
   @override
-  TransformData<TOut, TOut>? get transformData =>
-      throw UnsupportedError('Only ThemeEncoder can transform data');
+  TransformData<TOut, TOut>? get transformData => throw UnsupportedError('Only ThemeEncoder can transform data');
 }
 
 const tailor = Tailor();
