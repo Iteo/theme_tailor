@@ -147,7 +147,7 @@ const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
 @Tailor([
   TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
       encoder: TextDataEncoder([AppColors.orange, AppColors.blue])),
-  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)], encoder: textDataEncoderBlackWhite),
+  // TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)], encoder: textDataEncoderBlackWhite),
   TailorProp<int, double>('luckyNumber', [7, 8], encoder: NumerEncoder()),
 ], [])
 class _$CustomThemeExtensionLightDark2 {}

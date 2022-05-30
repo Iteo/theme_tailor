@@ -1,5 +1,6 @@
 library theme_tailor_annotation;
 
+import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
 
 typedef Lerp<T> = T Function(T a, T b, double t);
