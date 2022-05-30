@@ -73,15 +73,15 @@ ${await _generateColorBody()}
     final colorList = await _parseJson();
 
     final buffer = StringBuffer();
-    String? previuseParent;
+    String? previouseParent;
 
     for (final color in colorList) {
-      if (previuseParent != null && color.parent != previuseParent) {
+      if (previouseParent != null && color.parent != previouseParent) {
         buffer.write('\n');
       }
 
       buffer.writeln('  static const Color ${color.name} = ${color.color};');
-      previuseParent = color.parent;
+      previouseParent = color.parent;
     }
 
     return buffer.toString();
