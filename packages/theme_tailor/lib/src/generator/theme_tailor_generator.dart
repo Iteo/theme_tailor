@@ -8,6 +8,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 import '../../theme_tailor.dart';
 import '../util/message.dart';
+import '../util/string_format.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
@@ -16,7 +17,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       throw InvalidGenerationSourceError(Message.unsupportedAnnotationTarget(element), element: element);
     }
 
-    final strBuffer = StringBuffer()..writeln(commented('DEBUG PRINT:'));
+    final className = element.displayName.formatClassName();
+    final themeNames = annotation.read('themes').listValue.map((e) => e.toStringValue()!);
+
+    final strBuffer = StringBuffer()
+      ..writeln(commented('DEBUG PRINT:'))
+      ..writeln(commented('class name: $className'))
+      ..writeln(commented('themes: $themeNames'));
 
     /// DEBUG PLAYGROUND
     final parsedLibResult = element.session!.getParsedLibraryByElement(element.library) as ParsedLibraryResult;
@@ -26,15 +33,12 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final tailorProps =
         (tailorAnnotation.arguments!.arguments[0] as ListLiteral).elements.whereType<MethodInvocation>();
 
+    final themeExtensionFields = <ThemeExtensionField>[];
+
     annotation.read('props').listValue.forEachIndexed((i, propValues) {
       final tailorProp = tailorProps.elementAt(i);
 
-      final name = propValues.getField('name')!.toStringValue();
-      const nameType = String;
-
-      /// Values expression (as it is typed in the annotation)
-      final values = tailorProp.argumentList.arguments.elementAt(1);
-      final valuesTypes = propValues.getField('values')!.toListValue()!.map((e) => e.type);
+      final name = propValues.getField('name')!.toStringValue()!;
 
       /// Encoder expression (as it is typed in the annotation)
       final encoder = tailorProp.argumentList.arguments
@@ -43,10 +47,16 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
           ?.expression;
       final encoderType = propValues.getField('encoder')?.type;
 
+      /// Values expression (as it is typed in the annotation)
+      final values = (tailorProp.argumentList.arguments.elementAt(1) as ListLiteral).elements;
+      final valuesTypes = propValues.getField('values')!.toListValue()!.map((e) => e.type);
+
       strBuffer
-        ..writeln(commented('name: $name | type: $nameType'))
-        ..writeln(commented('values: $values | type: $valuesTypes'))
-        ..writeln(commented('encoder: ${encoder ?? '-'} | type: $encoderType'));
+        ..writeln(commented('name: $name'))
+        ..writeln(commented('encoder: ${encoder ?? '-'} | type: $encoderType'))
+        ..writeln(commented('values: $values | type: $valuesTypes'));
+
+      themeExtensionFields.add(ThemeExtensionField(name, values, valuesTypes, encoder, encoderType));
 
       // This won't work if it is a SimpleIdentifierImpl
       // final tailorPropEncoderType = (tailorPropEncoder?.expression as MethodInvocation?)?.methodName;
@@ -54,10 +64,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       // ..writeln(commented('encoderType: $tailorPropEncoderType'));
     });
 
-    strBuffer.toString();
-    final config = ThemeExtensionConfig.fromData(element, annotation);
+    final config = ThemeExtensionConfig.fromData(className, themeNames, themeExtensionFields);
     final template = ThemeExtensionClassTemplate(config);
-    return template.generate();
+    return '${strBuffer.toString()}\n\n${template.generate()}';
   }
 }
 

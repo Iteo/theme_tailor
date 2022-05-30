@@ -50,8 +50,7 @@ class ColorEncoder extends SimpleThemeEncoder<MaterialColor> {
 }
 
 // @Tailor([
-//   TailorProp('appBar', [AppColors.blue, AppColors.orange],
-//       encoder: ColorEncoder())
+//   TailorProp('appBar', [AppColors.blue, AppColors.orange], encoder: ColorEncoder())
 // ])
 // class _$ThemeWithColorsAndTextStylesCustomEncoder {}
 
@@ -75,15 +74,19 @@ class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
   Stringify<SuperThemeEnum> get stringify => (v) => '${v.name} index: ${v.index}';
 }
 
+/// TODO type 'SimpleIdentifierImpl' is not a subtype of type 'ListLiteral' in type cast
+
 const themes = ['light', 'superLight', 'dark', 'superDark'];
 const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
 
-/// Multiple themes
-// @Tailor([
-//   TailorProp('themeType', themesEnums),
-//   TailorProp('themeType2', themesEnums, encoder: SuperThemeEnumEncoder()),
-// ], themes)
-// class _$SuperThemeEnumThemeExtension {}
+@Tailor([
+  TailorProp(
+      'themeType', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark]),
+  TailorProp(
+      'themeType2', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark],
+      encoder: SuperThemeEnumEncoder()),
+], themes)
+class _$SuperThemeEnumThemeExtension {}
 
 // **************************************************************************
 /// DOC - Custom encoders
@@ -146,8 +149,8 @@ const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
 
 @Tailor([
   TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
-      encoder: TextDataEncoder([AppColors.orange, AppColors.blue])),
-  // TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)], encoder: textDataEncoderBlackWhite),
+      encoder: TextDataEncoder([AppColors.orange, Colors.yellow])),
+  TailorProp('h4', [TextData.h3, TextData(defaultColor: AppColors.blue)], encoder: textDataEncoderBlackWhite),
   TailorProp<int, double>('luckyNumber', [7, 8], encoder: NumerEncoder()),
-], [])
+])
 class _$CustomThemeExtensionLightDark2 {}

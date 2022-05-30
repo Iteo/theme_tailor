@@ -1,7 +1,9 @@
-import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:source_gen/source_gen.dart';
-import '../util/string_format.dart';
+// ignore_for_file: constant_identifier_names
+
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/element/type.dart';
+
+import '../util/type_util.dart';
 
 class ThemeExtensionConfig {
   const ThemeExtensionConfig(
@@ -10,13 +12,12 @@ class ThemeExtensionConfig {
     this.fields,
   );
 
-  factory ThemeExtensionConfig.fromData(ClassElement element, ConstantReader annotation) {
-    final name = element.displayName.formatClassName();
-    final themeNames = annotation.read('themes').listValue.map((e) => e.toString()).toList(growable: false);
-
-    final props = annotation.read('props').listValue.map(ThemeExtensionField.fromDartObject);
-
-    return ThemeExtensionConfig(name, themeNames, props);
+  factory ThemeExtensionConfig.fromData(
+    String className,
+    Iterable<String> themeNames,
+    List<ThemeExtensionField> fields,
+  ) {
+    return ThemeExtensionConfig(className, themeNames, fields);
   }
 
   final String className;
@@ -25,21 +26,18 @@ class ThemeExtensionConfig {
 }
 
 class ThemeExtensionField {
-  const ThemeExtensionField(
+  ThemeExtensionField(
     this.name,
-    this.type,
     this.values,
-  );
-
-  factory ThemeExtensionField.fromDartObject(DartObject object) {
-    final name = object.getField('name')!.toStringValue()!;
-    final values = object.getField('values')!.toListValue()!;
-    final type = values.first.type!.getDisplayString(withNullability: true);
-
-    return ThemeExtensionField(name, type, values);
-  }
+    this.valuesType,
+    this.encoder,
+    this.encoderType,
+  ) : type = TypeUtil.typeFromDartTypeCollection(valuesType);
 
   final String name;
-  final String type;
-  final Iterable<DartObject> values;
+  final Iterable<CollectionElement> values;
+  final Iterable<DartType?> valuesType;
+  final Expression? encoder;
+  final DartType? encoderType;
+  late final String type;
 }
