@@ -19,37 +19,41 @@ class AppColors {
 /// light and dark and 2 properties: [int] and [String] properties.
 /// Without further customization it is not useful
 
-@tailor
-class _$DefaultTheme {}
+// @tailor
+// class _$DefaultTheme {}
 
 // **************************************************************************
 /// Default theme - light / dark with additional fields
 /// h1 - text style
 /// appBar - with different colors per mode (light: blue, dark: orange)
 
-@Tailor([
-  TailorProp('h1', [TextStyle(), TextStyle()]),
-  TailorProp('appBar', [AppColors.blue, AppColors.orange])
-])
-class _$ThemeWithColorsAndTextStyles {}
+// @Tailor([
+//   TailorProp('h1', [TextStyle(), TextStyle()]),
+//   TailorProp('appBar', [AppColors.blue, AppColors.orange]),
+//   TailorProp('card', [AppColors.blue, AppColors.orange]),
+//   TailorProp('surface', [AppColors.blue, AppColors.orange]),
+//   TailorProp('material', [AppColors.blue, AppColors.orange])
+// ])
+// class _$ThemeWithColorsAndTextStyles {}
 
 // **************************************************************************
 /// DOC
 
-class ColorEncoder extends SimpleThemeEncoder<Color> {
+class ColorEncoder extends SimpleThemeEncoder<MaterialColor> {
   const ColorEncoder();
 
   @override
-  Lerp<Color> get lerp => (a, b, t) => Color.lerp(a, b, t)!;
+  Lerp<MaterialColor> get lerp => (a, b, t) => t < 0.5 ? a : b;
 
   @override
-  Stringify<Color> get stringify => (v) => v.toString();
+  Stringify<MaterialColor> get stringify => (v) => v.toString();
 }
 
-@Tailor([
-  TailorProp('appBar', [AppColors.blue, AppColors.orange], encoder: ColorEncoder())
-])
-class _$ThemeWithColorsAndTextStylesCustomEncoder {}
+// @Tailor([
+//   TailorProp('appBar', [AppColors.blue, AppColors.orange],
+//       encoder: ColorEncoder())
+// ])
+// class _$ThemeWithColorsAndTextStylesCustomEncoder {}
 
 // **************************************************************************
 /// DOC - Multitheme, custom encoders
@@ -68,18 +72,24 @@ class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
   Lerp<SuperThemeEnum> get lerp => (a, b, t) => t < 0.5 ? a : b;
 
   @override
-  Stringify<SuperThemeEnum> get stringify => (v) => '${v.name} index: ${v.index}';
+  Stringify<SuperThemeEnum> get stringify =>
+      (v) => '${v.name} index: ${v.index}';
 }
 
 const themes = ['light', 'superLight', 'dark', 'superDark'];
-const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
+const themesEnums = [
+  SuperThemeEnum.light,
+  SuperThemeEnum.superLight,
+  SuperThemeEnum.dark,
+  SuperThemeEnum.superDark
+];
 
 /// Multiple themes
-@Tailor([
-  TailorProp('themeType', themesEnums),
-  TailorProp('themeType2', themesEnums, encoder: SuperThemeEnumEncoder()),
-], themes)
-class _$SuperThemeEnumThemeExtension {}
+// @Tailor([
+//   TailorProp('themeType', themesEnums),
+//   TailorProp('themeType2', themesEnums, encoder: SuperThemeEnumEncoder()),
+// ], themes)
+// class _$SuperThemeEnumThemeExtension {}
 
 // **************************************************************************
 /// DOC - Custom encoders
@@ -135,11 +145,17 @@ class TextDataEncoder extends ThemeEncoder<TextData, TextStyle> {
   Stringify<TextStyle> get stringify => (v) => v.toString();
 
   @override
-  TransformData<TextData, TextStyle>? get transformData => (v, i) => v.toTextStyle(colors[i]);
+  TransformData<TextData, TextStyle>? get transformData =>
+      (v, i) => v.toTextStyle(colors[i]);
 }
 
+const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
+
 @Tailor([
-  TailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
-  TailorProp('h3', [TextData.h3, TextData.h3], encoder: TextDataEncoder([AppColors.orange, AppColors.blue]))
+  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
+      encoder: TextDataEncoder([AppColors.orange, AppColors.blue])),
+  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
+      encoder: textDataEncoderBlackWhite),
+  TailorProp<int, double>('luckyNumber', [7, 8], encoder: NumerEncoder()),
 ], [])
 class _$CustomThemeExtensionLightDark2 {}
