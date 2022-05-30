@@ -36,7 +36,7 @@ class _$ThemeWithColorsAndTextStyles {}
 // **************************************************************************
 /// DOC
 
-class ColorEncoder extends ThemeEncoder<Color> {
+class ColorEncoder extends SimpleThemeEncoder<Color> {
   const ColorEncoder();
 
   @override
@@ -61,7 +61,7 @@ enum SuperThemeEnum {
   superDark,
 }
 
-class SuperThemeEnumEncoder extends ThemeEncoder<SuperThemeEnum> {
+class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
   const SuperThemeEnumEncoder();
 
   @override
@@ -84,7 +84,7 @@ class _$SuperThemeEnumThemeExtension {}
 // **************************************************************************
 /// DOC - Custom encoders
 
-class NumerEncoder extends CoreThemeEncoder<int, double> {
+class NumerEncoder extends ThemeEncoder<int, double> {
   const NumerEncoder();
 
   @override
@@ -123,7 +123,7 @@ class TextData {
 /// Encoder to transform data before it is encoded to theme
 /// During data transformation, custom properties can be encoded from the
 /// [TextDataEncoder.colors] in the [TextDataEncoder.transformData]
-class TextDataEncoder extends CoreThemeEncoder<TextData, TextStyle> {
+class TextDataEncoder extends ThemeEncoder<TextData, TextStyle> {
   const TextDataEncoder(this.colors);
 
   final List<Color> colors;
@@ -139,7 +139,7 @@ class TextDataEncoder extends CoreThemeEncoder<TextData, TextStyle> {
 }
 
 @Tailor([
-  CoreTailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
-  CoreTailorProp('h3', [TextData.h3, TextData.h3], encoder: TextDataEncoder([AppColors.orange, AppColors.blue]))
+  TailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
+  TailorProp('h3', [TextData.h3, TextData.h3], encoder: TextDataEncoder([AppColors.orange, AppColors.blue]))
 ], [])
 class _$CustomThemeExtensionLightDark2 {}

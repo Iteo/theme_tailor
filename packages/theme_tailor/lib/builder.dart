@@ -4,6 +4,7 @@ import 'package:source_gen/source_gen.dart';
 import 'src/generator/theme_tailor_generator.dart';
 
 Builder themeTailorBuilder(BuilderOptions options) {
+  print(options.config);
   return PartBuilder(
     [ThemeTailorGenerator()],
     '.tailor.dart',
