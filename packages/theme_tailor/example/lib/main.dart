@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'main.tailor.dart';
+part 'main.tailor.target.dart';
 
 /// Define your colors somewhere in the app
 class AppColors {
@@ -151,6 +152,7 @@ const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
   TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
       encoder: TextDataEncoder([AppColors.orange, Colors.yellow])),
   TailorProp('h4', [TextData.h3, TextData(defaultColor: AppColors.blue)], encoder: textDataEncoderBlackWhite),
-  TailorProp<int, double>('luckyNumber', [7, 8], encoder: NumerEncoder()),
+  TailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
+  TailorProp('appBar', [AppColors.blue, AppColors.orange])
 ])
 class _$CustomThemeExtensionLightDark2 {}

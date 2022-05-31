@@ -87,6 +87,9 @@ class SuperThemeEnumThemeExtension
 /// name: luckyNumber
 /// encoder: NumerEncoder() | type: NumerEncoder
 /// values: [7, 8] | type: (int, int)
+/// name: appBar
+/// encoder: - | type: Null
+/// values: [AppColors.blue, AppColors.orange] | type: (MaterialColor, MaterialColor)
 
 class CustomThemeExtensionLightDark2
     extends ThemeExtension<CustomThemeExtensionLightDark2> {
@@ -94,17 +97,20 @@ class CustomThemeExtensionLightDark2
     required this.h3,
     required this.h4,
     required this.luckyNumber,
+    required this.appBar,
   });
 
   final TextData h3;
   final TextData h4;
   final int luckyNumber;
+  final MaterialColor appBar;
 
   static const CustomThemeExtensionLightDark2 light =
       CustomThemeExtensionLightDark2(
     h3: TextData.h3,
     h4: TextData.h3,
     luckyNumber: 7,
+    appBar: AppColors.blue,
   );
 
   static const CustomThemeExtensionLightDark2 dark =
@@ -112,6 +118,7 @@ class CustomThemeExtensionLightDark2
     h3: TextData(defaultColor: AppColors.orange),
     h4: TextData(defaultColor: AppColors.blue),
     luckyNumber: 8,
+    appBar: AppColors.orange,
   );
 
   @override
@@ -119,11 +126,13 @@ class CustomThemeExtensionLightDark2
     TextData? h3,
     TextData? h4,
     int? luckyNumber,
+    MaterialColor? appBar,
   }) {
     return CustomThemeExtensionLightDark2(
       h3: h3 ?? this.h3,
       h4: h4 ?? this.h4,
       luckyNumber: luckyNumber ?? this.luckyNumber,
+      appBar: appBar ?? this.appBar,
     );
   }
 
@@ -134,6 +143,7 @@ class CustomThemeExtensionLightDark2
       h3: simpleLerp(h3, other.h3, t),
       h4: simpleLerp(h4, other.h4, t),
       luckyNumber: simpleLerp(luckyNumber, other.luckyNumber, t),
+      appBar: simpleLerp(appBar, other.appBar, t),
     );
   }
 
