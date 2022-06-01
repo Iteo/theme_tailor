@@ -1,39 +1,74 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+# Theme Tailor
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
 
-## Features
+## Generate style classes from figma
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
 
-## Getting started
+## Example
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+TODO!
 
-## Usage
+## How to do it
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+### 1. Prepare colors and font styles accordingly
+
+You must create colors and fonts styles, you can learn how to do it from articale below
+
+🔗 &nbsp;&nbsp;[(Click Me!) How create colors and fonts styles](https://help.figma.com/hc/en-us/articles/360038746534-Create-color-text-effect-and-layout-grid-styles)
+
+</br>
+
+### 2. Install and configure plugin for figma
+
+🔗 &nbsp;&nbsp;[(Click Me!) Design Tokens](https://www.figma.com/community/plugin/888356646278934516/Design-Tokens)
+
+When you have aready installed plugin go to `Plugins > Design Tokens > Settings` and you must changed some parameters.
+
+* in `Filename` section change name to `style` and format from `.tokens.json` to `.json`.
+* in `Name conversion` set type to `camelCase`.
+
+Okey, now you can save changes and go to next step!
+
+</br>
+
+### 3. Export to json
+
+- go to `Plugins > Design Tokens > Export Design Token File`
+- in `Include types in export` section, check only `Colors` and `Font Styles` option.
+- click `Save & Export` and save file to `styles` folder in your assets.
+
+</br>
+
+### 4. Generate the style classes
+
+if you already have an exported color or font style file from figma, make sure it's in the folder `assets/styles` and use this command to generate the classes
 
 ```dart
-const like = 'sample';
+  flutter pub run theme_tailor:main
 ```
 
-## Additional information
+| Args | Name     | Description                |
+| :-------- | :------- | :------------------------- |
+| `-h` | `help` | Showing all parameters |
+| `-S` | `source-dir` | Folder containing styles files (defaults to "assets/styles") |
+| `-T` | `source-file-typography` | File to use for typography style (defaults to "typography.json") |
+| `-C` | `source-file-colors` | File to use for colors style (defaults to "colors.json") |
+| `-O` | `output-dir` | Output folder stores for the generated file (defaults to "lib/presentation/style") |
+| `-t` | `output-file-typography` | Output file name (defaults to "app_typography.dart") |
+| `-c` | `output-file-colors` |  Output file name (defaults to "app_colors.dart") |
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+</br>
+
+### 5. There it is, you can already use your styles!
+
+```dart
+  Container(
+    color: AppColors.myCoolColor,
+    child: Text(
+      "YEAH!",
+      style: AppTypography.myFontStyle
+    ),
+  ),
+```
