@@ -20,6 +20,14 @@ class AppColors {
 /// light and dark and 2 properties: [int] and [String] properties.
 /// Without further customization it is not useful
 
+class _Test {
+  const _Test();
+}
+
+const test = _Test();
+
+/// Test Comment
+// Test comment
 // @tailor
 // class _$DefaultTheme {}
 
@@ -45,9 +53,6 @@ class ColorEncoder extends SimpleThemeEncoder<MaterialColor> {
 
   @override
   Lerp<MaterialColor> get lerp => (a, b, t) => t < 0.5 ? a : b;
-
-  @override
-  Stringify<MaterialColor> get stringify => (v) => v.toString();
 }
 
 // @Tailor([
@@ -70,9 +75,6 @@ class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
 
   @override
   Lerp<SuperThemeEnum> get lerp => (a, b, t) => t < 0.5 ? a : b;
-
-  @override
-  Stringify<SuperThemeEnum> get stringify => (v) => '${v.name} index: ${v.index}';
 }
 
 /// TODO type 'SimpleIdentifierImpl' is not a subtype of type 'ListLiteral' in type cast
@@ -97,9 +99,6 @@ class NumerEncoder extends ThemeEncoder<int, double> {
 
   @override
   Lerp<double> get lerp => (a, b, t) => lerpDouble(a, b, t)!;
-
-  @override
-  Stringify<double> get stringify => (v) => v.toString();
 
   @override
   TransformData<int, double>? get transformData => (v, _) => v.toDouble();
@@ -140,9 +139,6 @@ class TextDataEncoder extends ThemeEncoder<TextData, TextStyle> {
   Lerp<TextStyle> get lerp => (a, b, t) => TextStyle.lerp(a, b, t)!;
 
   @override
-  Stringify<TextStyle> get stringify => (v) => v.toString();
-
-  @override
   TransformData<TextData, TextStyle>? get transformData => (v, i) => v.toTextStyle(colors[i]);
 }
 
@@ -153,6 +149,6 @@ const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
       encoder: TextDataEncoder([AppColors.orange, Colors.yellow])),
   TailorProp('h4', [TextData.h3, TextData(defaultColor: AppColors.blue)], encoder: textDataEncoderBlackWhite),
   TailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
-  TailorProp('appBar', [AppColors.blue, AppColors.orange])
+  // TailorProp('appBar', [AppColors.blue, AppColors.orange])
 ])
 class _$CustomThemeExtensionLightDark2 {}

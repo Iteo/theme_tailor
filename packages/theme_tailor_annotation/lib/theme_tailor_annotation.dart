@@ -3,7 +3,6 @@ library theme_tailor_annotation;
 import 'package:meta/meta_meta.dart';
 
 typedef Lerp<T> = T Function(T a, T b, double t);
-typedef Stringify<T> = String Function(T v);
 typedef TransformData<TIn, TOut> = TOut Function(TIn v, int i);
 
 abstract class ThemeEncoder<TIn, TOut> {
@@ -16,9 +15,6 @@ abstract class ThemeEncoder<TIn, TOut> {
 
   /// Value interpolation
   Lerp<TOut> get lerp;
-
-  /// String builder for the value
-  Stringify<TOut> get stringify;
 }
 
 abstract class SimpleThemeEncoder<TOut> extends ThemeEncoder<TOut, TOut> {

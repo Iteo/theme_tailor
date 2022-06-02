@@ -19,6 +19,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 
     final className = element.displayName.formatClassName();
     final themeNames = annotation.read('themes').listValue.map((e) => e.toStringValue()!);
+    final defaultProps = annotation.read('props').listValue.map((e) => e.toString());
+
+    print('DEFAULT PROPS VALUES: $defaultProps');
 
     final strBuffer = StringBuffer()
       ..writeln(commented('DEBUG PRINT:'))
@@ -26,12 +29,28 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       ..writeln(commented('themes: $themeNames'));
 
     /// DEBUG PLAYGROUND
-    final parsedLibResult = element.session!.getParsedLibraryByElement(element.library) as ParsedLibraryResult;
-    final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
+    final parsedLibResult = element.session?.getParsedLibraryByElement(element.library) as ParsedLibraryResult;
+    final elementDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
 
-    final tailorAnnotation = elDeclarationResult.node.childEntities.first as Annotation;
-    final tailorProps =
-        (tailorAnnotation.arguments!.arguments[0] as ListLiteral).elements.whereType<MethodInvocation>();
+    print('elementDeclaration - ok');
+
+    final classAnnotation =
+        elementDeclarationResult.node.childEntities.firstWhere((e) => e is Annotation) as Annotation;
+
+    print('tailorAnnotation - ok');
+
+    final annotationArgs = classAnnotation.arguments?.arguments;
+
+    /// Handle empty annotation
+    final isAnnotationArgsEmpty = annotationArgs?.isEmpty ?? true;
+    final annotationArgsLen = isAnnotationArgsEmpty ? 0 : annotationArgs!.length;
+    print('Annotation len: $annotationArgsLen');
+
+    final annotationHasProps = annotationArgsLen > 0;
+
+    final tailorProps = (annotationArgs?.first as ListLiteral).elements.whereType<MethodInvocation>();
+
+    print('tailorProps - ok');
 
     final themeExtensionFields = <ThemeExtensionField>[];
 

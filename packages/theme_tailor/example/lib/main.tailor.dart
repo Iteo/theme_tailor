@@ -19,8 +19,7 @@ part of 'main.dart';
 /// encoder: SuperThemeEnumEncoder() | type: SuperThemeEnumEncoder
 /// values: [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark] | type: (SuperThemeEnum, SuperThemeEnum, SuperThemeEnum, SuperThemeEnum)
 
-class SuperThemeEnumThemeExtension
-    extends ThemeExtension<SuperThemeEnumThemeExtension> {
+class SuperThemeEnumThemeExtension extends ThemeExtension<SuperThemeEnumThemeExtension> {
   const SuperThemeEnumThemeExtension({
     required this.themeType,
     required this.themeType2,
@@ -29,14 +28,12 @@ class SuperThemeEnumThemeExtension
   final SuperThemeEnum themeType;
   final SuperThemeEnum themeType2;
 
-  static const SuperThemeEnumThemeExtension light =
-      SuperThemeEnumThemeExtension(
+  static const SuperThemeEnumThemeExtension light = SuperThemeEnumThemeExtension(
     themeType: SuperThemeEnum.light,
     themeType2: SuperThemeEnum.light,
   );
 
-  static const SuperThemeEnumThemeExtension superLight =
-      SuperThemeEnumThemeExtension(
+  static const SuperThemeEnumThemeExtension superLight = SuperThemeEnumThemeExtension(
     themeType: SuperThemeEnum.superLight,
     themeType2: SuperThemeEnum.superLight,
   );
@@ -46,8 +43,7 @@ class SuperThemeEnumThemeExtension
     themeType2: SuperThemeEnum.dark,
   );
 
-  static const SuperThemeEnumThemeExtension superDark =
-      SuperThemeEnumThemeExtension(
+  static const SuperThemeEnumThemeExtension superDark = SuperThemeEnumThemeExtension(
     themeType: SuperThemeEnum.superDark,
     themeType2: SuperThemeEnum.superDark,
   );
@@ -87,38 +83,28 @@ class SuperThemeEnumThemeExtension
 /// name: luckyNumber
 /// encoder: NumerEncoder() | type: NumerEncoder
 /// values: [7, 8] | type: (int, int)
-/// name: appBar
-/// encoder: - | type: Null
-/// values: [AppColors.blue, AppColors.orange] | type: (MaterialColor, MaterialColor)
 
-class CustomThemeExtensionLightDark2
-    extends ThemeExtension<CustomThemeExtensionLightDark2> {
+class CustomThemeExtensionLightDark2 extends ThemeExtension<CustomThemeExtensionLightDark2> {
   const CustomThemeExtensionLightDark2({
     required this.h3,
     required this.h4,
     required this.luckyNumber,
-    required this.appBar,
   });
 
   final TextData h3;
   final TextData h4;
   final int luckyNumber;
-  final MaterialColor appBar;
 
-  static const CustomThemeExtensionLightDark2 light =
-      CustomThemeExtensionLightDark2(
+  static const CustomThemeExtensionLightDark2 light = CustomThemeExtensionLightDark2(
     h3: TextData.h3,
     h4: TextData.h3,
     luckyNumber: 7,
-    appBar: AppColors.blue,
   );
 
-  static const CustomThemeExtensionLightDark2 dark =
-      CustomThemeExtensionLightDark2(
+  static const CustomThemeExtensionLightDark2 dark = CustomThemeExtensionLightDark2(
     h3: TextData(defaultColor: AppColors.orange),
     h4: TextData(defaultColor: AppColors.blue),
     luckyNumber: 8,
-    appBar: AppColors.orange,
   );
 
   @override
@@ -126,13 +112,11 @@ class CustomThemeExtensionLightDark2
     TextData? h3,
     TextData? h4,
     int? luckyNumber,
-    MaterialColor? appBar,
   }) {
     return CustomThemeExtensionLightDark2(
       h3: h3 ?? this.h3,
       h4: h4 ?? this.h4,
       luckyNumber: luckyNumber ?? this.luckyNumber,
-      appBar: appBar ?? this.appBar,
     );
   }
 
@@ -143,7 +127,6 @@ class CustomThemeExtensionLightDark2
       h3: simpleLerp(h3, other.h3, t),
       h4: simpleLerp(h4, other.h4, t),
       luckyNumber: simpleLerp(luckyNumber, other.luckyNumber, t),
-      appBar: simpleLerp(appBar, other.appBar, t),
     );
   }
 
