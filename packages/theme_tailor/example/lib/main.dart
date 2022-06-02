@@ -82,13 +82,13 @@ class SuperThemeEnumEncoder extends SimpleThemeEncoder<SuperThemeEnum> {
 const themes = ['light', 'superLight', 'dark', 'superDark'];
 const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
 
-@Tailor([
-  TailorProp(
-      'themeType', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark]),
-  TailorProp(
-      'themeType2', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark],
-      encoder: SuperThemeEnumEncoder()),
-], themes)
+// @Tailor([
+//   TailorProp(
+//       'themeType', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark]),
+//   TailorProp(
+//       'themeType2', [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark],
+//       encoder: SuperThemeEnumEncoder()),
+// ], themes)
 class _$SuperThemeEnumThemeExtension {}
 
 // **************************************************************************
@@ -144,11 +144,32 @@ class TextDataEncoder extends ThemeEncoder<TextData, TextStyle> {
 
 const textDataEncoderBlackWhite = TextDataEncoder([Colors.black, Colors.white]);
 
-@Tailor([
-  TailorProp('h3', [TextData.h3, TextData(defaultColor: AppColors.orange)],
-      encoder: TextDataEncoder([AppColors.orange, Colors.yellow])),
-  TailorProp('h4', [TextData.h3, TextData(defaultColor: AppColors.blue)], encoder: textDataEncoderBlackWhite),
-  TailorProp('luckyNumber', [7, 8], encoder: NumerEncoder()),
-  // TailorProp('appBar', [AppColors.blue, AppColors.orange])
-])
+class PColor extends Prop<Color> {
+  const PColor(super.values);
+}
+
+class PInt extends Prop<int> {
+  const PInt(super.values);
+}
+
+class PDouble extends Prop<double> {
+  const PDouble(super.values);
+}
+
+class PTextData extends BaseProp<TextData, TextStyle> {
+  const PTextData(super.values, super.themeEncoder);
+}
+
+class A {
+  const A(this.map);
+
+  final Map<String, List> map;
+}
+
+@Tailor({
+  'h3': PTextData([TextData.h3, TextData()], TextDataEncoder([Colors.blue, Colors.orange])),
+  'h4': PTextData([TextData.h3, TextData()], TextDataEncoder([Colors.red, Colors.amber])),
+  'luckyNumber': PInt([3, 8]),
+  'appBar': PColor([AppColors.blue, AppColors.orange]),
+})
 class _$CustomThemeExtensionLightDark2 {}

@@ -1,21 +1,93 @@
-import 'dart:collection';
+// import 'dart:collection';
 
-import 'template.dart';
+// import 'template.dart';
 
-// class ThemeExtensionClassTemplate extends Template {
-//   const ThemeExtensionClassTemplate(
+// // class ThemeExtensionClassTemplate extends Template {
+// //   const ThemeExtensionClassTemplate(
+// //     this.className,
+// //     this.isConst,
+// //     this.constructorParams,
+// //     this.fields,
+// //     this.themes,
+// //   );
+
+// //   final String className;
+// //   final bool isConst;
+// //   final List<String> constructorParams;
+// //   final List<String> fields;
+// //   final SplayTreeMap<String, SplayTreeMap<String, String>> themes;
+
+// //   /// Generate all of the themes
+// //   String generateThemes() {
+// //     if (themes.isEmpty) return '';
+// //     final buffer = StringBuffer();
+// //     themes.forEach((key, value) => buffer.write(themeTemplate(key, value)));
+// //     return buffer.toString();
+// //   }
+
+// //   /// Template for one static theme
+// //   String themeTemplate(String name, SplayTreeMap<String, String> propsAndValues) {
+// //     final buffer = StringBuffer();
+
+// //     propsAndValues.forEach((key, value) => buffer.write('$key: $value'));
+
+// //     return '''
+// //     ${'static ${isConst ? 'const' : ''} $className $name = $className('}
+// //       ${buffer.toString()}
+// //     );
+// //     ''';
+// //   }
+
+// //   @override
+// //   String generate() {
+// //     return '''
+// //     class $className extends ThemeExtension<$className> {
+// //       const $className({
+// //         $constructorParams
+// //       });
+
+// //       $fields
+
+// //       ${generateThemes()}
+
+// //       @override
+// //       ThemeExtension<$className> copyWith({
+// //         SuperThemeEnum? themeType,
+// //         SuperThemeEnum? themeType2,
+// //       }) {
+// //         return $className(
+// //           themeType: themeType ?? this.themeType,
+// //           themeType2: themeType2 ?? this.themeType2,
+// //         );
+// //       }
+
+// //       @override
+// //       ThemeExtension<$className> lerp(other, t) {
+// //         if (other is! $className) return this;
+// //         return $className(
+// //           themeType: simpleLerp(themeType, other.themeType, t),
+// //           themeType2: simpleLerp(themeType2, other.themeType2, t),
+// //         );
+// //       }
+
+// //       T _simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;
+// //   }
+// //   ''';
+// //   }
+// // }
+
+// class ThemeExtensionClassTemplate2 extends Template {
+//   const ThemeExtensionClassTemplate2(
 //     this.className,
 //     this.isConst,
-//     this.constructorParams,
-//     this.fields,
+//     this.params,
 //     this.themes,
 //   );
 
 //   final String className;
 //   final bool isConst;
-//   final List<String> constructorParams;
-//   final List<String> fields;
-//   final SplayTreeMap<String, SplayTreeMap<String, String>> themes;
+//   final List<ParameterModel> params;
+//   final SplayTreeMap<String, ParameterModel> themes;
 
 //   /// Generate all of the themes
 //   String generateThemes() {
@@ -38,15 +110,15 @@ import 'template.dart';
 //     ''';
 //   }
 
+//   String constructorParams() {
+//     return '';
+//   }
+
 //   @override
 //   String generate() {
 //     return '''
 //     class $className extends ThemeExtension<$className> {
-//       const $className({
-//         $constructorParams
-//       });
-
-//       $fields
+//       ${params.toConstructorAndFields(className, isConst)}
 
 //       ${generateThemes()}
 
@@ -75,78 +147,6 @@ import 'template.dart';
 //   ''';
 //   }
 // }
-
-class ThemeExtensionClassTemplate2 extends Template {
-  const ThemeExtensionClassTemplate2(
-    this.className,
-    this.isConst,
-    this.params,
-    this.themes,
-  );
-
-  final String className;
-  final bool isConst;
-  final List<ParameterModel> params;
-  final SplayTreeMap<String, ParameterModel> themes;
-
-  /// Generate all of the themes
-  String generateThemes() {
-    if (themes.isEmpty) return '';
-    final buffer = StringBuffer();
-    themes.forEach((key, value) => buffer.write(themeTemplate(key, value)));
-    return buffer.toString();
-  }
-
-  /// Template for one static theme
-  String themeTemplate(String name, SplayTreeMap<String, String> propsAndValues) {
-    final buffer = StringBuffer();
-
-    propsAndValues.forEach((key, value) => buffer.write('$key: $value'));
-
-    return '''
-    ${'static ${isConst ? 'const' : ''} $className $name = $className('}
-      ${buffer.toString()}
-    );
-    ''';
-  }
-
-  String constructorParams() {
-    return '';
-  }
-
-  @override
-  String generate() {
-    return '''
-    class $className extends ThemeExtension<$className> {
-      ${params.toConstructorAndFields(className, isConst)}
-
-      ${generateThemes()}
-
-      @override
-      ThemeExtension<$className> copyWith({
-        SuperThemeEnum? themeType,
-        SuperThemeEnum? themeType2,
-      }) {
-        return $className(
-          themeType: themeType ?? this.themeType,
-          themeType2: themeType2 ?? this.themeType2,
-        );
-      }
-
-      @override
-      ThemeExtension<$className> lerp(other, t) {
-        if (other is! $className) return this;
-        return $className(
-          themeType: simpleLerp(themeType, other.themeType, t),
-          themeType2: simpleLerp(themeType2, other.themeType2, t),
-        );
-      }
-
-      T _simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;
-  }
-  ''';
-  }
-}
 
 extension ParameterModelIterableExtension on Iterable<ParameterModel> {
   String toConstructorAndFields(String className, bool isConst) {

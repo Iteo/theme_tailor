@@ -1,5 +1,7 @@
 import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
@@ -17,76 +19,100 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       throw InvalidGenerationSourceError(Message.unsupportedAnnotationTarget(element), element: element);
     }
 
-    final className = element.displayName.formatClassName();
-    final themeNames = annotation.read('themes').listValue.map((e) => e.toStringValue()!);
-    final defaultProps = annotation.read('props').listValue.map((e) => e.toString());
+    /// TODO:
+    /// class name +
+    /// properties names +
+    /// properties output types +
+    /// properties values (literals)
+    /// properties custom lerp
+    /// properties custom encoding (class != const)
 
-    print('DEFAULT PROPS VALUES: $defaultProps');
+    final className = element.displayName.formatClassName();
+    final themeNames = annotation.read('themes').listValue.map((e) => e.toSymbolValue());
+    final propertiesMap = annotation.read('props').mapValue;
+
+    final properties = <String>[];
+    final types = <String>[];
+
+    final typeDeclaration = RegExp(r'<(.*?)>');
+
+    for (final e in propertiesMap.entries) {
+      final property = e.key?.toStringValue();
+
+      final declaration = e.value!.type!.element!.declaration!.toString();
+      print(declaration);
+
+      final type = typeDeclaration.firstMatch(declaration)!.group(1)?.split(',').last.trim();
+
+      if (property == null) InvalidGenerationSourceError('Bad property name on the $element', element: element);
+      if (type == null) InvalidGenerationSourceError('Can not determine type for the property: $property');
+
+      properties.add(property!);
+      types.add(type!);
+    }
 
     final strBuffer = StringBuffer()
       ..writeln(commented('DEBUG PRINT:'))
       ..writeln(commented('class name: $className'))
       ..writeln(commented('themes: $themeNames'));
 
-    /// DEBUG PLAYGROUND
-    final parsedLibResult = element.session?.getParsedLibraryByElement(element.library) as ParsedLibraryResult;
-    final elementDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
-
-    print('elementDeclaration - ok');
-
+    /// AST NODE
     final classAnnotation =
-        elementDeclarationResult.node.childEntities.firstWhere((e) => e is Annotation) as Annotation;
-
-    print('tailorAnnotation - ok');
-
+        getAstNodeFromElement(element).childEntities.firstWhere((e) => e is Annotation) as Annotation;
     final annotationArgs = classAnnotation.arguments?.arguments;
-
-    /// Handle empty annotation
     final isAnnotationArgsEmpty = annotationArgs?.isEmpty ?? true;
-    final annotationArgsLen = isAnnotationArgsEmpty ? 0 : annotationArgs!.length;
-    print('Annotation len: $annotationArgsLen');
 
-    final annotationHasProps = annotationArgsLen > 0;
+    return '${strBuffer.toString()}\n\n}';
 
-    final tailorProps = (annotationArgs?.first as ListLiteral).elements.whereType<MethodInvocation>();
+    // print('Annotation len: $annotationArgsLen');
 
-    print('tailorProps - ok');
+    // final annotationHasProps = annotationArgsLen > 0;
 
-    final themeExtensionFields = <ThemeExtensionField>[];
+    // final tailorProps = (annotationArgs?.first as ListLiteral).elements.whereType<MethodInvocation>();
 
-    annotation.read('props').listValue.forEachIndexed((i, propValues) {
-      final tailorProp = tailorProps.elementAt(i);
+    // print('tailorProps - ok');
 
-      final name = propValues.getField('name')!.toStringValue()!;
+    // final themeExtensionFields = <ThemeExtensionField>[];
 
-      /// Encoder expression (as it is typed in the annotation)
-      final encoder = tailorProp.argumentList.arguments
-          .whereType<NamedExpression>()
-          .firstWhereOrNull((element) => element.name.label.name == 'encoder')
-          ?.expression;
-      final encoderType = propValues.getField('encoder')?.type;
+    // annotation.read('props').listValue.forEachIndexed((i, propValues) {
+    //   final tailorProp = tailorProps.elementAt(i);
 
-      /// Values expression (as it is typed in the annotation)
-      final values = (tailorProp.argumentList.arguments.elementAt(1) as ListLiteral).elements;
-      final valuesTypes = propValues.getField('values')!.toListValue()!.map((e) => e.type);
+    //   final name = propValues.getField('name')!.toStringValue()!;
 
-      strBuffer
-        ..writeln(commented('name: $name'))
-        ..writeln(commented('encoder: ${encoder ?? '-'} | type: $encoderType'))
-        ..writeln(commented('values: $values | type: $valuesTypes'));
+    //   /// Encoder expression (as it is typed in the annotation)
+    //   // final encoder = tailorProp.argumentList.arguments
+    //   //     .whereType<NamedExpression>()
+    //   //     .firstWhereOrNull((element) => element.name.label.name == 'encoder')
+    //   //     ?.expression;
+    //   // final encoderType = propValues.getField('encoder')?.type;
 
-      themeExtensionFields.add(ThemeExtensionField(name, values, valuesTypes, encoder, encoderType));
+    //   /// Values expression (as it is typed in the annotation)
+    //   final values = (tailorProp.argumentList.arguments.elementAt(1) as ListLiteral).elements;
+    //   final valuesTypes = propValues.getField('values')!.toListValue()!.map((e) => e.type);
 
-      // This won't work if it is a SimpleIdentifierImpl
-      // final tailorPropEncoderType = (tailorPropEncoder?.expression as MethodInvocation?)?.methodName;
+    //   strBuffer
+    //     ..writeln(commented('name: $name'))
+    //     // ..writeln(commented('encoder: ${encoder ?? '-'} | type: $encoderType'))
+    //     ..writeln(commented('values: $values | type: $valuesTypes'));
 
-      // ..writeln(commented('encoderType: $tailorPropEncoderType'));
-    });
+    //   themeExtensionFields.add(ThemeExtensionField(name, []));
 
-    final config = ThemeExtensionConfig.fromData(className, themeNames, themeExtensionFields);
-    final template = ThemeExtensionClassTemplate(config);
-    return '${strBuffer.toString()}\n\n${template.generate()}';
+    //   // This won't work if it is a SimpleIdentifierImpl
+    //   // final tailorPropEncoderType = (tailorPropEncoder?.expression as MethodInvocation?)?.methodName;
+
+    //   // ..writeln(commented('encoderType: $tailorPropEncoderType'));
+    // });
+
+    // final config = ThemeExtensionConfig.fromData(className, themeNames, themeExtensionFields);
+    // final template = ThemeExtensionClassTemplate(config);
   }
 }
 
 String commented(String val) => '/// $val';
+
+AstNode getAstNodeFromElement(Element element) {
+  final session = element.session!;
+  final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
+  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
+  return elDeclarationResult.node;
+}

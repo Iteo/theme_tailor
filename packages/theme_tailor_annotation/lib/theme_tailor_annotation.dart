@@ -25,34 +25,21 @@ abstract class SimpleThemeEncoder<TOut> extends ThemeEncoder<TOut, TOut> {
   TransformData<TOut, TOut>? get transformData => throw UnsupportedError('Only ThemeEncoder can transform data');
 }
 
-const tailor = Tailor();
-
 @Target({TargetKind.classType})
 class Tailor {
-  const Tailor([this.props = defaultProps, this.themes = defaultThemes]);
+  const Tailor(this.props, [this.themes = const ['light', 'dark']]);
 
-  static const String light = 'light';
-  static const String dark = 'dark';
-
-  static const List<String> defaultThemes = [light, dark];
-  static const List<TailorProp> defaultProps = [
-    TailorProp('lucky', [7, 8]),
-    TailorProp('themeMode', ['light-mode', 'dark-mode']),
-  ];
-
+  final Map<String, BaseProp> props;
   final List<String> themes;
-  final List<TailorProp> props;
 }
 
-class TailorProp<TIn, TOut> {
-  const TailorProp(this.name, this.values, {this.encoder});
+abstract class BaseProp<T, E> {
+  const BaseProp(this.values, this.encoder);
 
-  /// Name of the prop in the generated theme
-  final String name;
+  final List<T> values;
+  final ThemeEncoder<T, E>? encoder;
+}
 
-  /// Value of the theme prop per theme
-  final List<TIn> values;
-
-  /// Value interpolation
-  final ThemeEncoder<TIn, TOut>? encoder;
+abstract class Prop<T> extends BaseProp<T, T> {
+  const Prop(List<T> values) : super(values, null);
 }
