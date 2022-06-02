@@ -45,7 +45,7 @@ class Tailor {
   final List<String> themes;
 }
 
-@Target({TargetKind.getter})
+@Target({TargetKind.field})
 class ColorVariant {
   const ColorVariant(this.name, this.color);
 

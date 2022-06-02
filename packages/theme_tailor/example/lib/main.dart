@@ -13,14 +13,14 @@ class AppColors {
 const lol = [AppColors.blue, AppColors.orange];
 
 @Tailor(['light', 'dark'])
-abstract class $_OK {
-  List<Color> get background => [AppColors.white, AppColors.black];
-  List<Color> get surface => lol;
-  List<Color> get appBar => [AppColors.orange, AppColors.blue];
+class $_OK {
+  static List<Color> background = [AppColors.white, AppColors.black];
+  static List<Color> surface = lol;
+  static List<Color> appBar = [AppColors.orange, AppColors.blue];
 
   @ColorVariant('primary', [Colors.black, Colors.black54])
   @ColorVariant('secondary', [Colors.blue, Colors.pink])
   @ColorVariant('onError', [Colors.white, Colors.white])
-  List<TextStyle> get h1 => const [TextStyle(), TextStyle()];
-  List<TextStyle> get h2 => const [TextStyle(), TextStyle()];
+  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
+  static List<TextStyle> h2 = const [TextStyle(), TextStyle()];
 }

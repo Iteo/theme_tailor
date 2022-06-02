@@ -1,28 +1,17 @@
-import '../template/constructor_template.dart';
+import 'dart:collection';
 
-class ThemeExtensionConfig {
-  const ThemeExtensionConfig(
-    this.className,
-    this.themeNames,
-    this.fields,
-  );
+import 'package:analyzer/dart/ast/ast.dart';
 
-  factory ThemeExtensionConfig.fromData(
-    String className,
-    Iterable<String> themeNames,
-    List<ThemeExtensionField> fields,
-  ) {
-    return ThemeExtensionConfig(className, themeNames, fields);
-  }
+class ThemeExtensionClassConfig {
+  const ThemeExtensionClassConfig({
+    required this.expressions,
+    required this.fields,
+    required this.returnType,
+    required this.themes,
+  });
 
-  final String className;
-  final Iterable<String> themeNames;
-  final Iterable<ThemeExtensionField> fields;
-}
-
-class ThemeExtensionField {
-  ThemeExtensionField(this.name, this.values);
-
-  final String name;
-  final Iterable<ValueModel> values;
+  final SplayTreeMap<String, String> fields;
+  final SplayTreeMap<String, Expression> expressions;
+  final SplayTreeSet<String> themes;
+  final String returnType;
 }

@@ -1,15 +1,18 @@
+import 'dart:collection';
+
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-import '../util/regexp.dart';
+import '../model/theme_extension_config.dart';
+import '../template/theme_extension_class_templates.dart';
+import '../util/util.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
@@ -18,39 +21,50 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       throw InvalidGenerationSourceError('Tailor can only annotate classes', element: element);
     }
 
-    final themeNames = annotation.read('themes').listValue.map((e) => e.toStringValue());
+    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    const stringUtil = StringUtil();
 
-    final tailorClassVisitor = TailorClassVisitor();
+    final tailorClassVisitor = _TailorClassVisitor(stringUtil);
     element.visitChildren(tailorClassVisitor);
 
-    final astTailorClassVisitor = ASTTailorClassVisitor();
-    getAstNodeFromElement(element).visitChildren(astTailorClassVisitor);
+    final astTailorClassVisitor = _ASTTailorClassVisitor(stringUtil);
+    _getAstNodeFromElement(element).visitChildren(astTailorClassVisitor);
+
+    final config = ThemeExtensionClassConfig(
+      expressions: astTailorClassVisitor.expressions,
+      fields: tailorClassVisitor.fields,
+      returnType: tailorClassVisitor.returnType,
+      themes: themes,
+    );
 
     final debug = '''
-DEBUG:
-Class name: ${tailorClassVisitor.className}
-Themes: ${themeNames.join(' ')}
-Properties: ${tailorClassVisitor.fields.entries}
-Expressions: ${astTailorClassVisitor.expressions.entries}
-''';
+    // DEBUG:
+    // Class name: ${config.returnType}
+    // Themes: ${config.themes.join(' ')}
+    // Properties: ${config.fields.entries}
+    // Expressions: ${config.expressions.entries}\n
+    ''';
 
-    print(debug);
-    return multiLineCommented(debug);
+    final outputBuffer = StringBuffer(debug)..write(ThemeExtensionClassTemplate(config));
+
+    return outputBuffer.toString();
   }
 }
 
-String multiLineCommented(String val) => '/*$val*/';
-String commented(String val) => '/// $val';
-
-AstNode getAstNodeFromElement(Element element) {
+AstNode _getAstNodeFromElement(Element element) {
   final session = element.session!;
   final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
   final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
   return elDeclarationResult.node;
 }
 
-class ASTTailorClassVisitor extends GeneralizingAstVisitor {
-  Map<String, Expression> expressions = {};
+/// Only supports getters
+class _ASTTailorClassVisitor extends GeneralizingAstVisitor {
+  _ASTTailorClassVisitor(this._stringUtil);
+
+  final StringUtil _stringUtil;
+
+  SplayTreeMap<String, Expression> expressions = SplayTreeMap();
 
   @override
   void visitAnnotation(Annotation node) {
@@ -59,8 +73,7 @@ class ASTTailorClassVisitor extends GeneralizingAstVisitor {
 
   @override
   void visitClassMember(ClassMember node) {
-    /// Only supporting getters for theme data
-    final getterName = findGetterName(node.toString());
+    final getterName = _stringUtil.getGetterName(node.toString());
     if (getterName == null) return;
 
     final fun = node.childEntities.firstWhereOrNull((e) => e is ExpressionFunctionBody) as ExpressionFunctionBody;
@@ -68,17 +81,26 @@ class ASTTailorClassVisitor extends GeneralizingAstVisitor {
   }
 }
 
-class TailorClassVisitor extends SimpleElementVisitor {
-  late DartType className;
-  Map<String, DartType> fields = {};
+/// Only supports getters
+class _TailorClassVisitor extends SimpleElementVisitor {
+  _TailorClassVisitor(this._stringUtil);
+
+  final StringUtil _stringUtil;
+
+  String returnType = '';
+  SplayTreeMap<String, String> fields = SplayTreeMap();
 
   @override
   void visitConstructorElement(ConstructorElement element) {
-    className = element.type.returnType;
+    returnType = _stringUtil.formatClassName(element.type.returnType.toString());
   }
 
   @override
   void visitFieldElement(FieldElement element) {
-    if (element.getter != null) fields[element.name] = element.type;
+    if (element.getter != null) {
+      final type = _stringUtil.getTypeFromList(element.type.toString());
+      if (type == null) throw InvalidGenerationSourceError('Getters must have a List<T> return type', element: element);
+      fields[element.name] = type;
+    }
   }
 }
