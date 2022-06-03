@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 
-import '../model/theme_extension_config.dart';
-import 'dart_type_nullable_template.dart';
+import 'package:theme_tailor/src/model/theme_extension_config.dart';
+import 'package:theme_tailor/src/template/dart_type_nullable_template.dart';
 
 class ThemeExtensionClassTemplate {
   const ThemeExtensionClassTemplate(this.config);
