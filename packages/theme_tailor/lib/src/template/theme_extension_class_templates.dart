@@ -1,80 +1,113 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:collection/collection.dart';
 
-import '../model/theme_extension_config.dart';
-import 'dart_type_nullable_template.dart';
-import 'template.dart';
+import 'package:theme_tailor/src/model/theme_extension_config.dart';
+import 'package:theme_tailor/src/template/dart_type_nullable_template.dart';
 
-class ThemeExtensionClassTemplate extends Template {
+class ThemeExtensionClassTemplate {
   const ThemeExtensionClassTemplate(this.config);
 
-  final ThemeExtensionConfig config;
+  final ThemeExtensionClassConfig config;
+
+  String _constructorAndParams() {
+    final constructorBuffer = StringBuffer();
+    final fieldsBuffer = StringBuffer();
+
+    config.fields.forEach((key, value) {
+      constructorBuffer.write('required this.$key,');
+      fieldsBuffer.write('final $value $key;');
+    });
+
+    return '''
+    ${config.returnType}({
+      ${constructorBuffer.toString()}
+    });
+    
+    ${fieldsBuffer.toString()}
+    ''';
+  }
+
+  /// Generate all of the themes
+  String _generateThemes() {
+    if (config.themes.isEmpty) return '';
+    final buffer = StringBuffer();
+    config.themes.forEachIndexed((i, e) {
+      buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
+    });
+    return buffer.toString();
+  }
+
+  /// Template for one static theme
+  String _themeTemplate(int index, String themeName, List<String> props) {
+    final buffer = StringBuffer();
+    final returnType = config.returnType;
+
+    for (final prop in props) {
+      buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
+    }
+
+    return '''
+    static final $returnType $themeName = $returnType(
+      ${buffer.toString()}
+    );\n
+    ''';
+  }
+
+  String _lerpMethods() {
+    const _simpleLerp = 'T _simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;';
+    return _simpleLerp;
+  }
+
+  String _copyWithMethod() {
+    final returnType = config.returnType;
+    final methodParams = StringBuffer();
+    final classParams = StringBuffer();
+
+    config.fields.forEach((key, value) {
+      methodParams.write('${NullableTypeTemplate(value)} $key,');
+      classParams.write('$key: $key ?? this.$key,');
+    });
+
+    return '''
+    @override
+    ThemeExtension<$returnType> copyWith({
+      ${methodParams.toString()}
+    }) {
+      return $returnType(
+        ${classParams.toString()}
+      );
+    }
+    ''';
+  }
+
+  String _lerpMethod() {
+    final returnType = config.returnType;
+    final classParams = StringBuffer();
+
+    config.fields.forEach((key, value) {
+      classParams.write('$key: _simpleLerp($key, other.$key, t),');
+    });
+
+    return '''
+    @override
+    ThemeExtension<$returnType> lerp(other, t) {
+      if (other is! $returnType) return this;
+      return $returnType(
+        ${classParams.toString()}
+      );
+    }
+    ''';
+  }
 
   @override
-  String generate() {
+  String toString() {
     return '''
-    class ${config.className} extends ThemeExtension<${config.className}>{
-      ${_generateConstructor()}
-
-      ${_generateFields()}
-
-      ${_generateStaticThemes()}
-
-      ${_generateMethodCopyWith()}
-
-      ${_generateMethodLerp()}
+    class ${config.returnType} extends ThemeExtension<${config.returnType}>{
+      ${_constructorAndParams()}
+      ${_generateThemes()}
+      ${_copyWithMethod()}
+      ${_lerpMethod()}
+      ${_lerpMethods()}
     }
-    ''';
-  }
-
-  String _generateConstructor() {
-    final fields = config.fields.map((e) => 'required this.${e.name},').join();
-    return 'const ${config.className}({$fields});';
-  }
-
-  String _generateFields() {
-    return config.fields.map((field) => 'final ${field.valuesType.first ?? 'dynamic'} ${field.name};').join();
-  }
-
-  String _generateStaticThemes() {
-    return config.themeNames.mapIndexed((i, e) => _generateStaticTheme(i)).join('\n');
-  }
-
-  String _generateStaticTheme(int i) {
-    final fields = config.fields.map((field) => '${field.name}: ${field.values.elementAt(i)},').join();
-
-    return '''
-    static const ${config.className} ${config.themeNames.elementAt(i)} = ${config.className}(
-      $fields
-    );
-    ''';
-  }
-
-  String _generateMethodCopyWith() {
-    final params = config.fields.map((e) => '${DartTypeNullableTemplate(e.type).generate()} ${e.name},').join();
-    final fields = config.fields.map((e) => '${e.name}: ${e.name} ?? this.${e.name},').join();
-    return '''
-    @override
-    ThemeExtension<${config.className}> copyWith({$params}){
-      return ${config.className}($fields);
-    }
-    ''';
-  }
-
-  String _generateMethodLerp() {
-    const simpleLerp = 'T simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;';
-    final lerpFunctions = [simpleLerp].join();
-
-    final fields = config.fields.map((e) => '${e.name}: simpleLerp(${e.name}, other.${e.name}, t),').join();
-
-    return '''
-    @override
-    ThemeExtension<${config.className}> lerp(other, t) {
-    if (other is! ${config.className}) return this;
-    return ${config.className}($fields);
-    }
-    $lerpFunctions
     ''';
   }
 }

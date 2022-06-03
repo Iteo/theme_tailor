@@ -1,12 +1,10 @@
-import 'template.dart';
-
-class DartTypeNullableTemplate extends Template {
-  const DartTypeNullableTemplate(this.type);
+class NullableTypeTemplate {
+  const NullableTypeTemplate(this.type);
 
   final String type;
 
-  bool get isNullable => type.endsWith('?');
+  bool get isNullable => type.endsWith('?') || type == 'dynamic';
 
   @override
-  String generate() => isNullable ? type : '$type?';
+  String toString() => isNullable ? type : '$type?';
 }

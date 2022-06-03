@@ -1,73 +1,77 @@
+import 'dart:collection';
+
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
-import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/model/theme_extension_config.dart';
+import 'package:theme_tailor/src/template/theme_extension_class_templates.dart';
+import 'package:theme_tailor/src/util/util.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-import '../../theme_tailor.dart';
-import '../util/message.dart';
-import '../util/string_format.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
   String generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
     if (element is! ClassElement || element is Enum) {
-      throw InvalidGenerationSourceError(Message.unsupportedAnnotationTarget(element), element: element);
+      throw InvalidGenerationSourceError('Tailor can only annotate classes', element: element);
     }
 
-    final className = element.displayName.formatClassName();
-    final themeNames = annotation.read('themes').listValue.map((e) => e.toStringValue()!);
+    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    const stringUtil = StringUtil();
 
-    final strBuffer = StringBuffer()
-      ..writeln(commented('DEBUG PRINT:'))
-      ..writeln(commented('class name: $className'))
-      ..writeln(commented('themes: $themeNames'));
+    final tailorClassVisitor = _TailorClassVisitor(stringUtil);
+    element.visitChildren(tailorClassVisitor);
 
-    /// DEBUG PLAYGROUND
-    final parsedLibResult = element.session!.getParsedLibraryByElement(element.library) as ParsedLibraryResult;
-    final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
+    final config = ThemeExtensionClassConfig(
+      fields: tailorClassVisitor.fields,
+      returnType: tailorClassVisitor.returnType,
+      baseClassName: tailorClassVisitor.baseClassName,
+      themes: themes,
+    );
 
-    final tailorAnnotation = elDeclarationResult.node.childEntities.first as Annotation;
-    final tailorProps =
-        (tailorAnnotation.arguments!.arguments[0] as ListLiteral).elements.whereType<MethodInvocation>();
+    final debug = '''
+    // DEBUG:
+    // Class name: ${config.returnType}
+    // Themes: ${config.themes.join(' ')}
+    // Properties: ${config.fields.entries}
+    ''';
 
-    final themeExtensionFields = <ThemeExtensionField>[];
+    final outputBuffer = StringBuffer(debug)..write(ThemeExtensionClassTemplate(config));
 
-    annotation.read('props').listValue.forEachIndexed((i, propValues) {
-      final tailorProp = tailorProps.elementAt(i);
-
-      final name = propValues.getField('name')!.toStringValue()!;
-
-      /// Encoder expression (as it is typed in the annotation)
-      final encoder = tailorProp.argumentList.arguments
-          .whereType<NamedExpression>()
-          .firstWhereOrNull((element) => element.name.label.name == 'encoder')
-          ?.expression;
-      final encoderType = propValues.getField('encoder')?.type;
-
-      /// Values expression (as it is typed in the annotation)
-      final values = (tailorProp.argumentList.arguments.elementAt(1) as ListLiteral).elements;
-      final valuesTypes = propValues.getField('values')!.toListValue()!.map((e) => e.type);
-
-      strBuffer
-        ..writeln(commented('name: $name'))
-        ..writeln(commented('encoder: ${encoder ?? '-'} | type: $encoderType'))
-        ..writeln(commented('values: $values | type: $valuesTypes'));
-
-      themeExtensionFields.add(ThemeExtensionField(name, values, valuesTypes, encoder, encoderType));
-
-      // This won't work if it is a SimpleIdentifierImpl
-      // final tailorPropEncoderType = (tailorPropEncoder?.expression as MethodInvocation?)?.methodName;
-
-      // ..writeln(commented('encoderType: $tailorPropEncoderType'));
-    });
-
-    final config = ThemeExtensionConfig.fromData(className, themeNames, themeExtensionFields);
-    final template = ThemeExtensionClassTemplate(config);
-    return '${strBuffer.toString()}\n\n${template.generate()}';
+    return outputBuffer.toString();
   }
 }
 
-String commented(String val) => '/// $val';
+AstNode getAstNodeFromElement(Element element) {
+  final session = element.session!;
+  final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
+  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
+  return elDeclarationResult.node;
+}
+
+/// Only supports getters
+class _TailorClassVisitor extends SimpleElementVisitor {
+  _TailorClassVisitor(this._stringUtil);
+
+  final StringUtil _stringUtil;
+
+  String baseClassName = '';
+  String get returnType => _stringUtil.formatClassName(baseClassName);
+  SplayTreeMap<String, String> fields = SplayTreeMap();
+
+  @override
+  void visitConstructorElement(ConstructorElement element) {
+    baseClassName = element.type.returnType.toString();
+  }
+
+  @override
+  void visitFieldElement(FieldElement element) {
+    if (element.isStatic) {
+      final type = _stringUtil.getTypeFromList(element.type.toString());
+      if (type == null) throw InvalidGenerationSourceError('Must have a List<T> return type', element: element);
+      fields[element.name] = type;
+    }
+  }
+}
