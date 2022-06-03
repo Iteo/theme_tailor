@@ -4,31 +4,74 @@ packages:
   - packages/**
 scripts:
   get:
-    run: melos exec dart pub get
+    run: melos run get_dart && melos run get_flutter
+
+  get_dart:
+    run: melos exec --no-flutter dart pub get
+
+  get_flutter:
+    run: melos exec --flutter flutter pub get
 
   generate:
-    run: melos exec --depends-on="build_runner" dart run build_runner build  --delete-conflicting-outputs
+    run: melos run generate_dart && melos run generate_flutter
+
+  generate_dart:
+    run: melos exec --no-flutter --depends-on="build_runner" dart run build_runner build --delete-conflicting-outputs
+
+  generate_flutter:
+    run: melos exec --flutter --depends-on="build_runner" flutter pub run build_runner build --delete-conflicting-outputs
 
   test:
+    run: melos run test_dart && melos run test_flutter
+
+  test_dart:
     run: melos exec --dir-exists="test" dart test
+
+  test_flutter:
+    run: melos exec --dir-exists="test" flutter test
 
   test:coverage:
-    run: melos exec  -c 1 --fail-fast -- "\$MELOS_ROOT_PATH/scripts/coverage.sh"
+    run: melos run test_dart:coverage && melos run test_flutter:coverage
     description: Run Dart tests for a specific package in this project.
-    select-package:
-      dir-exists: test
+
+  test_dart:coverage:
+    run: melos exec --no-flutter --dir-exists="test" -c 1 --fail-fast -- "\$MELOS_ROOT_PATH/scripts/coverage.sh"
+
+  test_flutter:coverage:
+    run: melos exec --flutter --dir-exists="test" -c 1 --fail-fast -- flutter test --coverage
 
   analyze:
-    run: melos exec dart analyze
+    run: melos run analyze_dart && melos run analyze_flutter
+
+  analyze_dart:
+    run: melos exec --no-flutter dart analyze
+
+  analyze_flutter:
+    run: melos exec --flutter flutter analyze
 
   get:fvm:
-    run: melos exec fvm dart pub get
+    run: melos run get_dart:fvm && melos run get_flutter:fvm
 
-  test:fvm:
-    run: melos exec --dir-exists="test" dart test
+  get_dart:fvm:
+    run: melos exec --no-flutter fvm dart pub get
 
-  analyze:fvm:
-    run: melos exec fvm dart analyze
+  get_flutter:fvm:
+    run: melos exec --flutter fvm flutter pub get
 
   generate:fvm:
-    run: melos exec --depends-on="build_runner" fvm dart run build_runner build --delete-conflicting-outputs
+    run: melos run generate_dart:fvm && melos run generate_flutter:fvm
+
+  generate_dart:fvm:
+    run: melos exec --no-flutter --depends-on="build_runner" fvm dart run build_runner build --delete-conflicting-outputs
+
+  generate_flutter:fvm:
+    run: melos exec --flutter --depends-on="build_runner" fvm flutter pub run build_runner build --delete-conflicting-outputs
+
+  test:fvm:
+    run: melos run test_dart:fvm && melos run test_flutter:fvm
+
+  test_dart:fvm:
+    run: melos exec --no-flutter --dir-exists="test" fvm dart test
+
+  test_flutter:fvm:
+    run: melos exec --flutter --dir-exists="test" fvm flutter test
