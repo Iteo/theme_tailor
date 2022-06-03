@@ -17,10 +17,6 @@ class $_OK {
   static List<Color> background = [AppColors.white, AppColors.black];
   static List<Color> surface = lol;
   static List<Color> appBar = [AppColors.orange, AppColors.blue];
-
-  @ColorVariant('primary', [Colors.black, Colors.black54])
-  @ColorVariant('secondary', [Colors.blue, Colors.pink])
-  @ColorVariant('onError', [Colors.white, Colors.white])
   static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
   static List<TextStyle> h2 = const [TextStyle(), TextStyle()];
 }

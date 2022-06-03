@@ -2,22 +2,27 @@ class StringUtil {
   const StringUtil();
 
   static final _listExpression = RegExp(r'List<(\w+[?]?)>');
-  static final _getterExpression = RegExp(r'get (\w+[?]?)');
+  static final _fieldExpression = RegExp(r'(\w+[?]?)\s*?=\s*?[\w+ | \[]');
+  static final _staticExpression = RegExp(r'static');
 
   String formatClassName(String value) {
     return value.replaceFirst(r'_$', '').replaceFirst(r'$_', '');
+  }
+
+  bool isStatic(String value) {
+    return _staticExpression.hasMatch(value);
   }
 
   bool isListType(String value) {
     return _listExpression.hasMatch(value);
   }
 
-  bool isGetter(String value) {
-    return _getterExpression.hasMatch(value);
+  bool isField(String value) {
+    return _fieldExpression.hasMatch(value);
   }
 
-  String? getGetterName(String value) {
-    return _getterExpression.firstMatch(value)?[1];
+  String? getFieldName(String value) {
+    return _fieldExpression.firstMatch(value)?[1];
   }
 
   String? getTypeFromList(String value) {

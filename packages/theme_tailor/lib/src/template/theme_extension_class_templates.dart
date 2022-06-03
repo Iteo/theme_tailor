@@ -1,6 +1,3 @@
-import 'dart:collection';
-
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:collection/collection.dart';
 
 import '../model/theme_extension_config.dart';
@@ -10,30 +7,6 @@ class ThemeExtensionClassTemplate {
   const ThemeExtensionClassTemplate(this.config);
 
   final ThemeExtensionClassConfig config;
-
-  /// Generate all of the themes
-  String _generateThemes() {
-    if (config.themes.isEmpty) return '';
-    final buffer = StringBuffer();
-    config.themes.forEachIndexed((i, e) {
-      buffer.write(_themeTemplate(i, e, config.expressions));
-    });
-    return buffer.toString();
-  }
-
-  /// Template for one static theme
-  String _themeTemplate(int index, String themeName, SplayTreeMap<String, Expression> props) {
-    final buffer = StringBuffer();
-    final returnType = config.returnType;
-
-    props.forEach((k, v) => buffer.write('$k: $v,'));
-
-    return '''
-    static $returnType $themeName = $returnType(
-      ${buffer.toString()}
-    );
-    ''';
-  }
 
   String _constructorAndParams() {
     final constructorBuffer = StringBuffer();
@@ -50,6 +23,32 @@ class ThemeExtensionClassTemplate {
     });
     
     ${fieldsBuffer.toString()}
+    ''';
+  }
+
+  /// Generate all of the themes
+  String _generateThemes() {
+    if (config.themes.isEmpty) return '';
+    final buffer = StringBuffer();
+    config.themes.forEachIndexed((i, e) {
+      buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
+    });
+    return buffer.toString();
+  }
+
+  /// Template for one static theme
+  String _themeTemplate(int index, String themeName, List<String> props) {
+    final buffer = StringBuffer();
+    final returnType = config.returnType;
+
+    for (final prop in props) {
+      buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
+    }
+
+    return '''
+    static final $returnType $themeName = $returnType(
+      ${buffer.toString()}
+    );\n
     ''';
   }
 
