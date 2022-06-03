@@ -32,6 +32,8 @@ class Sewing {
   final ThemeEncoder? encoder;
 }
 
+const tailor = Tailor();
+
 @Target({TargetKind.classType})
 class Tailor {
   const Tailor([this.themes = const ['light', 'dark']]);
