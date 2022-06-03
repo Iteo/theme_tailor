@@ -18,7 +18,7 @@ class $_SimpleTheme {
 
 /// Use @Tailor annotation to declare custom themes or different
 /// quantity of themes than the default 2 (light and dark)
-@Tailor(['superLight', 'amoledDark'])
+@Tailor(themes: ['superLight', 'amoledDark'])
 class $_SimpleThemeVariant2 {
   static List<Color> background = [AppColors.white, AppColors.black];
   static List<Color> surface = _lol;

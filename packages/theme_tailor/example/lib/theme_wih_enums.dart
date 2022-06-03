@@ -14,7 +14,7 @@ const themes = ['light', 'superLight', 'dark', 'superDark'];
 const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
 
 /// Theme with enums
-@Tailor(themes)
+@Tailor(themes: themes)
 class $_ThemeWithEnums {
   static List<SuperThemeEnum> enums1 = [
     SuperThemeEnum.light,

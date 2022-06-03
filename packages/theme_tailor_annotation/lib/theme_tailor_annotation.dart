@@ -25,18 +25,11 @@ abstract class SimpleThemeEncoder<TOut> extends ThemeEncoder<TOut, TOut> {
   TransformData<TOut, TOut>? get transformData => throw UnsupportedError('Only ThemeEncoder can transform data');
 }
 
-@Target({TargetKind.classType, TargetKind.getter})
-class Sewing {
-  const Sewing(this.encoder);
-
-  final ThemeEncoder? encoder;
-}
-
 const tailor = Tailor();
 
 @Target({TargetKind.classType})
 class Tailor {
-  const Tailor([this.themes = const ['light', 'dark']]);
+  const Tailor({this.themes = const ['light', 'dark']});
 
   final List<String> themes;
 }
