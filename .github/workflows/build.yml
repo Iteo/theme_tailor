@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ master, develop, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install melos
+        run: dart pub global activate melos
+
+      - name: Install coverage
+        run: dart pub global activate coverage
+
+      - name: Install dependencies
+        run: melos run get
+
+      - name: Run build_runner
+        run: melos run generate
+
+      # TODO: Uncomment when generated code will have no errors
+      # - name: Analyze project source
+      #   run: melos run analyze
+
+      - name: Run tests
+        run: melos run test:coverage
