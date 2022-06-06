@@ -127,7 +127,6 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
     }
     colorFiles = [sourceFile];
   } else {
-    //filtering format
     colorFiles =
         colorFiles.where((f) => f.path.contains('colors.json')).toList();
   }
@@ -141,7 +140,6 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
     }
     typographyFiles = [sourceFile];
   } else {
-    //filtering format
     typographyFiles = typographyFiles
         .where((f) => f.path.contains('typography.json'))
         .toList();

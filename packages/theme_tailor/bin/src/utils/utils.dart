@@ -8,29 +8,29 @@ String typographyParser(AppTypography typography) {
   final buffer = StringBuffer();
 
   if (typography.fontFamily != 'none') {
-    buffer.write("\n    fontFamily: '${typography.fontFamily}',");
+    buffer.write("\nfontFamily: '${typography.fontFamily}',");
   }
 
   if (typography.fontSize != null) {
-    buffer.write('\n    fontSize: ${typography.fontSize},');
+    buffer.write('\nfontSize: ${typography.fontSize},');
   }
 
   if (typography.height != null) {
     buffer.write(
-      '\n    height: ${computeFontSize(typography.fontSize, typography.height)},',
+      '\nheight: ${computeFontSize(typography.fontSize, typography.height)},',
     );
   }
 
   if (typography.fontStyle != 'none') {
-    buffer.write('\n    fontStyle: FontStyle.${typography.fontStyle},');
+    buffer.write('\nfontStyle: FontStyle.${typography.fontStyle},');
   }
 
   if (typography.letterSpacing != null) {
-    buffer.write('\n    letterSpacing: ${typography.letterSpacing},');
+    buffer.write('\nletterSpacing: ${typography.letterSpacing},');
   }
 
   if (typography.fontWeight != null) {
-    buffer.write('\n    fontWeight: FontWeight.w${typography.fontWeight},');
+    buffer.write('\nfontWeight: FontWeight.w${typography.fontWeight},');
   }
 
   return buffer.toString();

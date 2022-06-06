@@ -20,22 +20,22 @@ class ClassTypographyTemplate {
 ${_importsGenerate()}
 
 ${await _classGenerate()}
-      ''';
+''';
   }
 
   String _importsGenerate() {
     return '''
 import 'package:flutter/material.dart';
-    ''';
+''';
   }
 
   Future<String> _classGenerate() async {
     return '''
 class $className {
-  const $className._();
+const $className._();
 
 ${await _generateTypographyBody()}
-    ''';
+''';
   }
 
   Future<List<AppTypography>> _parseJson() async {
@@ -68,7 +68,7 @@ ${await _generateTypographyBody()}
 
     for (final typography in typographyList) {
       buffer.writeln(
-        '  static const TextStyle ${typography.name} = TextStyle(${typographyParser(typography)}\n  );\n',
+        'static const TextStyle ${typography.name} = TextStyle(${typographyParser(typography)}\n);\n',
       );
     }
 

@@ -8,7 +8,11 @@
 .buildlog/
 .history
 .svn/
-migrate_working_dir/
+.fvm
+.vscode
+.idea
+.DS_Store
+
 
 # IntelliJ related
 *.iml

@@ -18,19 +18,19 @@ class ClassColorTemplate {
 ${_importsGenerate()}
 
 ${await _classGenerate()}
-      ''';
+''';
   }
 
   String _importsGenerate() {
     return '''
 import 'package:flutter/material.dart';
-    ''';
+''';
   }
 
   Future<String> _classGenerate() async {
     return '''
 class $className {
-  const $className._();
+const $className._();
 
 ${await _generateColorBody()}
 ''';
@@ -83,7 +83,7 @@ ${await _generateColorBody()}
         buffer.write('\n');
       }
 
-      buffer.writeln('  static const Color ${color.name} = ${color.color};');
+      buffer.writeln('static const Color ${color.name} = ${color.color};');
       previouseParent = color.parent;
     }
 
