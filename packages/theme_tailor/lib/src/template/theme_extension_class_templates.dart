@@ -14,7 +14,7 @@ class ThemeExtensionClassTemplate {
 
     config.fields.forEach((key, value) {
       constructorBuffer.write('required this.$key,');
-      fieldsBuffer.write('final $value $key;');
+      fieldsBuffer.write('final ${value.getDisplayString(withNullability: true)} $key;');
     });
 
     return '''
@@ -63,7 +63,7 @@ class ThemeExtensionClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${NullableTypeTemplate(value)} $key,');
+      methodParams.write('${NullableTypeTemplate(value.getDisplayString(withNullability: true))} $key,');
       classParams.write('$key: $key ?? this.$key,');
     });
 
