@@ -13,6 +13,8 @@ import 'package:theme_tailor/src/type_helper/iterable_helper.dart';
 import 'package:theme_tailor/src/util/util.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
+import '../type_helper/theme_encoder_helper.dart';
+
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
   String generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
@@ -20,17 +22,31 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       throw InvalidGenerationSourceError('Tailor can only annotate classes', element: element);
     }
 
-    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
     const stringUtil = StringUtil();
 
-    final tailorClassVisitor = _TailorClassVisitor(stringUtil);
+    final className = element.name;
+    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    final encodersReader = annotation.read('encoders');
+
+    // if (!encodersReader.isNull) {
+    //   for (final object in encodersReader.listValue) {
+    //     themeEncoderMatchfromDartObject(null, object);
+    //   }
+    // }
+
+    for (final annotation in element.metadata) {
+      print(extractThemeEncoderData(annotation, annotation.computeConstantValue()!));
+    }
+
+    final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
 
     final config = ThemeExtensionClassConfig(
       fields: tailorClassVisitor.fields,
-      returnType: tailorClassVisitor.classNameClean,
-      baseClassName: tailorClassVisitor._baseClassName,
+      returnType: stringUtil.formatClassName(className),
+      baseClassName: className,
       themes: themes,
+      encoders: encodersReader.isNull ? const [] : encodersReader.listValue,
     );
 
     final debug = '''
@@ -38,7 +54,10 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     // Class name: ${config.returnType}
     // Themes: ${config.themes.join(' ')}
     // Properties: ${config.fields.entries}
+    // Encoders: ${config.encoders}
     ''';
+
+    // print(debug);
 
     final outputBuffer = StringBuffer(debug)..write(ThemeExtensionClassTemplate(config));
 
@@ -54,24 +73,20 @@ AstNode getAstNodeFromElement(Element element) {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor(this._stringUtil);
-
-  final StringUtil _stringUtil;
-
-  String _baseClassName = '';
-  String get classNameClean => _stringUtil.formatClassName(_baseClassName);
   SplayTreeMap<String, DartType> fields = SplayTreeMap();
-
-  @override
-  void visitConstructorElement(ConstructorElement element) {
-    _baseClassName = element.type.returnType.toString();
-  }
 
   @override
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
-      print(coreIterableGenericType(element.type));
       fields[element.name] = coreIterableGenericType(element.type);
+
+      if (element.metadata.isNotEmpty) {
+        // print('$element metadata: ${element.metadata}');
+        for (final annotation in element.metadata) {
+          // final match = themeEncoderMatchfromDartObject(annotation, annotation.computeConstantValue()!);
+          // print(match);
+        }
+      }
     }
   }
 }
