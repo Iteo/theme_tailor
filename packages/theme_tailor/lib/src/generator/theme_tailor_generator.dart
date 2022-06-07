@@ -1,19 +1,17 @@
 import 'dart:collection';
 
-import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/model/field.dart';
+import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_extension_config.dart';
 import 'package:theme_tailor/src/template/theme_extension_class_templates.dart';
 import 'package:theme_tailor/src/type_helper/iterable_helper.dart';
+import 'package:theme_tailor/src/type_helper/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/util.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-import '../type_helper/theme_encoder_helper.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
@@ -28,14 +26,22 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
     final encodersReader = annotation.read('encoders');
 
-    // if (!encodersReader.isNull) {
-    //   for (final object in encodersReader.listValue) {
-    //     themeEncoderMatchfromDartObject(null, object);
-    //   }
-    // }
+    final classLevelEncoders = <String, ThemeEncoderData>{};
+
+    if (!encodersReader.isNull) {
+      for (final object in encodersReader.listValue) {
+        final encoderData = extractThemeEncoderData(null, object);
+        if (encoderData != null) {
+          classLevelEncoders[encoderData.type] = encoderData;
+        }
+      }
+    }
 
     for (final annotation in element.metadata) {
-      print(extractThemeEncoderData(annotation, annotation.computeConstantValue()!));
+      final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+      if (encoderData != null) {
+        classLevelEncoders[encoderData.type] = encoderData;
+      }
     }
 
     final tailorClassVisitor = _TailorClassVisitor();
@@ -46,7 +52,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       returnType: stringUtil.formatClassName(className),
       baseClassName: className,
       themes: themes,
-      encoders: encodersReader.isNull ? const [] : encodersReader.listValue,
+      encoderDataManager: ThemeEncoderDataManager(classLevelEncoders, tailorClassVisitor.fieldLevelEncoders),
     );
 
     final debug = '''
@@ -54,10 +60,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     // Class name: ${config.returnType}
     // Themes: ${config.themes.join(' ')}
     // Properties: ${config.fields.entries}
-    // Encoders: ${config.encoders}
+    // Encoders: ${config.encoderDataManager}
     ''';
-
-    // print(debug);
 
     final outputBuffer = StringBuffer(debug)..write(ThemeExtensionClassTemplate(config));
 
@@ -65,28 +69,25 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 }
 
-AstNode getAstNodeFromElement(Element element) {
-  final session = element.session!;
-  final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
-  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
-  return elDeclarationResult.node;
-}
-
 class _TailorClassVisitor extends SimpleElementVisitor {
-  SplayTreeMap<String, DartType> fields = SplayTreeMap();
+  final SplayTreeMap<String, Field> fields = SplayTreeMap();
+  final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
 
   @override
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
-      fields[element.name] = coreIterableGenericType(element.type);
+      final propName = element.name;
 
       if (element.metadata.isNotEmpty) {
-        // print('$element metadata: ${element.metadata}');
         for (final annotation in element.metadata) {
-          // final match = themeEncoderMatchfromDartObject(annotation, annotation.computeConstantValue()!);
-          // print(match);
+          final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+          if (encoderData != null) {
+            fieldLevelEncoders[propName] = encoderData;
+          }
         }
       }
+
+      fields[propName] = Field(propName, coreIterableGenericType(element.type));
     }
   }
 }
