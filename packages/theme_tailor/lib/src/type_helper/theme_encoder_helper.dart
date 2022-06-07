@@ -8,7 +8,8 @@ import '../model/theme_encoder_data.dart';
 
 const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
 
-ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObject constantValue) {
+ThemeEncoderData? extractThemeEncoderData(
+    ElementAnnotation? annotation, DartObject constantValue) {
   final encoderClassElement = constantValue.type!.element as ClassElement;
 
   final encoderSuper = encoderClassElement.allSupertypes.singleWhereOrNull((e) {
@@ -38,7 +39,8 @@ ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObj
 
   final reviver = ConstantReader(constantValue).revive();
 
-  if (reviver.namedArguments.isNotEmpty || reviver.positionalArguments.isNotEmpty) {
+  if (reviver.namedArguments.isNotEmpty ||
+      reviver.positionalArguments.isNotEmpty) {
     throw InvalidGenerationSourceError(
       'ThemeEncoders with constructor arguments are not supported',
       element: annotation?.element,

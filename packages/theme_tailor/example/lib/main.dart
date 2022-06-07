@@ -14,7 +14,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode themeMode = ThemeMode.light;
-  final SimpleThemeModeController _themeModeController = SimpleThemeModeController();
+  final SimpleThemeModeController _themeModeController =
+      SimpleThemeModeController();
 
   @override
   void initState() {
@@ -35,7 +36,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light().copyWith(extensions: [SimpleTheme.light]),
       darkTheme: ThemeData.dark().copyWith(extensions: [SimpleTheme.dark]),
       themeMode: themeMode,
-      home: MyHomePage(title: 'Flutter Demo Home Page', themeProvider: _themeModeController),
+      home: MyHomePage(
+          title: 'Flutter Demo Home Page', themeProvider: _themeModeController),
     );
   }
 }
@@ -69,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SimpleTheme customTheme = Theme.of(context).extension<SimpleTheme>()!; // nah :(
+    SimpleTheme customTheme =
+        Theme.of(context).extension<SimpleTheme>()!; // nah :(
     return Scaffold(
       backgroundColor: customTheme.background,
       appBar: AppBar(

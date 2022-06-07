@@ -22,7 +22,9 @@ class TextStyleEncoder extends SimpleThemeEncoder<TextStyle> {
   const TextStyleEncoder();
 
   @override
-  TextStyle lerp(TextStyle a, TextStyle b, double t) => TextStyle.lerp(a, b, t)!;
+  TextStyle lerp(TextStyle a, TextStyle b, double t) {
+    return TextStyle.lerp(a, b, t)!;
+  }
 }
 
 const customIntEncoder = CustomIntEncoder();
@@ -36,8 +38,14 @@ class $_SimpleTheme {
   static List<Color> background = [AppColors.white, AppColors.yellow];
   static List<Color> surface = _lol;
   static List<Color> appBar = [AppColors.orange, AppColors.blue];
-  static List<TextStyle> h1 = const [TextStyle(color: AppColors.black), TextStyle(color: AppColors.orange)];
-  static List<TextStyle> h2 = const [TextStyle(color: AppColors.orange), TextStyle(color: AppColors.black)];
+  static List<TextStyle> h1 = const [
+    TextStyle(color: AppColors.black),
+    TextStyle(color: AppColors.orange),
+  ];
+  static List<TextStyle> h2 = const [
+    TextStyle(color: AppColors.orange),
+    TextStyle(color: AppColors.black),
+  ];
 }
 
 /// Use @Tailor annotation to declare custom themes or different

@@ -15,15 +15,25 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
-  String generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) {
+  String generateForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
     if (element is! ClassElement || element is Enum) {
-      throw InvalidGenerationSourceError('Tailor can only annotate classes', element: element);
+      if (element is Enum) {}
+      throw InvalidGenerationSourceError(
+        'Tailor can only annotate classes',
+        element: element,
+        todo: 'Move @Tailor annotation above `class`',
+      );
     }
 
     const stringUtil = StringUtil();
 
     final className = element.name;
-    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    final themes = SplayTreeSet<String>.from(
+        annotation.read('themes').listValue.map((e) => e.toStringValue()));
     final encodersReader = annotation.read('encoders');
 
     final classLevelEncoders = <String, ThemeEncoderData>{};
@@ -38,7 +48,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     }
 
     for (final annotation in element.metadata) {
-      final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+      final encoderData = extractThemeEncoderData(
+          annotation, annotation.computeConstantValue()!);
       if (encoderData != null) {
         classLevelEncoders[encoderData.type] = encoderData;
       }
@@ -52,20 +63,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       returnType: stringUtil.formatClassName(className),
       baseClassName: className,
       themes: themes,
-      encoderDataManager: ThemeEncoderDataManager(classLevelEncoders, tailorClassVisitor.fieldLevelEncoders),
+      encoderDataManager: ThemeEncoderDataManager(
+        classLevelEncoders,
+        tailorClassVisitor.fieldLevelEncoders,
+      ),
     );
 
-    final debug = '''
-    // DEBUG:
-    // Class name: ${config.returnType}
-    // Themes: ${config.themes.join(' ')}
-    // Properties: ${config.fields.entries}
-    // Encoders: ${config.encoderDataManager}
-    ''';
-
-    final outputBuffer = StringBuffer(debug)..write(ThemeExtensionClassTemplate(config));
-
-    return outputBuffer.toString();
+    return ThemeExtensionClassTemplate(config).toString();
   }
 }
 
@@ -80,7 +84,11 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 
       if (element.metadata.isNotEmpty) {
         for (final annotation in element.metadata) {
-          final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+          final encoderData = extractThemeEncoderData(
+            annotation,
+            annotation.computeConstantValue()!,
+          );
+
           if (encoderData != null) {
             fieldLevelEncoders[propName] = encoderData;
           }

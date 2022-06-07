@@ -79,7 +79,8 @@ class ThemeExtensionClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      classParams.write('$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+      classParams.write(
+          '$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
     });
 
     return '''
