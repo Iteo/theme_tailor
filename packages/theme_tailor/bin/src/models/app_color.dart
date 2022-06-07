@@ -4,6 +4,8 @@ part 'app_color.g.dart';
 
 @JsonSerializable()
 class AppColor {
+  factory AppColor.fromJson(Map<String, dynamic> json) =>
+      _$AppColorFromJson(json);
   AppColor({
     this.color,
     this.name,
@@ -15,9 +17,6 @@ class AppColor {
   final String? name;
   final String? parent;
   final String? description;
-
-  factory AppColor.fromJson(Map<String, dynamic> json) =>
-      _$AppColorFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppColorToJson(this);
 

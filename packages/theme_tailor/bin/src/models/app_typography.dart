@@ -4,6 +4,8 @@ part 'app_typography.g.dart';
 
 @JsonSerializable()
 class AppTypography {
+  factory AppTypography.fromJson(Map<String, dynamic> json) =>
+      _$AppTypographyFromJson(json);
   AppTypography({
     this.name,
     this.fontFamily,
@@ -24,9 +26,6 @@ class AppTypography {
   final String? fontStyle;
   final int? letterSpacing;
   final int? fontWeight;
-
-  factory AppTypography.fromJson(Map<String, dynamic> json) =>
-      _$AppTypographyFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppTypographyToJson(this);
 

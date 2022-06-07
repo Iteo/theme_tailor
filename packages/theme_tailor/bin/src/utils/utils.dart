@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import '../models/app_typography.dart';
 
 String toColor(String str) {
@@ -41,9 +43,9 @@ double computeFontSize(int? fontSize, int? lineHeight) {
 }
 
 void printInfo(String info) {
-  print('\u001b[32mTTFL: $info\u001b[0m');
+  log('\u001b[32mTTFL: $info\u001b[0m');
 }
 
 void printError(String error) {
-  print('\u001b[31m[ERROR] TTFL: $error\u001b[0m');
+  log('\u001b[31m[ERROR] TTFL: $error\u001b[0m');
 }

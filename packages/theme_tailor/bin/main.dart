@@ -1,6 +1,5 @@
-// ignore_for_file: cascade_invocations
-
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -23,7 +22,7 @@ bool _isHelpCommand(List<String> args) {
 
 void _printHelperDisplay() {
   final parser = _generateArgParser(null);
-  print(parser.usage);
+  log(parser.usage);
 }
 
 GenerateOptions _generateOption(List<String> args) {
