@@ -89,28 +89,4 @@ enum ExtensionData {
         return ExtensionData.none;
     }
   }
-
-  T maybeWhen<T>({
-    required Callback<T> orElse,
-    Callback<T>? onThemeData,
-    Callback<T>? onThemeDataProps,
-    Callback<T>? onBuildContext,
-    Callback<T>? onBuildContextProps,
-  }) {
-    T call(Callback<T>? caller) => caller != null ? caller() : orElse();
-
-    switch (this) {
-      case ExtensionData.onThemeData:
-        return call(onThemeData);
-      case ExtensionData.onThemeDataProps:
-        return call(onThemeDataProps);
-      case ExtensionData.onBuildContext:
-        return call(onBuildContext);
-      case ExtensionData.onBuildContextProps:
-        return call(onBuildContextProps);
-      case ExtensionData.none:
-      default:
-        return call(orElse);
-    }
-  }
 }
