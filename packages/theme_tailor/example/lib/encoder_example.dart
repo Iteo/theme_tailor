@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:example/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
@@ -33,11 +34,7 @@ class CustomColorEncoder extends ThemeEncoder<Color> {
   double _lerpInt(int a, int b, double t) => a + (b - a) * t;
 
   int _clampInt(double value, int min, int max) {
-    return value < min
-        ? min
-        : value > max
-            ? max
-            : value.toInt();
+    return math.max(min, math.min(max, value.toInt()));
   }
 }
 
