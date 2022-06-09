@@ -14,7 +14,7 @@ class ThemeExtensionClassTemplate {
 
     config.fields.forEach((key, value) {
       constructorBuffer.write('required this.$key,');
-      fieldsBuffer.write('final $value $key;');
+      fieldsBuffer.write('final ${value.typeStr} $key;');
     });
 
     return '''
@@ -52,24 +52,19 @@ class ThemeExtensionClassTemplate {
     ''';
   }
 
-  String _lerpMethods() {
-    const _simpleLerp = 'T _simpleLerp<T>(T a, T b, double t) => t < .5 ? a : b;';
-    return _simpleLerp;
-  }
-
   String _copyWithMethod() {
     final returnType = config.returnType;
     final methodParams = StringBuffer();
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${NullableTypeTemplate(value)} $key,');
+      methodParams.write('${NullableTypeTemplate(value.typeStr)} $key,');
       classParams.write('$key: $key ?? this.$key,');
     });
 
     return '''
     @override
-    ThemeExtension<$returnType> copyWith({
+    $returnType copyWith({
       ${methodParams.toString()}
     }) {
       return $returnType(
@@ -84,12 +79,13 @@ class ThemeExtensionClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      classParams.write('$key: _simpleLerp($key, other.$key, t),');
+      classParams.write(
+          '$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
     });
 
     return '''
     @override
-    ThemeExtension<$returnType> lerp(other, t) {
+    $returnType lerp(ThemeExtension<$returnType>? other, double t) {
       if (other is! $returnType) return this;
       return $returnType(
         ${classParams.toString()}
@@ -106,7 +102,6 @@ class ThemeExtensionClassTemplate {
       ${_generateThemes()}
       ${_copyWithMethod()}
       ${_lerpMethod()}
-      ${_lerpMethods()}
     }
     ''';
   }
