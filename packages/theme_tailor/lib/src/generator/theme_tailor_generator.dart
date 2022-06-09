@@ -31,7 +31,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       );
     }
 
-    const stringUtil = StringUtil();
+    const stringUtil = FMTString();
 
     final className = element.name;
     final themes = SplayTreeSet<String>.from(
@@ -75,7 +75,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     );
 
     final generatorBuffer = StringBuffer(ThemeClassTemplate(config))
-      ..write(ThemeExtensionTemplate(config));
+      ..write(ThemeExtensionTemplate(config, stringUtil));
 
     return generatorBuffer.toString();
   }
