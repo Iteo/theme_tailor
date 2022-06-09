@@ -16,7 +16,8 @@ class ThemeExtensionTemplate {
   String _gettersOnThemeDataProps() {
     final themeGetterName = config.returnType.camelCase.asPrivateVariable;
     final getters = config.fields.entries
-        .map((e) => '${e.value} get ${e.key} => $themeGetterName.${e.key}')
+        .map((e) =>
+            '${e.value.typeStr} get ${e.key} => $themeGetterName.${e.key}')
         .join(';');
 
     return '''
@@ -38,7 +39,8 @@ class ThemeExtensionTemplate {
   String _gettersOnBuildContextProps() {
     final themeGetterName = config.returnType.camelCase.asPrivateVariable;
     final getters = config.fields.entries
-        .map((e) => '${e.value} get ${e.key} => $themeGetterName.${e.key}')
+        .map((e) =>
+            '${e.value.typeStr} get ${e.key} => $themeGetterName.${e.key}')
         .join(';');
 
     return '''

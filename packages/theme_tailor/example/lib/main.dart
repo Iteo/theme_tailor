@@ -1,5 +1,23 @@
-import 'package:example/simple_theme.dart';
+import 'package:example/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+part 'main.tailor.dart';
+
+/// Use @tailor annotation with default values of ['light', 'dark']
+@Tailor(themeGetter: ThemeGetter.onBuildContext)
+class $_SimpleTheme {
+  static List<Color> background = [AppColors.white, AppColors.yellow];
+  static List<Color> appBar = [AppColors.orange, AppColors.blue];
+  static List<TextStyle> h1 = const [
+    TextStyle(color: AppColors.black),
+    TextStyle(color: AppColors.orange),
+  ];
+  static List<TextStyle> h2 = const [
+    TextStyle(color: AppColors.orange),
+    TextStyle(color: AppColors.black),
+  ];
+}
 
 void main() {
   runApp(const MyApp());

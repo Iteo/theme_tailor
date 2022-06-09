@@ -1,6 +1,5 @@
 import 'package:meta/meta_meta.dart';
-
-import 'theme_getter.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 const tailor = Tailor();
 
@@ -14,6 +13,7 @@ class Tailor {
   const Tailor({
     this.themes = const ['light', 'dark'],
     this.themeGetter = ThemeGetter.onBuildContextProps,
+    this.encoders,
   });
 
   final List<String> themes;
@@ -22,4 +22,35 @@ class Tailor {
   /// In case of creating component/modular themes, set it to
   /// [ThemeGetter.none]
   final ThemeGetter themeGetter;
+
+  /// A list of [ThemeEncoder]s to apply to this class.
+  /// If this is null, default encoders will be used
+  ///
+  /// ```dart
+  /// @Tailor(encoders: [CustomColorEncoder()])
+  /// class ExampleTheme {...}
+  /// ```
+  ///
+  /// is equivalent to writing:
+  ///
+  /// ```dart
+  /// @Tailor()
+  /// @CustomColorEncoder()
+  /// class ExampleTheme {...}
+  /// ```
+  ///
+  /// It allows to reuse tailor annotation accross several theme classes
+  ///
+  /// ```dart
+  /// const myCustomAnnotation = Tailor(
+  ///   encoders: [CustomColorEncoder()],
+  /// );
+  ///
+  /// @myCustomAnnotation
+  /// class ExampleTheme {...}
+  ///
+  /// @myCustomAnnotation
+  /// class OtherExampleTheme {...}
+  /// ```
+  final List<ThemeEncoder>? encoders;
 }
