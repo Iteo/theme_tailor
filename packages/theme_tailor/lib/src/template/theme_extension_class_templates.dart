@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-
 import 'package:theme_tailor/src/model/theme_extension_config.dart';
 import 'package:theme_tailor/src/template/dart_type_nullable_template.dart';
 
@@ -17,13 +16,19 @@ class ThemeExtensionClassTemplate {
       fieldsBuffer.write('final $value $key;');
     });
 
-    return '''
-    ${config.returnType}({
-      ${constructorBuffer.toString()}
-    });
+    if (config.fields.isEmpty) {
+      return '''
+      ${fieldsBuffer.toString()}
+      ''';
+    } else {
+      return '''
+      ${config.returnType}({
+        ${constructorBuffer.toString()}
+      });
     
-    ${fieldsBuffer.toString()}
+      ${fieldsBuffer.toString()}
     ''';
+    }
   }
 
   /// Generate all of the themes
@@ -59,6 +64,13 @@ class ThemeExtensionClassTemplate {
 
   String _copyWithMethod() {
     final returnType = config.returnType;
+    if (config.fields.isEmpty) {
+      return '''
+      @override
+      ThemeExtension<$returnType> copyWith() => $returnType();
+      ''';
+    }
+
     final methodParams = StringBuffer();
     final classParams = StringBuffer();
 
