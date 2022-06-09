@@ -19,5 +19,5 @@ class ThemeClassConfig {
   final String baseClassName;
   final String returnType;
   final ThemeEncoderDataManager encoderDataManager;
-  final ThemeGetterData themeGetter;
+  final ExtensionData themeGetter;
 }

@@ -1,12 +1,13 @@
 import 'package:collection/collection.dart';
 
 import 'package:theme_tailor/src/model/theme_class_config.dart';
-import 'package:theme_tailor/src/template/dart_type_nullable_template.dart';
+import 'package:theme_tailor/src/util/string_format.dart';
 
 class ThemeClassTemplate {
-  const ThemeClassTemplate(this.config);
+  const ThemeClassTemplate(this.config, this.fmt);
 
   final ThemeClassConfig config;
+  final StringFormat fmt;
 
   String _constructorAndParams() {
     final constructorBuffer = StringBuffer();
@@ -58,7 +59,7 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${NullableTypeTemplate(value.typeStr)} $key,');
+      methodParams.write('${fmt.asNullableType(value.typeStr)} $key,');
       classParams.write('$key: $key ?? this.$key,');
     });
 
