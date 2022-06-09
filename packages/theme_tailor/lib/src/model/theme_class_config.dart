@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:theme_tailor/src/model/theme_getter_data.dart';
 
 class ThemeClassConfig {
   const ThemeClassConfig({
@@ -15,5 +15,5 @@ class ThemeClassConfig {
   final SplayTreeSet<String> themes;
   final String baseClassName;
   final String returnType;
-  final ThemeGetter themeGetter;
+  final ThemeGetterData themeGetter;
 }

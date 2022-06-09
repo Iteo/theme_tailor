@@ -25,7 +25,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final themes = SplayTreeSet<String>.from(
         annotation.read('themes').listValue.map((e) => e.toStringValue()));
 
-    final themeGetter = themeGetterFromData(annotation.read('themeGetter'));
+    final themeGetter = themeGetterDataFromData(annotation.read('themeGetter'));
 
     const stringUtil = StringUtil();
 

@@ -1,5 +1,4 @@
 import 'package:theme_tailor/src/model/theme_class_config.dart';
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeExtensionTemplate {
   const ThemeExtensionTemplate(this.config);
@@ -52,18 +51,13 @@ class ThemeExtensionTemplate {
 
   @override
   String toString() {
-    switch (config.themeGetter) {
-      case ThemeGetter.onThemeData:
-        return _gettersOnThemeData();
-      case ThemeGetter.onThemeDataProps:
-        return _gettersOnThemeDataProps();
-      case ThemeGetter.onBuildContext:
-        return _gettersOnBuildContext();
-      case ThemeGetter.onBuildContextProps:
-        return _gettersOnBuildContextProps();
-      case ThemeGetter.none:
-        return '';
-    }
+    return config.themeGetter.maybeWhen(
+      onThemeData: _gettersOnThemeData,
+      onThemeDataProps: _gettersOnThemeDataProps,
+      onBuildContext: _gettersOnBuildContext,
+      onBuildContextProps: _gettersOnBuildContextProps,
+      orElse: () => '',
+    );
   }
 }
 
