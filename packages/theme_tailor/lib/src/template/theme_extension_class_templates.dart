@@ -64,7 +64,7 @@ class ThemeExtensionClassTemplate {
 
     return '''
     @override
-    ThemeExtension<$returnType> copyWith({
+    $returnType copyWith({
       ${methodParams.toString()}
     }) {
       return $returnType(
@@ -85,7 +85,7 @@ class ThemeExtensionClassTemplate {
 
     return '''
     @override
-    ThemeExtension<$returnType> lerp(other, t) {
+    $returnType lerp(ThemeExtension<$returnType>? other, double t) {
       if (other is! $returnType) return this;
       return $returnType(
         ${classParams.toString()}
