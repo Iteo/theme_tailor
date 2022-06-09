@@ -1,5 +1,5 @@
 import 'package:theme_tailor/src/model/theme_class_config.dart';
-import 'package:theme_tailor/src/template/templates.dart';
+import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/extensions.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
@@ -21,7 +21,7 @@ class ThemeExtensionTemplate {
         .typeAsVariableName(config.returnType, 'Theme')
         .also((it) => extension.hasPublicThemeGetter ? it : fmt.asPrivate(it));
 
-    Templates.getter(
+    Template.getter(
       writer: extensionBody,
       type: config.returnType,
       name: themeGetterName,
@@ -30,7 +30,7 @@ class ThemeExtensionTemplate {
 
     if (extension.hasGeneratedProps) {
       for (final prop in config.fields.entries) {
-        Templates.getter(
+        Template.getter(
           writer: extensionBody,
           type: prop.value.typeStr,
           name: prop.key,
@@ -39,7 +39,7 @@ class ThemeExtensionTemplate {
       }
     }
 
-    Templates.extension(
+    Template.extension(
       writer: main,
       contentBuffer: extensionBody,
       name: extensionName,

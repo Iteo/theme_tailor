@@ -1,4 +1,4 @@
-class Templates {
+class Template {
   static void extension({
     required StringBuffer writer,
     required StringBuffer contentBuffer,
