@@ -5,12 +5,14 @@ import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/model/field.dart';
+import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
-import 'package:theme_tailor/src/model/theme_extension_config.dart';
-import 'package:theme_tailor/src/template/theme_extension_class_templates.dart';
-import 'package:theme_tailor/src/type_helper/iterable_helper.dart';
-import 'package:theme_tailor/src/type_helper/theme_encoder_helper.dart';
-import 'package:theme_tailor/src/util/util.dart';
+import 'package:theme_tailor/src/template/theme_class_template.dart';
+import 'package:theme_tailor/src/template/theme_extension_template.dart';
+import 'package:theme_tailor/src/util/iterable_helper.dart';
+import 'package:theme_tailor/src/util/string_format.dart';
+import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
+import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
@@ -21,7 +23,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     BuildStep buildStep,
   ) {
     if (element is! ClassElement || element is Enum) {
-      if (element is Enum) {}
       throw InvalidGenerationSourceError(
         'Tailor can only annotate classes',
         element: element,
@@ -29,11 +30,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       );
     }
 
-    const stringUtil = StringUtil();
+    const stringUtil = StringFormat();
 
     final className = element.name;
     final themes = SplayTreeSet<String>.from(
         annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    final themeGetter = themeGetterDataFromData(annotation.read('themeGetter'));
+
     final encodersReader = annotation.read('encoders');
 
     final classLevelEncoders = <String, ThemeEncoderData>{};
@@ -58,23 +61,29 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
 
-    final config = ThemeExtensionClassConfig(
+    final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
-      returnType: stringUtil.formatClassName(className),
+      returnType: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
       encoderDataManager: ThemeEncoderDataManager(
         classLevelEncoders,
         tailorClassVisitor.fieldLevelEncoders,
       ),
+      themeGetter: themeGetter,
     );
 
-    return ThemeExtensionClassTemplate(config).toString();
+    final generatorBuffer = StringBuffer(
+      ThemeClassTemplate(config, stringUtil),
+    );
+    ThemeExtensionTemplate(config, stringUtil).writeBuffer(generatorBuffer);
+
+    return generatorBuffer.toString();
   }
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  final SplayTreeMap<String, Field> fields = SplayTreeMap();
+  final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
 
   @override

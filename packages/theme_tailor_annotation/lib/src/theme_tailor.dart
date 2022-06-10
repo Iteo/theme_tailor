@@ -7,15 +7,21 @@ const tailor = Tailor();
 /// ### Tailor
 ///
 /// {@endtemplate}
-///
 @Target({TargetKind.classType})
 class Tailor {
+  /// {@macro theme_tailor.theme_tailor}
   const Tailor({
     this.themes = const ['light', 'dark'],
+    this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
   });
 
   final List<String> themes;
+
+  /// Create getters for the easy access of the theme properties
+  /// In case of creating component/modular themes, set it to
+  /// [ThemeGetter.none]
+  final ThemeGetter themeGetter;
 
   /// A list of [ThemeEncoder]s to apply to this class.
   /// If this is null, default encoders will be used
