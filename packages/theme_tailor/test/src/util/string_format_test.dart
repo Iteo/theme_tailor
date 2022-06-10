@@ -12,23 +12,20 @@ void main() {
     test('themeClassName', () {
       String fun(String val) => stringFormat.themeClassName(val);
 
-      var test = r'_';
+      var test = r'_$';
       expect(fun(test), 'CustomTheme');
 
-      test = r'$__';
-      expect(fun(test), r'__');
-
-      test = r'$';
-      expect(fun(test), 'CustomTheme');
-
-      test = r'$$';
-      expect(fun(test), r'$');
-
-      test = r'_$TestClass1';
-      expect(fun(test), r'$TestClass1');
+      test = r'$_';
+      expect(fun(test), r'CustomTheme');
 
       test = r'$_TestClass2';
-      expect(fun(test), r'_TestClass2');
+      expect(fun(test), r'TestClass2');
+
+      test = r'$';
+      expect(fun(test), r'$CustomTheme');
+
+      test = r'$$';
+      expect(fun(test), r'$$CustomTheme');
     });
 
     test('asCammelCase', () {

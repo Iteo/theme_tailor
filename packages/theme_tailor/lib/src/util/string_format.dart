@@ -7,10 +7,10 @@ class StringFormat {
   String themeClassName(String val, [String suffix = 'CustomTheme']) {
     if (val.isEmpty) return suffix;
 
-    final shouldTrimFirst = val[0] == '_' || val[0] == r'$';
-    if (val.length == 1 && shouldTrimFirst) return suffix;
+    final trimSpecial = val.startsWith(r'_$') || val.startsWith(r'$_');
+    if (val.length == 2 && trimSpecial) return suffix;
 
-    final name = (shouldTrimFirst ? val.trimFirst() : val).firstToUpperUnsafe();
+    final name = (trimSpecial ? val.substring(2) : val).firstToUpperUnsafe();
     return name != val ? name : '$name$suffix';
   }
 
