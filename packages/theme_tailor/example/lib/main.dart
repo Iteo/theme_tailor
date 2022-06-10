@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:example/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
@@ -7,110 +9,116 @@ part 'main.tailor.dart';
 /// Use @tailor annotation with default values of ['light', 'dark']
 @Tailor(themeGetter: ThemeGetter.onBuildContext)
 class $_SimpleTheme {
-  static List<Color> background = [AppColors.white, AppColors.yellow];
-  static List<Color> appBar = [AppColors.orange, AppColors.blue];
-  static List<TextStyle> h1 = const [
-    TextStyle(color: AppColors.black),
-    TextStyle(color: AppColors.orange),
+  static const h1Style = TextStyle(fontSize: 15, letterSpacing: 0.3);
+  static final h2Style = const TextStyle(fontSize: 14).copyWith(
+    fontFeatures: const [FontFeature.proportionalFigures()],
+  );
+
+  static List<Color> background = [AppColors.white, Colors.grey.shade900];
+  static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
+  static List<TextStyle> h1 = [
+    h1Style.copyWith(color: const Color.fromARGB(221, 25, 25, 25)),
+    h1Style.copyWith(color: Colors.grey.shade200),
   ];
-  static List<TextStyle> h2 = const [
-    TextStyle(color: AppColors.orange),
-    TextStyle(color: AppColors.black),
+
+  static List<TextStyle> h2 = [
+    h2Style.copyWith(color: Colors.amber.shade700),
+    h2Style.copyWith(color: Colors.blueGrey.shade300),
   ];
 }
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  ThemeMode themeMode = ThemeMode.light;
-  final SimpleThemeModeController _themeModeController =
-      SimpleThemeModeController();
+  final themeModeNotifier = ValueNotifier(ThemeMode.light);
 
-  @override
-  void initState() {
-    super.initState();
-    _themeModeController.onModeChanged(
-      (mode) => setState(
-        () {
-          themeMode = mode;
-        },
-      ),
-    );
-  }
+  final _lightThemeData = ThemeData.light().copyWith(
+    extensions: [SimpleTheme.light],
+  );
+  final _darkThemeData = ThemeData.light().copyWith(
+    extensions: [SimpleTheme.dark],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData.light().copyWith(extensions: [SimpleTheme.light]),
-      darkTheme: ThemeData.dark().copyWith(extensions: [SimpleTheme.dark]),
-      themeMode: themeMode,
-      home: MyHomePage(
-          title: 'Flutter Demo Home Page', themeProvider: _themeModeController),
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeModeNotifier,
+      builder: (_, themeMode, __) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: _lightThemeData,
+          darkTheme: _darkThemeData,
+          themeMode: themeMode,
+          home: MyHomePage(
+            title: 'Theme Tailor Demo',
+            themeModeNotifier: themeModeNotifier,
+          ),
+        );
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({
-    Key? key,
     required this.title,
-    required this.themeProvider,
-  }) : super(key: key);
+    required this.themeModeNotifier,
+    super.key,
+  });
 
   final String title;
-  final SimpleThemeModeController themeProvider;
+  final ValueNotifier<ThemeMode> themeModeNotifier;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final counter = ValueNotifier<int>(0);
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  void _increment() => counter.value++;
 
   void _swapTheme() {
-    widget.themeProvider.swapTheme();
+    final currentTheme = widget.themeModeNotifier.value;
+    currentTheme == ThemeMode.light
+        ? widget.themeModeNotifier.value = ThemeMode.dark
+        : widget.themeModeNotifier.value = ThemeMode.light;
   }
 
   @override
   Widget build(BuildContext context) {
-    SimpleTheme customTheme = context.simpleTheme;
+    final customTheme = context.simpleTheme;
 
     return Scaffold(
       backgroundColor: customTheme.background,
       appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: customTheme.h1,
-        ),
+        foregroundColor: customTheme.h1.color,
+        title: Text(widget.title),
         backgroundColor: customTheme.appBar,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'You have pushed the button\nthis many times:',
+              textAlign: TextAlign.center,
               style: customTheme.h1,
             ),
-            Text(
-              '$_counter',
-              style: customTheme.h2,
+            const SizedBox(height: 20),
+            ValueListenableBuilder<int>(
+              valueListenable: counter,
+              builder: (_, count, __) {
+                return Text('$count', style: customTheme.h2);
+              },
             ),
           ],
         ),
@@ -119,42 +127,22 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
-            onPressed: _incrementCounter,
+            onPressed: _increment,
             tooltip: 'Increment',
             child: const Icon(Icons.add),
+            backgroundColor: customTheme.appBar,
+            foregroundColor: customTheme.h1.color,
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           FloatingActionButton(
             onPressed: _swapTheme,
+            child: const Icon(Icons.color_lens),
             tooltip: 'Swap theme',
-            child: const Icon(Icons.swap_vert),
+            backgroundColor: customTheme.appBar,
+            foregroundColor: customTheme.h1.color,
           ),
         ],
       ),
     );
-  }
-}
-
-class SimpleThemeModeController {
-  ThemeMode mode;
-  void Function(ThemeMode mode)? onModeChangedCallback;
-
-  SimpleThemeModeController({
-    this.mode = ThemeMode.light,
-  });
-
-  void swapTheme() {
-    if (mode == ThemeMode.light) {
-      mode = ThemeMode.dark;
-    } else {
-      mode = ThemeMode.light;
-    }
-    onModeChangedCallback?.call(mode);
-  }
-
-  void onModeChanged(void Function(ThemeMode mode) param0) {
-    onModeChangedCallback = param0;
   }
 }
