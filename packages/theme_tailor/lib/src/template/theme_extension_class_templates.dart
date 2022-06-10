@@ -18,9 +18,7 @@ class ThemeExtensionClassTemplate {
     });
 
     if (config.fields.isEmpty) {
-      return '''
-      ${fieldsBuffer.toString()}
-      ''';
+      return fieldsBuffer.toString();
     } else {
       return '''
       ${config.returnType}({
