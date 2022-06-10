@@ -18,13 +18,17 @@ class ThemeClassTemplate {
       fieldsBuffer.write('final ${value.typeStr} $key;');
     });
 
-    return '''
-    ${config.returnType}({
-      ${constructorBuffer.toString()}
-    });
+    if (config.fields.isEmpty) {
+      return fieldsBuffer.toString();
+    } else {
+      return '''
+      ${config.returnType}({
+        ${constructorBuffer.toString()}
+      });
     
-    ${fieldsBuffer.toString()}
+      ${fieldsBuffer.toString()}
     ''';
+    }
   }
 
   /// Generate all of the themes
@@ -55,6 +59,13 @@ class ThemeClassTemplate {
 
   String _copyWithMethod() {
     final returnType = config.returnType;
+    if (config.fields.isEmpty) {
+      return '''
+      @override
+      ThemeExtension<$returnType> copyWith() => $returnType();
+      ''';
+    }
+
     final methodParams = StringBuffer();
     final classParams = StringBuffer();
 
