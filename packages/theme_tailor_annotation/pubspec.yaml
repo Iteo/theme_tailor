@@ -1,9 +1,9 @@
 name: theme_tailor_annotation
-description: |
-  Theme Tailor annotations.
-  This package does nothing without Theme Tailor Generator
+description: >
+  Annotations for the Theme Tailor code-generator.
+  This package does nothing without Theme Tailor.
 version: 0.0.1
-homepage: none
+homepage: https://github.com/Iteo/theme_tailor
 publish_to: none
 
 environment:
