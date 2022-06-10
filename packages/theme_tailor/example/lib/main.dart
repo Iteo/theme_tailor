@@ -1,5 +1,23 @@
-import 'package:example/simple_theme.dart';
+import 'package:example/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+part 'main.tailor.dart';
+
+/// Use @tailor annotation with default values of ['light', 'dark']
+@tailor
+class $_SimpleTheme {
+  static List<Color> background = [AppColors.white, AppColors.yellow];
+  static List<Color> appBar = [AppColors.orange, AppColors.blue];
+  static List<TextStyle> h1 = const [
+    TextStyle(color: AppColors.black),
+    TextStyle(color: AppColors.orange),
+  ];
+  static List<TextStyle> h2 = const [
+    TextStyle(color: AppColors.orange),
+    TextStyle(color: AppColors.black),
+  ];
+}
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +32,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode themeMode = ThemeMode.light;
-  final SimpleThemeModeController _themeModeController = SimpleThemeModeController();
+  final SimpleThemeModeController _themeModeController =
+      SimpleThemeModeController();
 
   @override
   void initState() {
@@ -35,7 +54,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData.light().copyWith(extensions: [SimpleTheme.light]),
       darkTheme: ThemeData.dark().copyWith(extensions: [SimpleTheme.dark]),
       themeMode: themeMode,
-      home: MyHomePage(title: 'Flutter Demo Home Page', themeProvider: _themeModeController),
+      home: MyHomePage(
+          title: 'Flutter Demo Home Page', themeProvider: _themeModeController),
     );
   }
 }
@@ -69,7 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SimpleTheme customTheme = Theme.of(context).extension<SimpleTheme>()!; // nah :(
+    SimpleTheme customTheme =
+        Theme.of(context).extension<SimpleTheme>()!; // nah :(
     return Scaffold(
       backgroundColor: customTheme.background,
       appBar: AppBar(

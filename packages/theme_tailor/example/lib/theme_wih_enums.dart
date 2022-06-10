@@ -11,7 +11,12 @@ enum SuperThemeEnum {
 }
 
 const themes = ['light', 'superLight', 'dark', 'superDark'];
-const themesEnums = [SuperThemeEnum.light, SuperThemeEnum.superLight, SuperThemeEnum.dark, SuperThemeEnum.superDark];
+const themesEnums = [
+  SuperThemeEnum.light,
+  SuperThemeEnum.superLight,
+  SuperThemeEnum.dark,
+  SuperThemeEnum.superDark
+];
 
 /// Theme with enums
 @Tailor(themes: themes)
