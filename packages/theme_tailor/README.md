@@ -21,20 +21,20 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-Welcome to Theme Tailor, theming utility for generating Flutter ThemeExtension classes and application themes.
+Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0!
 
 # Motivation
-Flutter 3.0 provides new way of theming applications via ThemeData's theme extensions.
+Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
 To declara ThemeExtension we have to:
-- define class that extends ThemeData,
+- define a class that extends ThemeData,
 - define a constructor and fields,
 - implement copyWith,
 - implement lerp.
 
-Implementing all of this thakes a lof of lines of code and might be error-prone.
+In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 
-In addition to generating themes we may want to declare utility extensions to access theme properties via extension on BuildContext or ThemeData.
-If we wish to access these properties directly (not via the theme class) it requires additional work.
+Implementing all of this takes a lot of time, lines of code and might be error-prone.
+
 
 | Before                | After               |
 | --------------------- | ------------------- |
@@ -50,8 +50,6 @@ If we wish to access these properties directly (not via the theme class) it requ
     - [Create Theme class](#create-theme-class)
         - [Change themes quantity and names](#change-themes-quantity-and-names)
         - [Change generated extensions](#change-generated-extensions)
-
-
 
 
 # How to use
@@ -70,9 +68,9 @@ flutter pub add theme_tailor_annotation
 ```
 
 ## Add imports and part directive
-ThemeTailor is a generator for annotation, it will generate code in a part file that needs to be specified. Make sure to add following imports and part directive in the file where you use the annotation.
+ThemeTailor is a generator for annotation that generates code in a part file that needs to be specified. Make sure to add the following imports and part directive in the file where you use the annotation.
 
-Make sure to speficy correct file name in a part directive. In an example below, replace 'this_is_a_name_of_your_file' with the name of the file.
+Make sure to specify the correct file name in a part directive. In the example below, replace 'this_is_a_name_of_your_file' with the file name.
 
 ###### this_is_a_name_of_your_file.dart
 ```dart
@@ -82,16 +80,16 @@ part 'this_is_a_name_of_your_file.tailor.dart'
 ```
 
 ## Run the code generator
-To run the code generator, run following commands:
+To run the code generator, run the following commands:
 
 ```console
 flutter run build_runner build --delete-conflicting-outputs
 ```
 
 ## Create Theme class
-ThemeTailor will generate ThemeExtension class based on the configuration class that you are required to annotate with [theme_tailor_annotation]. Following conditions must be met:
-- class name starts with "`_$`" or "`$_`". The former is recommended as it ensures that the configuration class is private. If class name does not contain required prefix, additional suffix to the class name may be added,
-- class contains static `List<T>` fields (e.g. "static `List<Color> surface = []`). If there are no fields in the config class, empty ThemeExtension class will be generated.
+ThemeTailor will generate ThemeExtension class based on the configuration class you are required to annotate with [theme_tailor_annotation]. Please make sure to name class and theme properties appropriately according to the following rules:
+- class name starts with `_$` or `$_` (Recommendation is to use the former, as it ensures that the configuration class is private). If the class name does not contain the required prefix, then the generated class name will append an additional suffix,
+- class contains static `List<T>` fields (e.g. "static `List<Color> surface = []`). If no fields exist in the config class, the generator will create an empty ThemeExtension class.
 
 Example
 ###### my_theme.dart
@@ -107,21 +105,21 @@ class _$MyTheme {
 }
 ```
 
-The following code snippet defines theme extension class namesd `MyTheme`
-- `MyTheme` extnds `ThemeExtension<MyTheme>`
+The following code snippet defines the "MyTheme" theme extension class.
+- "MyTheme" extnds `ThemeExtension<MyTheme>`
 - defined class is immutable with final fields
-- there is a one field of type `Color` named `background`
-- there are 2 static MyTheme fields: `light` and `dark`. These are default theme names supplied by [theme_tailor_annotation]
-- copy method is created (override of ThemeExtension) with nullable argument of type `Color` and name `background`
-- lerp method is created (override of ThemeExtension) with default lerping method for type `Color`
+- there is one field 'background' of type Color
+- "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
+- copy method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
+- lerp method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
 
 Additionally [theme_tailor_annotation] by default generates extension on BuildContext
-- `MyThemeBuildContextProps` extension on `BuildContext` is generated
-- getter on `background` of type `Color` is added directly to `BuildContext` 
+- "MyThemeBuildContextProps" extension on "BuildContext" is generated
+- getter on "background" of type "Color" is added directly to "BuildContext"
 
 ### Change themes quantity and names
-By default `@tailor` will generate 2 themes: `light` and `dark`.
-Theme names and their quantity can be changed by specyfying `themes` property in the @Tailor() annotation
+By default,  "@tailor" will generate two themes: "light" and "dark".
+To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.
 
 ```dart
 @Tailor(themes: ['baseTheme'])
@@ -129,13 +127,13 @@ class _$MyTheme {}
 ```
 
 ### Change generated extensions
-By default `@tailor` will generate extension on `BuildContext` and expand theme properties as getters. If this is undesired behaviour, it can be disabled completely by changing `themeGetter` property in the @Tailor() annotation
+By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor"
 
 ```dart
 @Tailor(themeGetter: ThemeGetter.none)
 ```
 
-`ThemeGetter` has several variants for generating common extensions to ease out access to the declared themes.
+"ThemeGetter" has several variants for generating common extensions to ease access to the declared themes.
 
 ## Custom property encoding
 ThemeTailor will attempt to provide lerp method for types like:
@@ -144,8 +142,8 @@ ThemeTailor will attempt to provide lerp method for types like:
 - TextStyle
 - TextStyle?
 
-In the case of unrecognized or unsupported types, default lerping function will be used (It won't use linear interpolation). When encoding custom types is is possible to specyfiy lerping function for provided type or for a single property.
-To do so, one must extend `ThemeEncoder` class from [theme_tailor_annotation]
+In the case of unrecognized or unsupported types, the generator provides a default lerping function (That does not interpolate values linearly but switches between them). 
+You can specify a custom the lerp function for the given type (Color/TextStyle, etc.) or a property by extending "ThemeEncoder" class from [theme_tailor_annotation]
 
 Example of adding custom encoder for an int. 
 ###### my_theme.dart
@@ -162,7 +160,7 @@ class IntEncoder extends ThemeEncoder<int> {
 }
 ```
 
-Then it can be used in several ways:
+Use it in different ways:
 
 ```dart
 /// 1 Add it to the encoders list in the @Tailor() annotation
@@ -197,11 +195,10 @@ const intEncoder = IntEncoder();
 class _$Theme5 {}
 ```
 
-Encoder for a given field will be choosen based on the closest annotation related to the field in a following order:
+Generator chooses proper lerp function for the given field based on the order:
 - annotation on the field
-- annotation on the class
-- property from encoders list in the @Tailor(encoders: []) annotation
-- if property has no declared encoders and it it is not one of the default supported ones, default lerp function will be applied
-- if encoder is added for one of the supported properties e.g. `Color` this encoder will be used in place of a default one
+- annotation on top of the class
+- property from encoders list in the "@Tailor" annotation.
 
+Custom supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 

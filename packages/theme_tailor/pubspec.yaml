@@ -1,8 +1,10 @@
 name: theme_tailor
 description: >
-  Theme Tailor. Utility for generating themes, Flutter's ThemeExtension classes and extensions 
-  on BuildContext and ThemeData to access themes
-version: 1.0.0
+  Code generator and theming utility for supercharging and embracing Flutter's 3.0
+  ThemeExtension classes. The generator can create themes based on the lists of the theme properties. 
+  Additionally, you can generate extensions on BuildContext and ThemeData to ease out access 
+  to the theming classes.
+version: 1.0.1
 repository: https://github.com/Iteo/theme_tailor
 issue_tracker: https://github.com/Iteo/theme_tailor/issues
 homepage: https://github.com/Iteo/theme_tailor
