@@ -75,7 +75,15 @@ class ThemeClassTemplate {
 
     config.fields.forEach((key, value) {
       methodParams.write('${fmt.asNullableType(value.typeStr)} $key,');
-      classParams.write('$key: $key ?? this.$key,');
+      if (value.isThemeExtension) {
+        classParams.write('$key: this.$key.copyWith(');
+        for (final extensionField in value.themeExtensionFields) {
+          classParams.write('$extensionField: $key?.$extensionField,');
+        }
+        classParams.write('),');
+      } else {
+        classParams.write('$key: $key ?? this.$key,');
+      }
     });
 
     return '''
@@ -93,10 +101,13 @@ class ThemeClassTemplate {
   String _lerpMethod() {
     final returnType = config.returnType;
     final classParams = StringBuffer();
-
     config.fields.forEach((key, value) {
-      classParams.write(
-          '$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+      if (value.isThemeExtension) {
+        classParams.write('$key: $key.lerp(other.$key,t),');
+      } else {
+        classParams
+            .write('$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+      }
     });
 
     return '''
@@ -113,7 +124,7 @@ class ThemeClassTemplate {
   @override
   String toString() {
     return '''
-    class ${config.returnType} extends ThemeExtension<${config.returnType}>{
+    class ${config.returnType} extends ThemeExtension<${config.returnType}> with ${config.baseClassName} {
       ${_constructorAndParams()}
       ${_generateThemes()}
       ${_copyWithMethod()}
