@@ -84,9 +84,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor({required this.themes});
+  _TailorClassVisitor();
 
-  final SplayTreeSet<String> themes;
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
 
