@@ -2,9 +2,8 @@ import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-import '../model/theme_encoder_data.dart';
 
 const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
 

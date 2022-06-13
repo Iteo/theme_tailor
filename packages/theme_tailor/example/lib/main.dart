@@ -5,7 +5,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'main.tailor.dart';
 
 /// Use @tailor annotation with default values of ['light', 'dark']
-@tailor
+@Tailor(themeGetter: ThemeGetter.onBuildContext)
 class $_SimpleTheme {
   static List<Color> background = [AppColors.white, AppColors.yellow];
   static List<Color> appBar = [AppColors.orange, AppColors.blue];
@@ -89,8 +89,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SimpleTheme customTheme =
-        Theme.of(context).extension<SimpleTheme>()!; // nah :(
+    SimpleTheme customTheme = context.simpleTheme;
+
     return Scaffold(
       backgroundColor: customTheme.background,
       appBar: AppBar(
