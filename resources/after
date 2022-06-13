@@ -1,0 +1,7 @@
+@tailor
+class Theme1 {
+  static List<Color> background = [AppColors.white, AppColors.black];
+  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
+  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
+  static List<TextStyle> h2 = const [TextStyle(), TextStyle()];
+}
