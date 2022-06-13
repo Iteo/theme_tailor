@@ -7,10 +7,10 @@ part 'theme_extension_in_field.tailor.dart';
 @tailor
 class $_SomeTheme {
   static List<Color> appBackground = [AppColors.white, AppColors.black];
-  static List<$_AnotherTheme> anotherTheme = [];
+  static List<$_AnotherThemePart> anotherThemePart = [];
 }
 
 @tailor
-class $_AnotherTheme {
+class $_AnotherThemePart {
   static List<Color> navBarBackground = [AppColors.white, AppColors.black];
 }
