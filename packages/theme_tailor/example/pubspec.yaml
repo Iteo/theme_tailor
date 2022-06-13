@@ -12,8 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  theme_tailor_annotation:
-    path: ../../theme_tailor_annotation
+  theme_tailor_annotation: 1.0.0
 
 dev_dependencies:
   flutter_test:
