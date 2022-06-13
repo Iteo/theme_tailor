@@ -4,6 +4,9 @@
 [ThemeTailor]: https://pub.dartlang.org/packages/theme_tailor
 [theme_tailor_annotation]: https://pub.dartlang.org/packages/theme_tailor_annotation
 
+<!-- IMAGES -->
+[img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
+[img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
 
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -33,9 +36,9 @@ Implementing all of this thakes a lof of lines of code and might be error-prone.
 In addition to generating themes we may want to declare utility extensions to access theme properties via extension on BuildContext or ThemeData.
 If we wish to access these properties directly (not via the theme class) it requires additional work.
 
-| Before                          | After                          |
-| ------------------------------- | ------------------------------ |
-| ![before](resources/before.png) | ![after](resources/after.png) |
+| Before                | After               |
+| --------------------- | ------------------- |
+| ![before][img_before] | ![after][img_after] |
 
 # Index
 - [Motivation](#motivation)
