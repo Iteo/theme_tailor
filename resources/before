@@ -1,0 +1,61 @@
+class MyTheme extends ThemeExtension<MyTheme> {
+  MyTheme({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
+
+  final Color background;
+  final Color iconColor;
+  final TextStyle h1;
+  final TextStyle h2;
+
+  static final MyTheme superLight = MyTheme(
+    background: AppColors.white,
+    iconColor: AppColors.orange,
+    h1: const TextStyle(),
+    h2: const TextStyle(),
+  );
+
+  static final MyTheme amoledDark = MyTheme(
+    background: AppColors.black,
+    iconColor: AppColors.blue,
+    h1: const TextStyle(),
+    h2: const TextStyle(),
+  );
+
+  @override
+  MyTheme copyWith({
+    Color? background,
+    Color? iconColor,
+    TextStyle? h1,
+    TextStyle? h2,
+  }) {
+    return MyTheme(
+      background: background ?? this.background,
+      iconColor: iconColor ?? this.iconColor,
+      h1: h1 ?? this.h1,
+      h2: h2 ?? this.h2,
+    );
+  }
+
+  @override
+  MyTheme lerp(ThemeExtension<MyTheme>? other, double t) {
+    if (other is! MyTheme) return this;
+    return MyTheme(
+      background: Color.lerp(background, other.background, t)!,
+      iconColor: Color.lerp(iconColor, other.iconColor, t)!,
+      h1: TextStyle.lerp(h1, other.h1, t)!,
+      h2: TextStyle.lerp(h2, other.h2, t)!,
+    );
+  }
+}
+
+extension MyThemeExtension on BuildContext {
+  MyTheme get _theme1 => Theme.of(this).extension<MyTheme>()!;
+  Color get background => _theme1.background;
+  Color get iconColor => _theme1.iconColor;
+  TextStyle get h1 => _theme1.h1;
+  TextStyle get h2 => _theme1.h2;
+}

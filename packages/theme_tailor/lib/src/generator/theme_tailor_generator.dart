@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
@@ -35,7 +33,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     const stringUtil = StringFormat();
 
     final className = element.name;
-    final themes = SplayTreeSet<String>.from(annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    final themes = List<String>.from(
+        annotation.read('themes').listValue.map((e) => e.toStringValue()));
+
     final themeGetter = themeGetterDataFromData(annotation.read('themeGetter'));
 
     final encodersReader = annotation.read('encoders');
@@ -52,13 +52,14 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     }
 
     for (final annotation in element.metadata) {
-      final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+      final encoderData = extractThemeEncoderData(
+          annotation, annotation.computeConstantValue()!);
       if (encoderData != null) {
         classLevelEncoders[encoderData.type] = encoderData;
       }
     }
 
-    final tailorClassVisitor = _TailorClassVisitor(themes: themes);
+    final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
 
     final config = ThemeClassConfig(
