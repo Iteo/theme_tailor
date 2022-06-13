@@ -8,6 +8,7 @@ part 'theme_extension_in_field.tailor.dart';
 class $_SomeTheme {
   static List<Color> appBackground = [AppColors.white, AppColors.black];
   static List<$_AnotherThemePart> anotherThemePart = [AnotherThemePart.light, AnotherThemePart.dark];
+  static List<$_AnotherThemePart> anotherThemePartGeneratedConstructor = AnotherThemePart.themes;
   static List<OtherThemeExtension> otherThemeExtension = [OtherThemeExtension(), OtherThemeExtension()];
 }
 

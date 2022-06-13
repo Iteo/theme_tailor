@@ -38,6 +38,7 @@ class ThemeClassTemplate {
     config.themes.forEachIndexed((i, e) {
       buffer.write(_themeTemplate(i, e, config.fields.values));
     });
+    buffer.writeln('static final themes = [${config.themes.fold("", (p, theme) => "$p$theme,")}];');
     return buffer.toString();
   }
 
