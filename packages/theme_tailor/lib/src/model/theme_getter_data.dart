@@ -68,12 +68,6 @@ enum ExtensionData {
     required this.hasPublicThemeGetter,
   });
 
-  final String shortName;
-  final ExtensionTarget target;
-  final bool shouldGenerate;
-  final bool hasGeneratedProps;
-  final bool hasPublicThemeGetter;
-
   factory ExtensionData.from(String name) {
     switch (name) {
       case 'onThemeData':
@@ -89,4 +83,10 @@ enum ExtensionData {
         return ExtensionData.none;
     }
   }
+
+  final String shortName;
+  final ExtensionTarget target;
+  final bool shouldGenerate;
+  final bool hasGeneratedProps;
+  final bool hasPublicThemeGetter;
 }
