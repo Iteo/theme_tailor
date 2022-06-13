@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-
+import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_extension_config.dart';
 import 'package:theme_tailor/src/template/dart_type_nullable_template.dart';
 
@@ -31,18 +31,22 @@ class ThemeExtensionClassTemplate {
     if (config.themes.isEmpty) return '';
     final buffer = StringBuffer();
     config.themes.forEachIndexed((i, e) {
-      buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
+      buffer.write(_themeTemplate(i, e, config.fields.values));
     });
     return buffer.toString();
   }
 
   /// Template for one static theme
-  String _themeTemplate(int index, String themeName, List<String> props) {
+  String _themeTemplate(int index, String themeName, Iterable<Field> fields) {
     final buffer = StringBuffer();
     final returnType = config.returnType;
 
-    for (final prop in props) {
-      buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
+    for (final field in fields) {
+      if (field.isAnotherTailorTheme) {
+        buffer.write('${field.name}: ${field.typeStr}.$themeName,');
+      } else {
+        buffer.write('${field.name}: ${config.baseClassName}.${field.name}[$index],');
+      }
     }
 
     return '''

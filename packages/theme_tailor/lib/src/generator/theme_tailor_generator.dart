@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
+import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
@@ -55,7 +56,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       }
     }
 
-    final tailorClassVisitor = _TailorClassVisitor();
+    final tailorClassVisitor = _TailorClassVisitor(themes: themes);
     element.visitChildren(tailorClassVisitor);
 
     final config = ThemeExtensionClassConfig(
@@ -74,6 +75,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
+  _TailorClassVisitor({required this.themes});
+
+  final SplayTreeSet<String> themes;
   final SplayTreeMap<String, Field> fields = SplayTreeMap();
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
 
@@ -81,6 +85,33 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
+      final coreType = coreIterableGenericType(element.type);
+      final typeDeclarationMetadata = coreType.element?.declaration?.metadata;
+
+      if (typeDeclarationMetadata != null) {
+        for (final typeDeclarationAnnotation in typeDeclarationMetadata) {
+          final typeName =
+              typeDeclarationAnnotation.computeConstantValue()?.type?.getDisplayString(withNullability: false);
+
+          if (typeName != null && typeName == (Tailor).toString()) {
+            if (!_validateThemesAnnotation(typeDeclarationAnnotation)) {
+              throw InvalidGenerationSourceError(
+                'Tailor themes can only be used on extensions with the same themes as enclosing class.\n'
+                'Make sure that ${coreType.getDisplayString(withNullability: false)} has following themes ${themes.toList()}.',
+                element: element.declaration,
+              );
+            }
+
+            fields[propName] = Field(
+              name: propName,
+              type: coreType,
+              isAnotherTailorTheme: true,
+            );
+
+            return;
+          }
+        }
+      }
 
       if (element.metadata.isNotEmpty) {
         for (final annotation in element.metadata) {
@@ -95,7 +126,25 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
-      fields[propName] = Field(propName, coreIterableGenericType(element.type));
+      fields[propName] = Field(
+        name: propName,
+        type: coreType,
+        isAnotherTailorTheme: false,
+      );
     }
+  }
+
+  bool _validateThemesAnnotation(ElementAnnotation typeDeclarationAnnotation) {
+    final typeDeclarationThemes = SplayTreeSet<String>.from(
+      typeDeclarationAnnotation
+              .computeConstantValue()
+              ?.getField('themes')
+              ?.toListValue()
+              ?.map((e) => e.toStringValue())
+              .where((e) => e != null) ??
+          const Iterable.empty(),
+    );
+
+    return const ListEquality().equals(themes.toList(), typeDeclarationThemes.toList());
   }
 }
