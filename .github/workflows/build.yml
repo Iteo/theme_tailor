@@ -2,7 +2,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [ master, develop, main ]
+    branches: [master, develop, main]
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.0.0'
+          flutter-version: "3.0.0"
 
       - name: Install melos
         run: dart pub global activate melos

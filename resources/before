@@ -1,5 +1,5 @@
 class MyTheme extends ThemeExtension<MyTheme> {
-  MyTheme({
+  const MyTheme({
     required this.background,
     required this.iconColor,
     required this.h1,
@@ -11,16 +11,16 @@ class MyTheme extends ThemeExtension<MyTheme> {
   final TextStyle h1;
   final TextStyle h2;
 
-  static final MyTheme superLight = MyTheme(
-    background: AppColors.white,
-    iconColor: AppColors.orange,
+  static final MyTheme light = MyTheme(
+    background: Colors.white,
+    iconColor: Colors.orange,
     h1: const TextStyle(),
     h2: const TextStyle(),
   );
 
-  static final MyTheme amoledDark = MyTheme(
-    background: AppColors.black,
-    iconColor: AppColors.blue,
+  static final MyTheme dark = MyTheme(
+    background: Colors.black,
+    iconColor: Colors.blue,
     h1: const TextStyle(),
     h2: const TextStyle(),
   );
