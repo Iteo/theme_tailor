@@ -397,10 +397,10 @@ packages:
   theme_tailor:
     dependency: "direct dev"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "1.0.1"
+      name: theme_tailor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   theme_tailor_annotation:
     dependency: "direct main"
     description:

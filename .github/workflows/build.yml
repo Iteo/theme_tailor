@@ -25,7 +25,7 @@ jobs:
         run: melos run get
 
       - name: Run build_runner
-        run: melos run generate_dart
+        run: melos run generate
 
       # TODO: Uncomment when generated code will have no errors
       # - name: Analyze project source
