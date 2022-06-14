@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
@@ -36,19 +35,19 @@ class ThemeClassTemplate {
     if (config.themes.isEmpty) return '';
     final buffer = StringBuffer();
     config.themes.forEachIndexed((i, e) {
-      buffer.write(_themeTemplate(i, e, config.fields.values));
+      buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
     });
     buffer.writeln('static final themes = [${config.themes.fold("", (p, theme) => "$p$theme,")}];');
     return buffer.toString();
   }
 
   /// Template for one static theme
-  String _themeTemplate(int index, String themeName, Iterable<Field> fields) {
+  String _themeTemplate(int index, String themeName, List<String> props) {
     final buffer = StringBuffer();
     final returnType = config.returnType;
 
-    for (final field in fields) {
-      buffer.write('${field.name}: ${config.baseClassName}.${field.name}[$index],');
+    for (final prop in props) {
+      buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
     }
 
     return '''

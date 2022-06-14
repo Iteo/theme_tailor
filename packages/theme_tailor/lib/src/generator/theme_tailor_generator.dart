@@ -20,9 +20,11 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
-  String generateForAnnotatedElement(Element element,
-      ConstantReader annotation,
-      BuildStep buildStep,) {
+  String generateForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
     if (element is! ClassElement || element is Enum) {
       throw InvalidGenerationSourceError(
         'Tailor can only annotate classes',
