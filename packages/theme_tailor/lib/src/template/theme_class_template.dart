@@ -37,7 +37,8 @@ class ThemeClassTemplate {
     config.themes.forEachIndexed((i, e) {
       buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
     });
-    buffer.writeln('static final themes = [${config.themes.fold("", (p, theme) => "$p$theme,")}];');
+    final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
+    buffer.writeln('static final themes = [$themesList];');
     return buffer.toString();
   }
 
@@ -93,8 +94,8 @@ class ThemeClassTemplate {
       if (value.isThemeExtension) {
         classParams.write('$key: $key.lerp(other.$key,t),');
       } else {
-        classParams
-            .write('$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+        classParams.write(
+            '$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
       }
     });
 

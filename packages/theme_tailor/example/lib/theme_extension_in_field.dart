@@ -8,10 +8,17 @@ part 'theme_extension_in_field.tailor.dart';
 class $_SomeTheme {
   static List<Color> appBackground = [AppColors.white, AppColors.black];
   @themeExtension
-  static List<AnotherThemePart> anotherThemePart = [AnotherThemePart.light, AnotherThemePart.dark];
+  static List<AnotherThemePart> anotherThemePart = [
+    AnotherThemePart.light,
+    AnotherThemePart.dark
+  ];
   @themeExtension
-  static List<AnotherThemePart> anotherThemePartGeneratedConstructor = AnotherThemePart.themes;
-  static List<OtherThemeExtension> otherThemeExtension = [OtherThemeExtension(), OtherThemeExtension()];
+  static List<AnotherThemePart> anotherThemePartGeneratedConstructor =
+      AnotherThemePart.themes;
+  static List<OtherThemeExtension> otherThemeExtension = [
+    OtherThemeExtension(),
+    OtherThemeExtension()
+  ];
 }
 
 @tailorComponent
@@ -28,14 +35,18 @@ class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {
 
   @override
   OtherThemeExtension copyWith({Color? floatingActionButtonColor}) {
-    return OtherThemeExtension(floatingActionButtonColor: floatingActionButtonColor ?? this.floatingActionButtonColor);
+    return OtherThemeExtension(
+        floatingActionButtonColor:
+            floatingActionButtonColor ?? this.floatingActionButtonColor);
   }
 
   @override
-  OtherThemeExtension lerp(ThemeExtension<OtherThemeExtension>? other, double t) {
+  OtherThemeExtension lerp(
+      ThemeExtension<OtherThemeExtension>? other, double t) {
     if (other is! OtherThemeExtension) return this;
     return OtherThemeExtension(
-      floatingActionButtonColor: t < 0.5 ? floatingActionButtonColor : other.floatingActionButtonColor,
+      floatingActionButtonColor:
+          t < 0.5 ? floatingActionButtonColor : other.floatingActionButtonColor,
     );
   }
 }

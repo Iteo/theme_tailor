@@ -55,7 +55,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     }
 
     for (final annotation in element.metadata) {
-      final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
+      final encoderData = extractThemeEncoderData(
+          annotation, annotation.computeConstantValue()!);
       if (encoderData != null) {
         classLevelEncoders[encoderData.type] = encoderData;
       }
@@ -65,7 +66,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final astVisitor = ListFieldTypeASTVisitor();
     astNode.visitChildren(astVisitor);
 
-    final tailorClassVisitor = _TailorClassVisitor(fieldTypes: astVisitor.fieldTypes);
+    final tailorClassVisitor =
+        _TailorClassVisitor(fieldTypes: astVisitor.fieldTypes);
     element.visitChildren(tailorClassVisitor);
 
     final config = ThemeClassConfig(
@@ -96,7 +98,8 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
-  final extensionAnnotationTypeChecker = TypeChecker.fromRuntime(themeExtension.runtimeType);
+  final extensionAnnotationTypeChecker =
+      TypeChecker.fromRuntime(themeExtension.runtimeType);
 
   @override
   void visitFieldElement(FieldElement element) {
@@ -104,9 +107,12 @@ class _TailorClassVisitor extends SimpleElementVisitor {
       final propName = element.name;
       final coreType = coreIterableGenericType(element.type);
       final extendsThemeExtension = coreType.typeImplementations
-              .firstWhereOrNull((t) => t.getDisplayString(withNullability: false).startsWith('ThemeExtension')) !=
+              .firstWhereOrNull((t) => t
+                  .getDisplayString(withNullability: false)
+                  .startsWith('ThemeExtension')) !=
           null;
-      final isThemeComponent = extensionAnnotationTypeChecker.hasAnnotationOf(element);
+      final isThemeComponent =
+          extensionAnnotationTypeChecker.hasAnnotationOf(element);
       final isThemeExtension = isThemeComponent || extendsThemeExtension;
 
       if (element.metadata.isNotEmpty) {
@@ -123,7 +129,9 @@ class _TailorClassVisitor extends SimpleElementVisitor {
       }
 
       final coreTypeName = coreType.getDisplayString(withNullability: false);
-      final typeName = isThemeComponent ? fieldTypes[element.name] ?? coreTypeName : coreTypeName;
+      final typeName = isThemeComponent
+          ? fieldTypes[element.name] ?? coreTypeName
+          : coreTypeName;
 
       fields[propName] = Field(
         name: propName,
@@ -141,10 +149,12 @@ class ListFieldTypeASTVisitor extends SimpleAstVisitor {
   void visitFieldDeclaration(FieldDeclaration node) {
     final fieldType = node.fields.type;
     if (fieldType != null) {
-      final childTypeEntities = fieldType.childEntities.map((e) => e.toString()).toList();
+      final childTypeEntities =
+          fieldType.childEntities.map((e) => e.toString()).toList();
       if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
         final typeWithBraces = childTypeEntities[1];
-        fieldTypes[node.fields.variables.first.name.name] = typeWithBraces.substring(1, typeWithBraces.length - 1);
+        fieldTypes[node.fields.variables.first.name.name] =
+            typeWithBraces.substring(1, typeWithBraces.length - 1);
       }
     }
   }
@@ -152,7 +162,8 @@ class ListFieldTypeASTVisitor extends SimpleAstVisitor {
 
 AstNode _getAstNodeFromElement(Element element) {
   final session = element.session!;
-  final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
+  final parsedLibResult = session.getParsedLibraryByElement(element.library!)
+      as ParsedLibraryResult;
   final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
   return elDeclarationResult.node;
 }
