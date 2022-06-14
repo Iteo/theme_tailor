@@ -1,3 +1,6 @@
+import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
@@ -17,11 +20,9 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
-  String generateForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) {
+  String generateForAnnotatedElement(Element element,
+      ConstantReader annotation,
+      BuildStep buildStep,) {
     if (element is! ClassElement || element is Enum) {
       throw InvalidGenerationSourceError(
         'Tailor can only annotate classes',
@@ -52,14 +53,17 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     }
 
     for (final annotation in element.metadata) {
-      final encoderData = extractThemeEncoderData(
-          annotation, annotation.computeConstantValue()!);
+      final encoderData = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
       if (encoderData != null) {
         classLevelEncoders[encoderData.type] = encoderData;
       }
     }
 
-    final tailorClassVisitor = _TailorClassVisitor();
+    final astNode = _getAstNodeFromElement(element);
+    final astVisitor = ListFieldTypeASTVisitor();
+    astNode.visitChildren(astVisitor);
+
+    final tailorClassVisitor = _TailorClassVisitor(fieldTypes: astVisitor.fieldTypes);
     element.visitChildren(tailorClassVisitor);
 
     final config = ThemeClassConfig(
@@ -84,10 +88,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor();
+  _TailorClassVisitor({required this.fieldTypes});
+
+  final Map<String, String> fieldTypes;
 
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
+  final extensionAnnotationTypeChecker = TypeChecker.fromRuntime(themeExtension.runtimeType);
 
   @override
   void visitFieldElement(FieldElement element) {
@@ -97,21 +104,8 @@ class _TailorClassVisitor extends SimpleElementVisitor {
       final extendsThemeExtension = coreType.typeImplementations
               .firstWhereOrNull((t) => t.getDisplayString(withNullability: false).startsWith('ThemeExtension')) !=
           null;
-      final hasTailorComponentAnnotation = coreType.element?.declaration?.metadata
-              .map((annotation) => annotation.computeConstantValue()?.type?.getDisplayString(withNullability: false))
-              .firstWhereOrNull((displayString) =>
-                  displayString == (TailorComponent).toString() || displayString == (Tailor).toString()) !=
-          null;
-
-      final isThemeExtension = extendsThemeExtension || hasTailorComponentAnnotation;
-
-      final themeExtensionFields = <String>[];
-
-      if (isThemeExtension) {
-        final fieldListingVisitor = _FieldListingVisitor();
-        coreType.element!.visitChildren(fieldListingVisitor);
-        themeExtensionFields.addAll(fieldListingVisitor.fieldNames);
-      }
+      final isThemeComponent = extensionAnnotationTypeChecker.hasAnnotationOf(element);
+      final isThemeExtension = isThemeComponent || extendsThemeExtension;
 
       if (element.metadata.isNotEmpty) {
         for (final annotation in element.metadata) {
@@ -126,22 +120,37 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
+      final coreTypeName = coreType.getDisplayString(withNullability: false);
+      final typeName = isThemeComponent ? fieldTypes[element.name] ?? coreTypeName : coreTypeName;
+
       fields[propName] = Field(
         name: propName,
-        type: coreType,
-        isAnotherTailorTheme: hasTailorComponentAnnotation,
+        typeName: typeName,
         isThemeExtension: isThemeExtension,
-        themeExtensionFields: themeExtensionFields,
       );
     }
   }
 }
 
-class _FieldListingVisitor extends SimpleElementVisitor<Object> {
-  final List<String> fieldNames = [];
+class ListFieldTypeASTVisitor extends SimpleAstVisitor {
+  Map<String, String> fieldTypes = {};
 
   @override
-  void visitFieldElement(FieldElement element) {
-    fieldNames.add(element.name);
+  void visitFieldDeclaration(FieldDeclaration node) {
+    final fieldType = node.fields.type;
+    if (fieldType != null) {
+      final childTypeEntities = fieldType.childEntities.map((e) => e.toString()).toList();
+      if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
+        final typeWithBraces = childTypeEntities[1];
+        fieldTypes[node.fields.variables.first.name.name] = typeWithBraces.substring(1, typeWithBraces.length - 1);
+      }
+    }
   }
+}
+
+AstNode _getAstNodeFromElement(Element element) {
+  final session = element.session!;
+  final parsedLibResult = session.getParsedLibraryByElement(element.library!) as ParsedLibraryResult;
+  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
+  return elDeclarationResult.node;
 }

@@ -15,7 +15,7 @@ class ThemeClassTemplate {
 
     config.fields.forEach((key, value) {
       constructorBuffer.write('required this.$key,');
-      fieldsBuffer.write('final ${value.typeStr} $key;');
+      fieldsBuffer.write('final ${value.typeName} $key;');
     });
 
     if (config.fields.isEmpty) {
@@ -48,11 +48,7 @@ class ThemeClassTemplate {
     final returnType = config.returnType;
 
     for (final field in fields) {
-      if (field.isAnotherTailorTheme) {
-        buffer.write('${field.name}: ${field.typeStr}.$themeName,');
-      } else {
-        buffer.write('${field.name}: ${config.baseClassName}.${field.name}[$index],');
-      }
+      buffer.write('${field.name}: ${config.baseClassName}.${field.name}[$index],');
     }
 
     return '''
@@ -75,16 +71,8 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${fmt.asNullableType(value.typeStr)} $key,');
-      if (value.isThemeExtension) {
-        classParams.write('$key: this.$key.copyWith(');
-        for (final extensionField in value.themeExtensionFields) {
-          classParams.write('$extensionField: $key?.$extensionField,');
-        }
-        classParams.write('),');
-      } else {
-        classParams.write('$key: $key ?? this.$key,');
-      }
+      methodParams.write('${fmt.asNullableType(value.typeName)} $key,');
+      classParams.write('$key: $key ?? this.$key,');
     });
 
     return '''
@@ -125,7 +113,7 @@ class ThemeClassTemplate {
   @override
   String toString() {
     return '''
-    class ${config.returnType} extends ThemeExtension<${config.returnType}> with ${config.baseClassName} {
+    class ${config.returnType} extends ThemeExtension<${config.returnType}> {
       ${_constructorAndParams()}
       ${_generateThemes()}
       ${_copyWithMethod()}
