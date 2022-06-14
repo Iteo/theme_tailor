@@ -2,7 +2,7 @@ name: Build
 
 on:
   pull_request:
-    branches: [ master, develop, main ]
+    branches: [master, develop, main]
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
 
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.0.0'
+          flutter-version: "3.0.0"
 
       - name: Install melos
         run: dart pub global activate melos
@@ -25,7 +25,7 @@ jobs:
         run: melos run get
 
       - name: Run build_runner
-        run: melos run generate
+        run: melos run generate_dart
 
       # TODO: Uncomment when generated code will have no errors
       # - name: Analyze project source
