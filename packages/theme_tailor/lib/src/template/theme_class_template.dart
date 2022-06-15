@@ -91,7 +91,7 @@ class ThemeClassTemplate {
     final returnType = config.returnType;
     final classParams = StringBuffer();
     config.fields.forEach((key, value) {
-      if (value.isThemeExtension) {
+      if (value.implementsThemeExtension) {
         classParams.write('$key: $key.lerp(other.$key,t),');
       } else {
         classParams.write(

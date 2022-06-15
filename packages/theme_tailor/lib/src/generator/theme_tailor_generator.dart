@@ -4,7 +4,6 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
-import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
 import 'package:theme_tailor/src/model/field.dart';
@@ -62,13 +61,24 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       }
     }
 
+    final tailorClassVisitor = _TailorClassVisitor();
+    element.visitChildren(tailorClassVisitor);
+    final fields = tailorClassVisitor.fields;
+
+    final fieldsToCheck =
+        fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
+
     final astNode = _getAstNodeFromElement(element);
-    final astVisitor = ListFieldTypeASTVisitor();
+    final astVisitor =
+        _ListFieldTypeASTVisitor(fieldNamesToCheck: fieldsToCheck);
     astNode.visitChildren(astVisitor);
 
-    final tailorClassVisitor =
-        _TailorClassVisitor(fieldTypes: astVisitor.fieldTypes);
-    element.visitChildren(tailorClassVisitor);
+    for (final typeEntry in astVisitor.fieldTypes.entries) {
+      final fieldValue = fields[typeEntry.key];
+      if (fieldValue != null) {
+        fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
+      }
+    }
 
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
@@ -92,10 +102,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor({required this.fieldTypes});
-
-  final Map<String, String> fieldTypes;
-
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final extensionAnnotationTypeChecker =
@@ -106,14 +112,14 @@ class _TailorClassVisitor extends SimpleElementVisitor {
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
       final coreType = coreIterableGenericType(element.type);
-      final extendsThemeExtension = coreType.typeImplementations
-              .firstWhereOrNull((t) => t
-                  .getDisplayString(withNullability: false)
-                  .startsWith('ThemeExtension')) !=
-          null;
-      final isThemeComponent =
+      final extendsThemeExtension = coreType.typeImplementations.any((e) => e
+          .getDisplayString(withNullability: false)
+          .startsWith('ThemeExtension'));
+
+      final hasThemeExtensionAnnotation =
           extensionAnnotationTypeChecker.hasAnnotationOf(element);
-      final isThemeExtension = isThemeComponent || extendsThemeExtension;
+      final isThemeExtension =
+          hasThemeExtensionAnnotation || extendsThemeExtension;
 
       if (element.metadata.isNotEmpty) {
         for (final annotation in element.metadata) {
@@ -128,32 +134,33 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
-      final coreTypeName = coreType.getDisplayString(withNullability: false);
-      final typeName = isThemeComponent
-          ? fieldTypes[element.name] ?? coreTypeName
-          : coreTypeName;
-
       fields[propName] = Field(
         name: propName,
-        typeName: typeName,
-        isThemeExtension: isThemeExtension,
+        typeName: coreType.getDisplayString(withNullability: true),
+        implementsThemeExtension: isThemeExtension,
+        isTailorThemeExtension: hasThemeExtensionAnnotation,
       );
     }
   }
 }
 
-class ListFieldTypeASTVisitor extends SimpleAstVisitor {
-  Map<String, String> fieldTypes = {};
+class _ListFieldTypeASTVisitor extends SimpleAstVisitor {
+  _ListFieldTypeASTVisitor({required this.fieldNamesToCheck});
+
+  final Iterable<String> fieldNamesToCheck;
+  final Map<String, String> fieldTypes = {};
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
+    final fieldName = node.fields.variables.first.name.name;
     final fieldType = node.fields.type;
-    if (fieldType != null) {
+
+    if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
       final childTypeEntities =
           fieldType.childEntities.map((e) => e.toString()).toList();
       if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
         final typeWithBraces = childTypeEntities[1];
-        fieldTypes[node.fields.variables.first.name.name] =
+        fieldTypes[fieldName] =
             typeWithBraces.substring(1, typeWithBraces.length - 1);
       }
     }
