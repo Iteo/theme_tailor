@@ -22,7 +22,6 @@ dependencies:
   source_gen: ^1.2.2
   theme_tailor_annotation: ^1.0.0
   source_helper: ^1.3.2
-  dartz: ^0.10.0
 
 dev_dependencies:
   lint: ^1.8.2
