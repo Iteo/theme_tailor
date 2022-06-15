@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/analysis/results.dart';
-import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -14,6 +13,7 @@ import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
 import 'package:theme_tailor/src/template/theme_extension_template.dart';
+import 'package:theme_tailor/src/util/extensions.dart';
 import 'package:theme_tailor/src/util/iterable_helper.dart';
 import 'package:theme_tailor/src/util/json_serializable_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
@@ -49,24 +49,18 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final astVisitor = _TailorClassASTVisitor();
     _getAstNodeFromElement(element).visitChildren(astVisitor);
 
-    for (var i = 0; i < element.metadata.length; i++) {
-      final annotation = element.metadata[i];
-
-      final encoder = extractThemeEncoderData(
-        annotation,
-        annotation.computeConstantValue()!,
-      );
-
-      if (encoder != null) {
-        classLevelEncoders[encoder.type] = encoder;
-        continue;
-      }
-      if (isTailorAnnotation(annotation)) continue;
-      classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
-    }
-
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
+
+    element.metadata.forEachIndexed((i, annotation) {
+      extractThemeEncoderData(
+        annotation,
+        annotation.computeConstantValue()!,
+      )?.let((it) => classLevelEncoders[it.type] = it);
+
+      if (isTailorAnnotation(annotation)) return;
+      classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
+    });
 
     tailorClassVisitor.isAnnotationInternalPerField.entries
         .forEachIndexed((index, entry) {
@@ -102,10 +96,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       annotationManager: annotationDataManager,
     );
 
-    final generatorBuffer = StringBuffer(
-      ThemeClassTemplate(config, stringUtil),
-    );
-    ThemeExtensionTemplate(config, stringUtil).writeBuffer(generatorBuffer);
+    final generatorBuffer = StringBuffer()
+      ..write(ThemeClassTemplate(config, stringUtil))
+      ..write(ThemeExtensionTemplate(config, stringUtil));
 
     return generatorBuffer.toString();
   }
