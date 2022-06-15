@@ -13,6 +13,35 @@ import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
+bool _libraryHasElement(
+  LibraryElement library,
+  String pathStartsWith,
+  bool Function(Element element) matcher,
+) {
+  if (library.librarySource.fullName.startsWith(pathStartsWith)) {
+    for (final element in library.topLevelElements) {
+      if (matcher(element)) {
+        return true;
+      }
+    }
+  }
+
+  return library.exportedLibraries.any((library) {
+    return library.librarySource.fullName.startsWith(pathStartsWith) &&
+        _libraryHasElement(library, pathStartsWith, matcher);
+  });
+}
+
+bool _libraryHasJson(LibraryElement library) {
+  return _libraryHasElement(
+    library,
+    '/json_annotation/',
+    (element) =>
+        element.displayName.contains('JsonSerializable') &&
+        element.kind == ElementKind.CLASS,
+  );
+}
+
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
   String generateForAnnotatedElement(
@@ -105,5 +134,10 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 
       fields[propName] = Field(propName, coreIterableGenericType(element.type));
     }
+  }
+
+  @override
+  void visitImportElement(ImportElement element) {
+    return super.visitImportElement(element);
   }
 }

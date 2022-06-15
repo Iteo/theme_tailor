@@ -236,12 +236,19 @@ packages:
     source: hosted
     version: "0.6.4"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.5.0"
+  json_serializable:
+    dependency: "direct dev"
+    description:
+      name: json_serializable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.2.0"
   logging:
     dependency: transitive
     description:
@@ -397,16 +404,16 @@ packages:
   theme_tailor:
     dependency: "direct dev"
     description:
-      name: theme_tailor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
+      path: ".."
+      relative: true
+    source: path
+    version: "1.0.1"
   theme_tailor_annotation:
     dependency: "direct main"
     description:
-      name: theme_tailor_annotation
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../../theme_tailor_annotation"
+      relative: true
+    source: path
     version: "1.0.0"
   timing:
     dependency: transitive
