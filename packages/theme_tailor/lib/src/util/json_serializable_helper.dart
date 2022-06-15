@@ -14,7 +14,7 @@ extension JsonSerializableLibraryElementExtension on LibraryElement {
 }
 
 extension JsonSerializableElementExtension on Element {
-  bool get hasJsonSerializable {
+  bool get hasJsonSerializableAnnotation {
     return const TypeChecker.fromRuntime(JsonSerializable).hasAnnotationOf(
       this,
       throwOnUnresolved: false,

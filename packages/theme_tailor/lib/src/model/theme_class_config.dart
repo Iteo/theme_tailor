@@ -1,3 +1,4 @@
+import 'package:theme_tailor/src/model/annotation_data.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
@@ -10,6 +11,7 @@ class ThemeClassConfig {
     required this.returnType,
     required this.encoderDataManager,
     required this.themeGetter,
+    required this.annotationDataManager,
   });
 
   final Map<String, Field> fields;
@@ -18,4 +20,5 @@ class ThemeClassConfig {
   final String returnType;
   final ThemeEncoderDataManager encoderDataManager;
   final ExtensionData themeGetter;
+  final AnnotationDataManager annotationDataManager;
 }

@@ -18,7 +18,6 @@ const themesEnums = [
   SuperThemeEnum.superDark
 ];
 
-/// Theme with enums
 @Tailor(themes: themes)
 class $_ThemeWithEnums {
   static List<SuperThemeEnum> enums1 = [
