@@ -1,4 +1,5 @@
 import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
@@ -67,21 +68,17 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
 
-    tailorClassVisitor.consumedFieldsAnnotations.entries
-        .forEachIndexed((index, element) {
-      if (element.value.isEmpty) return;
+    tailorClassVisitor.isAnnotationInternalPerField.entries
+        .forEachIndexed((index, entry) {
+      if (entry.value.isEmpty) return;
 
       final annotations = <String>[];
 
-      element.value.forEachIndexed((index, isConsumed) {
-        late final value = astVisitor.rawFieldsAnnotations[element.key]![index];
+      entry.value.forEachIndexed((index, isConsumed) {
+        late final value = astVisitor.rawFieldsAnnotations[entry.key]![index];
         if (!isConsumed) annotations.add(value);
       });
-      fieldLevelAnnotations[element.key] = annotations;
-    });
-
-    fieldLevelAnnotations.forEach((key, value) {
-      print('key: $key, value: $value');
+      fieldLevelAnnotations[entry.key] = annotations;
     });
 
     final encoderDataManager = ThemeEncoderDataManager(
@@ -100,9 +97,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       returnType: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
-      encoderDataManager: encoderDataManager,
+      encoderManager: encoderDataManager,
       themeGetter: themeGetter,
-      annotationDataManager: annotationDataManager,
+      annotationManager: annotationDataManager,
     );
 
     final generatorBuffer = StringBuffer(
@@ -145,7 +142,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
-  final Map<String, List<bool>> consumedFieldsAnnotations = {};
+  final Map<String, List<bool>> isAnnotationInternalPerField = {};
 
   @override
   void visitFieldElement(FieldElement element) {
@@ -167,7 +164,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
-      consumedFieldsAnnotations[propName] = consumedFieldAnnotations;
+      isAnnotationInternalPerField[propName] = consumedFieldAnnotations;
       fields[propName] = Field(propName, coreIterableGenericType(element.type));
     }
   }
@@ -189,11 +186,10 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
 }
 
 AstNode _getAstNodeFromElement(Element element) {
-  final session = element.session!;
-  final parsedLibResult = session.getParsedLibraryByElement(element.library!)
-      as ParsedLibraryResult;
-  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
-  return elDeclarationResult.node;
+  final library = element.library!;
+  final result = library.session.getParsedLibraryByElement(library)
+      as ParsedLibraryResult?;
+  return result!.getElementDeclaration(element)!.node;
 }
 
 extension FieldDeclarationExtension on FieldDeclaration {

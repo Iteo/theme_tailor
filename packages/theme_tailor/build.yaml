@@ -5,3 +5,4 @@ builders:
     build_extensions: { ".dart": [".tailor.dart"] }
     auto_apply: dependents
     build_to: source
+    runs_before: ["json_serializable|json_serializable"]

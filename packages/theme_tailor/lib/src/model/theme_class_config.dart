@@ -9,16 +9,16 @@ class ThemeClassConfig {
     required this.themes,
     required this.baseClassName,
     required this.returnType,
-    required this.encoderDataManager,
+    required this.encoderManager,
     required this.themeGetter,
-    required this.annotationDataManager,
+    required this.annotationManager,
   });
 
   final Map<String, Field> fields;
   final List<String> themes;
   final String baseClassName;
   final String returnType;
-  final ThemeEncoderDataManager encoderDataManager;
+  final ThemeEncoderDataManager encoderManager;
   final ExtensionData themeGetter;
-  final AnnotationDataManager annotationDataManager;
+  final AnnotationDataManager annotationManager;
 }

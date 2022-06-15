@@ -15,7 +15,9 @@ class ThemeClassTemplate {
 
     config.fields.forEach((key, value) {
       constructorBuffer.write('required this.$key,');
-      fieldsBuffer.write('final ${value.typeStr} $key;');
+      fieldsBuffer
+        ..write(config.annotationManager.expandFieldAnnotations(key))
+        ..write('final ${value.typeStr} $key;');
     });
 
     if (config.fields.isEmpty) {
@@ -92,7 +94,7 @@ class ThemeClassTemplate {
 
     config.fields.forEach((key, value) {
       classParams.write(
-          '$key: ${config.encoderDataManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+          '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
     });
 
     return '''
@@ -106,11 +108,19 @@ class ThemeClassTemplate {
     ''';
   }
 
+  String _jsonAnnotationFactory() {
+    if (!config.annotationManager.hasJsonSerializable) return '';
+    return '''factory ${config.returnType}.fromJson(Map<String, dynamic> json) =>
+      _\$${config.returnType}FromJson(json);\n''';
+  }
+
   @override
   String toString() {
     return '''
+    ${config.annotationManager.expandClassAnnotations()}
     class ${config.returnType} extends ThemeExtension<${config.returnType}>{
       ${_constructorAndParams()}
+      ${_jsonAnnotationFactory()}
       ${_generateThemes()}
       ${_copyWithMethod()}
       ${_lerpMethod()}

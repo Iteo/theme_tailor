@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 class AnnotationData {
   const AnnotationData(this.accessor, this.isConsumed);
 
@@ -31,4 +33,13 @@ class AnnotationDataManager {
   final List<String> classAnnotations;
   final Map<String, List<String>> fieldsAnotations;
   final bool hasJsonSerializable;
+
+  String expandClassAnnotations() => classAnnotations.join('\n') + '\n';
+
+  String expandFieldAnnotations(String name) =>
+      annotationsForField(name).join(' ') + '\n';
+
+  List<String> annotationsForField(String name) {
+    return fieldsAnotations[name] ?? [];
+  }
 }

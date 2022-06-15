@@ -1,24 +1,12 @@
 import 'dart:ui';
 
+import 'package:example/encoder_example.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'json_serializable_example.tailor.dart';
 part 'json_serializable_example.g.dart';
-
-abstract class OtherAnnotation {
-  const OtherAnnotation();
-
-  const factory OtherAnnotation.someAnnotation() = SomeAnnotation;
-}
-
-class SomeAnnotation extends OtherAnnotation {
-  const SomeAnnotation();
-}
-
-const someAnnotation = SomeAnnotation();
-const someAnnotation2 = OtherAnnotation.someAnnotation();
 
 class JsonColorConverter implements JsonConverter<Color, int> {
   const JsonColorConverter();
@@ -30,29 +18,14 @@ class JsonColorConverter implements JsonConverter<Color, int> {
   int toJson(Color color) => color.value;
 }
 
-const jsonColorConverter = JsonColorConverter();
-
-@Tailor(themes: [])
-class $_EmptyTheme {}
-
-@JsonSerializable()
-@someAnnotation
 @tailor
-
-/// Test
-// test 2
-@SomeAnnotation()
+@JsonSerializable()
 class _$SerializableTE {
-  /// Comment 1
-  @SomeAnnotation()
-  @OtherAnnotation.someAnnotation()
-  @someAnnotation
-  // Comment 2
-  @someAnnotation2
   static List<int> foo = [10, 20];
 
   @JsonColorConverter()
   @JsonKey(name: 'bar')
+  @CustomColorEncoder()
   static List<Color> bar = [Colors.orange, Colors.pink];
 }
 
@@ -62,6 +35,9 @@ class JsonSerializableTE extends ThemeExtension<JsonSerializableTE> {
     required this.foo,
     required this.bar,
   });
+
+  factory JsonSerializableTE.fromJson(Map<String, dynamic> json) =>
+      _$JsonSerializableTEFromJson(json);
 
   final int foo;
 
