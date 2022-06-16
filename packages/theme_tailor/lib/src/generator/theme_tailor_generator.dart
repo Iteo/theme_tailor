@@ -6,7 +6,7 @@ import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:theme_tailor/src/model/annotation_data.dart';
+import 'package:theme_tailor/src/model/annotation_data_manager.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
@@ -52,28 +52,29 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
 
-    element.metadata.forEachIndexed((i, annotation) {
+    for (var i = 0; i < element.metadata.length; i++) {
+      final annotation = element.metadata[i];
+
       extractThemeEncoderData(
         annotation,
         annotation.computeConstantValue()!,
       )?.let((it) => classLevelEncoders[it.type] = it);
 
-      if (isTailorAnnotation(annotation)) return;
-      classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
-    });
+      if (!isTailorAnnotation(annotation)) {
+        classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
+      }
+    }
 
-    tailorClassVisitor.isAnnotationInternalPerField.entries
-        .forEachIndexed((index, entry) {
-      if (entry.value.isEmpty) return;
+    for (var entry in tailorClassVisitor.hasInternalAnnotations.entries) {
+      if (entry.value.isEmpty) continue;
 
-      final annotations = <String>[];
-
-      entry.value.forEachIndexed((index, isConsumed) {
-        late final value = astVisitor.rawFieldsAnnotations[entry.key]![index];
-        if (!isConsumed) annotations.add(value);
+      final astAnnotations = <String>[];
+      entry.value.forEachIndexed((i, isInternal) {
+        late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
+        if (!isInternal) astAnnotations.add(value);
       });
-      fieldLevelAnnotations[entry.key] = annotations;
-    });
+      fieldLevelAnnotations[entry.key] = astAnnotations;
+    }
 
     final encoderDataManager = ThemeEncoderDataManager(
       classLevelEncoders,
@@ -135,13 +136,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
-  final Map<String, List<bool>> isAnnotationInternalPerField = {};
+  final Map<String, List<bool>> hasInternalAnnotations = {};
 
   @override
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
-      final consumedFieldAnnotations = <bool>[];
+      final isInternalAnnotation = <bool>[];
 
       for (final annotation in element.metadata) {
         final encoderData = extractThemeEncoderData(
@@ -150,14 +151,14 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         );
 
         if (encoderData != null) {
-          consumedFieldAnnotations.add(true);
+          isInternalAnnotation.add(true);
           fieldLevelEncoders[propName] = encoderData;
         } else {
-          consumedFieldAnnotations.add(false);
+          isInternalAnnotation.add(false);
         }
       }
 
-      isAnnotationInternalPerField[propName] = consumedFieldAnnotations;
+      hasInternalAnnotations[propName] = isInternalAnnotation;
       fields[propName] = Field(propName, coreIterableGenericType(element.type));
     }
   }
