@@ -10,7 +10,7 @@ const tailorComponent = TailorComponent();
 @Target({TargetKind.classType})
 class TailorComponent extends Tailor {
   const TailorComponent({
-    List<String> themes = const ['light', 'dark'],
-    List<ThemeEncoder> encoders = const [],
-  }) : super(themes: themes, encoders: encoders, themeGetter: ThemeGetter.none);
+    super.themes,
+    super.encoders,
+  }) : super(themeGetter: ThemeGetter.none);
 }
