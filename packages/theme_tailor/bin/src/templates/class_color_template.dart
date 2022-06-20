@@ -23,7 +23,8 @@ ${await _classGenerate()}
 
   String _importsGenerate() {
     return '''
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 ''';
   }
 
@@ -34,9 +35,13 @@ import 'dart:ui';
 abstract class $className {
 const $className({
   ${_generateConstructorParams(colorList)},
+  required this.systemUiOverlayStyle,
 });
 
 ${_generateParams(colorList)}
+
+// System
+final SystemUiOverlayStyle systemUiOverlayStyle;
 
 ${_generateColorMaps(colorList)}
   }
@@ -45,6 +50,7 @@ class Light$className extends $className {
   const Light$className()
       : super(
         ${_generateSuperParam(colorList, false)},
+        systemUiOverlayStyle: SystemUiOverlayStyle.dark,
         );
 }
 
@@ -52,6 +58,7 @@ class Dark$className extends $className {
   const Dark$className()
       : super(
           ${_generateSuperParam(colorList, true)},
+          systemUiOverlayStyle: SystemUiOverlayStyle.light,
         );
 ''';
   }

@@ -1,4 +1,5 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 abstract class AppColors {
   const AppColors({
@@ -38,6 +39,7 @@ abstract class AppColors {
     required this.subtypo,
     required this.tile,
     required this.typo,
+    required this.systemUiOverlayStyle,
   });
 
   // additional
@@ -85,6 +87,9 @@ abstract class AppColors {
   final Color makro100;
   final Color makro30;
   final Color makroAdditional;
+
+// System
+  final SystemUiOverlayStyle systemUiOverlayStyle;
 
   Map<String, Color> get additionalColors => {
         "additional 1 (100)": additional1,
@@ -177,6 +182,7 @@ class LightAppColors extends AppColors {
           subtypo: const Color(0xFF929497),
           tile: const Color(0xFFFFFFFF),
           typo: const Color(0xFF404041),
+          systemUiOverlayStyle: SystemUiOverlayStyle.dark,
         );
 }
 
@@ -219,5 +225,6 @@ class DarkAppColors extends AppColors {
           subtypo: const Color(0xFF929497),
           tile: const Color(0xFF262628),
           typo: const Color(0xFFF2F2F2),
+          systemUiOverlayStyle: SystemUiOverlayStyle.light,
         );
 }
