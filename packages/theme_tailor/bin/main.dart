@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 import 'src/templates/class_color_template.dart';
+import 'src/templates/class_spacings_template.dart';
 import 'src/templates/class_typography_template.dart';
 import 'src/utils/utils.dart';
 
@@ -12,7 +13,7 @@ Future<void> main(List<String> args) async {
   if (_isHelpCommand(args)) {
     _printHelperDisplay();
   } else {
-    await handleStyleFiles(_generateOption(args));
+    await _handleStyleFiles(_generateOption(args));
   }
 }
 
@@ -96,7 +97,7 @@ class GenerateOptions {
   String? outputFileTypography;
 }
 
-Future<void> handleStyleFiles(GenerateOptions options) async {
+Future<void> _handleStyleFiles(GenerateOptions options) async {
   final current = Directory.current;
   final source = Directory.fromUri(Uri.parse(options.sourceDir!));
   final output = Directory.fromUri(Uri.parse(options.outputDir!));
@@ -108,6 +109,10 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
 
   final outputColorsPath = Directory(
     path.join(current.path, output.path, options.outputFileColors),
+  );
+
+  final outputSpacingsPath = Directory(
+    path.join(current.path, output.path, "spacings.dart"),
   );
 
   if (!await sourcePath.exists()) {
@@ -145,7 +150,7 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
   }
 
   if (colorFiles.isNotEmpty) {
-    await generateFile(
+    await _generateFile(
       colorFiles,
       outputColorsPath,
       'AppColors',
@@ -155,7 +160,7 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
   }
 
   if (colorFiles.isNotEmpty) {
-    await generateFile(
+    await _generateFile(
       typographyFiles,
       outputTypographyPath,
       'AppTypography',
@@ -163,6 +168,12 @@ Future<void> handleStyleFiles(GenerateOptions options) async {
   } else {
     printError('Source path empty');
   }
+
+  await _generateFile(
+    [],
+    outputSpacingsPath,
+    'Spacings',
+  );
 }
 
 Future<List<FileSystemEntity>> dirContents(Directory dir) {
@@ -177,7 +188,7 @@ Future<List<FileSystemEntity>> dirContents(Directory dir) {
   return completer.future;
 }
 
-Future<void> generateFile(
+Future<void> _generateFile(
   List<FileSystemEntity> files,
   Directory outputPath,
   String className,
@@ -191,8 +202,10 @@ Future<void> generateFile(
 
   if (className == 'AppColors') {
     await _generateColorClass(classBuilder, files.first, className);
-  } else {
+  } else if (className == 'AppTypography') {
     await _generateTypographyClass(classBuilder, files.first, className);
+  } else {
+    _generateSpacingsClass(classBuilder);
   }
 
   classBuilder.writeln('}');
@@ -225,4 +238,8 @@ Future _generateTypographyClass(
       file: file,
     ).generate(),
   );
+}
+
+void _generateSpacingsClass(StringBuffer classBuilder) {
+  classBuilder.write(ClassSpacingsTemplate().generate());
 }

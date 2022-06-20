@@ -80,7 +80,7 @@ ${await _generateTypographyBody()}
   String _generateColorMaps(List<AppTypography> typography) {
     final buffer = StringBuffer();
 
-    buffer.writeln('\nMap<String, TextStyle> get allStyles => {');
+    buffer.writeln('\nstatic Map<String, TextStyle> get allStyles => {');
 
     for (final typo in typography) {
       buffer.writeln('"${typo.description}": ${typo.name},');

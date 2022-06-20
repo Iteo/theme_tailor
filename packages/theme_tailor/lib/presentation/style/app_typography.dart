@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTypography {
   const AppTypography._();
 
-  Map<String, TextStyle> get allStyles => {
+  static Map<String, TextStyle> get allStyles => {
         "style 0": style0,
         "style 1": style1,
         "style 2": style2,
