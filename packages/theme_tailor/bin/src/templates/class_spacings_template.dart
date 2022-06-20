@@ -1,6 +1,3 @@
-import 'package:theme_tailor/presentation/style/app_colors.dart';
-import 'package:theme_tailor/presentation/style/spacings.dart';
-
 import '../models/spacing.dart';
 
 var _spacings = <Spacing>[

@@ -135,13 +135,18 @@ class Dark$className extends $className {
     final buffer = StringBuffer();
     var map = <String, List<AppColor>>{};
 
+    buffer.writeln('\nMap<String, Map<String, Color>> get allColors => {');
+
     for (final color in colors.where((element) => !element.isDark)) {
       if (map[color.parent!] == null) {
         map[color.parent!] = [color];
+        buffer.writeln('"${color.parent}": ${color.parent}Colors,');
       } else {
         map[color.parent!]?.add(color);
       }
     }
+
+    buffer.writeln("};");
 
     for (final parent in map.keys) {
       var colorList = map[parent]!;
