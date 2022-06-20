@@ -1,6 +1,7 @@
 import 'package:theme_tailor/src/model/theme_class_config.dart';
-import 'package:theme_tailor/src/template/template.dart';
-import 'package:theme_tailor/src/util/extensions.dart';
+import 'package:theme_tailor/src/template/extension_template.dart';
+import 'package:theme_tailor/src/template/getter_template.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
 class ThemeExtensionTemplate {
@@ -9,10 +10,11 @@ class ThemeExtensionTemplate {
   final ThemeClassConfig config;
   final StringFormat fmt;
 
-  void writeBuffer(StringBuffer main) {
+  @override
+  String toString() {
     final extension = config.themeGetter;
 
-    if (!extension.shouldGenerate) return;
+    if (!extension.shouldGenerate) return '';
 
     final extensionBody = StringBuffer();
 
@@ -21,29 +23,26 @@ class ThemeExtensionTemplate {
         .typeAsVariableName(config.returnType, 'Theme')
         .also((it) => extension.hasPublicThemeGetter ? it : fmt.asPrivate(it));
 
-    Template.getter(
-      writer: extensionBody,
+    extensionBody.write(GetterTemplate(
       type: config.returnType,
       name: themeGetterName,
       accessor: extension.target.themeExtensionAccessor(config.returnType),
-    );
+    ));
 
     if (extension.hasGeneratedProps) {
       for (final prop in config.fields.entries) {
-        Template.getter(
-          writer: extensionBody,
+        extensionBody.write(GetterTemplate(
           type: prop.value.typeName,
           name: prop.key,
           accessor: '$themeGetterName.${prop.key}',
-        );
+        ));
       }
     }
 
-    Template.extension(
-      writer: main,
-      contentBuffer: extensionBody,
+    return ExtensionTemplate(
+      content: extensionBody.toString(),
       name: extensionName,
       target: extension.target.name,
-    );
+    ).toString();
   }
 }

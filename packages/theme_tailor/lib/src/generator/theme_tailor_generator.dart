@@ -4,14 +4,20 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
+import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:source_helper/source_helper.dart';
+import 'package:theme_tailor/src/model/annotation_data_manager.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
+import 'package:theme_tailor/src/model/theme_getter_data.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
 import 'package:theme_tailor/src/template/theme_extension_template.dart';
-import 'package:theme_tailor/src/util/iterable_helper.dart';
+import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
+import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
+import 'package:theme_tailor/src/util/extension/element_extension.dart';
+import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
@@ -35,31 +41,12 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     const stringUtil = StringFormat();
 
     final className = element.name;
-    final themes = List<String>.from(
-        annotation.read('themes').listValue.map((e) => e.toStringValue()));
+    final themes = _computeThemes(annotation);
+    final themeGetter = _computeThemeGetter(annotation);
 
-    final themeGetter = themeGetterDataFromData(annotation.read('themeGetter'));
-
-    final encodersReader = annotation.read('encoders');
-
-    final classLevelEncoders = <String, ThemeEncoderData>{};
-
-    if (!encodersReader.isNull) {
-      for (final object in encodersReader.listValue) {
-        final encoderData = extractThemeEncoderData(null, object);
-        if (encoderData != null) {
-          classLevelEncoders[encoderData.type] = encoderData;
-        }
-      }
-    }
-
-    for (final annotation in element.metadata) {
-      final encoderData = extractThemeEncoderData(
-          annotation, annotation.computeConstantValue()!);
-      if (encoderData != null) {
-        classLevelEncoders[encoderData.type] = encoderData;
-      }
-    }
+    final classLevelEncoders = _computeEncoders(annotation);
+    final classLevelAnnotations = <String>[];
+    final fieldLevelAnnotations = <String, List<String>>{};
 
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
@@ -68,10 +55,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final fieldsToCheck =
         fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
-    final astNode = _getAstNodeFromElement(element);
-    final astVisitor =
-        _ListFieldTypeASTVisitor(fieldNamesToCheck: fieldsToCheck);
-    astNode.visitChildren(astVisitor);
+    final astVisitor = _TailorClassASTVisitor(fieldNamesToCheck: fieldsToCheck);
+    _getAstNodeFromElement(element).visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
       final fieldValue = fields[typeEntry.key];
@@ -80,30 +65,86 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       }
     }
 
+    for (var i = 0; i < element.metadata.length; i++) {
+      final annotation = element.metadata[i];
+
+      extractThemeEncoderData(
+        annotation,
+        annotation.computeConstantValue()!,
+      )?.let((it) => classLevelEncoders[it.type] = it);
+
+      if (!annotation.isTailorAnnotation) {
+        classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
+      }
+    }
+
+    for (var entry in tailorClassVisitor.hasInternalAnnotations.entries) {
+      if (entry.value.isEmpty) continue;
+
+      final astAnnotations = <String>[];
+      entry.value.forEachIndexed((i, isInternal) {
+        late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
+        if (!isInternal) astAnnotations.add(value);
+      });
+      fieldLevelAnnotations[entry.key] = astAnnotations;
+    }
+
+    final encoderDataManager = ThemeEncoderDataManager(
+      classLevelEncoders,
+      tailorClassVisitor.fieldLevelEncoders,
+    );
+
+    final annotationDataManager = AnnotationDataManager(
+      classAnnotations: classLevelAnnotations,
+      fieldsAnotations: fieldLevelAnnotations,
+      hasJsonSerializable: element.hasJsonSerializableAnnotation,
+    );
+
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
       returnType: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
-      encoderDataManager: ThemeEncoderDataManager(
-        classLevelEncoders,
-        tailorClassVisitor.fieldLevelEncoders,
-      ),
+      encoderManager: encoderDataManager,
       themeGetter: themeGetter,
+      annotationManager: annotationDataManager,
     );
 
-    final generatorBuffer = StringBuffer(
-      ThemeClassTemplate(config, stringUtil),
-    );
-    ThemeExtensionTemplate(config, stringUtil).writeBuffer(generatorBuffer);
+    final generatorBuffer = StringBuffer()
+      ..write(ThemeClassTemplate(config, stringUtil))
+      ..write(ThemeExtensionTemplate(config, stringUtil));
 
     return generatorBuffer.toString();
+  }
+
+  List<String> _computeThemes(ConstantReader annotation) {
+    return List<String>.from(
+      annotation.read('themes').listValue.map((e) => e.toStringValue()),
+    );
+  }
+
+  ExtensionData _computeThemeGetter(ConstantReader annotation) {
+    return themeGetterDataFromData(annotation.read('themeGetter'));
+  }
+
+  Map<String, ThemeEncoderData> _computeEncoders(ConstantReader annotation) {
+    final encodersReader = annotation.read('encoders');
+    final encoders = <String, ThemeEncoderData>{};
+    if (encodersReader.isNull) return encoders;
+
+    for (final object in encodersReader.listValue) {
+      final encoderData = extractThemeEncoderData(null, object);
+      if (encoderData != null) encoders[encoderData.type] = encoderData;
+    }
+    return encoders;
   }
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
+  final Map<String, List<bool>> hasInternalAnnotations = {};
+
   final extensionAnnotationTypeChecker =
       TypeChecker.fromRuntime(themeExtension.runtimeType);
 
@@ -111,49 +152,67 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
-      final coreType = coreIterableGenericType(element.type);
-      final extendsThemeExtension = coreType.typeImplementations.any((e) => e
-          .getDisplayString(withNullability: false)
-          .startsWith('ThemeExtension'));
+      final isInternalAnnotation = <bool>[];
 
-      final hasThemeExtensionAnnotation =
-          extensionAnnotationTypeChecker.hasAnnotationOf(element);
-      final isThemeExtension =
-          hasThemeExtensionAnnotation || extendsThemeExtension;
+      var hasThemeExtensionAnnotation = false;
 
-      if (element.metadata.isNotEmpty) {
-        for (final annotation in element.metadata) {
-          final encoderData = extractThemeEncoderData(
-            annotation,
-            annotation.computeConstantValue()!,
-          );
+      for (final annotation in element.metadata) {
+        if (annotation.isTailorThemeExtension) {
+          isInternalAnnotation.add(true);
+          hasThemeExtensionAnnotation = true;
+          continue;
+        }
 
-          if (encoderData != null) {
-            fieldLevelEncoders[propName] = encoderData;
-          }
+        final encoderData = extractThemeEncoderData(
+          annotation,
+          annotation.computeConstantValue()!,
+        );
+
+        if (encoderData != null) {
+          isInternalAnnotation.add(true);
+          fieldLevelEncoders[propName] = encoderData;
+        } else {
+          isInternalAnnotation.add(false);
         }
       }
+
+      final coreType = element.type.coreIterableGenericType;
+
+      final implementsThemeExtension =
+          hasThemeExtensionAnnotation || coreType.isThemeExtensionType;
+
+      hasInternalAnnotations[propName] = isInternalAnnotation;
 
       fields[propName] = Field(
         name: propName,
         typeName: coreType.getDisplayString(withNullability: true),
-        implementsThemeExtension: isThemeExtension,
+        implementsThemeExtension: implementsThemeExtension,
         isTailorThemeExtension: hasThemeExtensionAnnotation,
       );
     }
   }
 }
 
-class _ListFieldTypeASTVisitor extends SimpleAstVisitor {
-  _ListFieldTypeASTVisitor({required this.fieldNamesToCheck});
+class _TailorClassASTVisitor extends SimpleAstVisitor {
+  _TailorClassASTVisitor({required this.fieldNamesToCheck});
+
+  final List<String> rawClassAnnotations = [];
+  final Map<String, List<String>> rawFieldsAnnotations = {};
 
   final Iterable<String> fieldNamesToCheck;
   final Map<String, String> fieldTypes = {};
 
   @override
+  void visitAnnotation(Annotation node) {
+    rawClassAnnotations.add(node.toString());
+  }
+
+  @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    final fieldName = node.fields.variables.first.name.name;
+    final fieldName = node.name;
     final fieldType = node.fields.type;
+
+    rawFieldsAnnotations[fieldName] = node.annotations;
 
     if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
       final childTypeEntities =
@@ -168,9 +227,8 @@ class _ListFieldTypeASTVisitor extends SimpleAstVisitor {
 }
 
 AstNode _getAstNodeFromElement(Element element) {
-  final session = element.session!;
-  final parsedLibResult = session.getParsedLibraryByElement(element.library!)
-      as ParsedLibraryResult;
-  final elDeclarationResult = parsedLibResult.getElementDeclaration(element)!;
-  return elDeclarationResult.node;
+  final library = element.library!;
+  final result = library.session.getParsedLibraryByElement(library)
+      as ParsedLibraryResult?;
+  return result!.getElementDeclaration(element)!.node;
 }
