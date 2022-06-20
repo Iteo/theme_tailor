@@ -3,6 +3,33 @@ import 'package:flutter/material.dart';
 class AppTypography {
   const AppTypography._();
 
+  Map<String, TextStyle> get allStyles => {
+        "style 0": style0,
+        "style 1": style1,
+        "style 2": style2,
+        "style 3": style3,
+        "style 4_s": style4s,
+        "style 5": style5,
+        "style 6": style6,
+        "style 6_u": style6u,
+        "style 7": style7,
+        "style 7_u": style7u,
+        "style 8": style8,
+        "style 9": style9,
+        "style 10": style10,
+        "style 10_s": style10s,
+        "style 10_u": style10u,
+        "style 11": style11,
+        "style 11_i": style11i,
+        "style 12": style12,
+        "style 13": style13,
+        "style 14": style14,
+        "style 15": style15,
+        "style 16": style16,
+        "style 16_s": style16s,
+        "style 17": style17,
+      };
+
   static const TextStyle style0 = TextStyle(
     fontFamily: 'Montserrat',
     fontSize: 24,
@@ -11,7 +38,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w700,
     decoration: TextDecoration.none,
-    debugLabel: "style 0",
+    debugLabel: "style0",
   );
 
   static const TextStyle style1 = TextStyle(
@@ -22,7 +49,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 1",
+    debugLabel: "style1",
   );
 
   static const TextStyle style2 = TextStyle(
@@ -33,7 +60,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 2",
+    debugLabel: "style2",
   );
 
   static const TextStyle style3 = TextStyle(
@@ -44,7 +71,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 3",
+    debugLabel: "style3",
   );
 
   static const TextStyle style4s = TextStyle(
@@ -55,7 +82,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.lineThrough,
-    debugLabel: "style 4_s",
+    debugLabel: "style4s",
   );
 
   static const TextStyle style5 = TextStyle(
@@ -66,7 +93,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 5",
+    debugLabel: "style5",
   );
 
   static const TextStyle style6 = TextStyle(
@@ -77,7 +104,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w700,
     decoration: TextDecoration.none,
-    debugLabel: "style 6",
+    debugLabel: "style6",
   );
 
   static const TextStyle style6u = TextStyle(
@@ -88,7 +115,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w700,
     decoration: TextDecoration.underline,
-    debugLabel: "style 6_u",
+    debugLabel: "style6u",
   );
 
   static const TextStyle style7 = TextStyle(
@@ -99,7 +126,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 7",
+    debugLabel: "style7",
   );
 
   static const TextStyle style7u = TextStyle(
@@ -110,7 +137,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.underline,
-    debugLabel: "style 7_u",
+    debugLabel: "style7u",
   );
 
   static const TextStyle style8 = TextStyle(
@@ -121,7 +148,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 8",
+    debugLabel: "style8",
   );
 
   static const TextStyle style9 = TextStyle(
@@ -132,7 +159,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w700,
     decoration: TextDecoration.none,
-    debugLabel: "style 9",
+    debugLabel: "style9",
   );
 
   static const TextStyle style10 = TextStyle(
@@ -143,7 +170,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 10",
+    debugLabel: "style10",
   );
 
   static const TextStyle style10s = TextStyle(
@@ -154,7 +181,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.lineThrough,
-    debugLabel: "style 10_s",
+    debugLabel: "style10s",
   );
 
   static const TextStyle style10u = TextStyle(
@@ -165,7 +192,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.underline,
-    debugLabel: "style 10_u",
+    debugLabel: "style10u",
   );
 
   static const TextStyle style11 = TextStyle(
@@ -176,7 +203,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 11",
+    debugLabel: "style11",
   );
 
   static const TextStyle style11i = TextStyle(
@@ -187,7 +214,7 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 11_i",
+    debugLabel: "style11i",
   );
 
   static const TextStyle style12 = TextStyle(
@@ -198,7 +225,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 12",
+    debugLabel: "style12",
   );
 
   static const TextStyle style13 = TextStyle(
@@ -209,7 +236,7 @@ class AppTypography {
     letterSpacing: -0.2,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 13",
+    debugLabel: "style13",
   );
 
   static const TextStyle style14 = TextStyle(
@@ -220,7 +247,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w700,
     decoration: TextDecoration.none,
-    debugLabel: "style 14",
+    debugLabel: "style14",
   );
 
   static const TextStyle style15 = TextStyle(
@@ -231,7 +258,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w600,
     decoration: TextDecoration.none,
-    debugLabel: "style 15",
+    debugLabel: "style15",
   );
 
   static const TextStyle style16 = TextStyle(
@@ -242,7 +269,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 16",
+    debugLabel: "style16",
   );
 
   static const TextStyle style16s = TextStyle(
@@ -253,7 +280,7 @@ class AppTypography {
     letterSpacing: 0.3,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.lineThrough,
-    debugLabel: "style 16_s",
+    debugLabel: "style16s",
   );
 
   static const TextStyle style17 = TextStyle(
@@ -264,6 +291,6 @@ class AppTypography {
     letterSpacing: 0,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.none,
-    debugLabel: "style 17",
+    debugLabel: "style17",
   );
 }

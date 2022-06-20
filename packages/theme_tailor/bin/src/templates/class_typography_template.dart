@@ -49,7 +49,10 @@ ${await _generateTypographyBody()}
 
       var appTypography = AppTypography.fromJson(value['value']);
 
-      appTypography = appTypography.copyWith(name: key);
+      appTypography = appTypography.copyWith(
+        name: _getTypographyName(key),
+        description: key,
+      );
 
       typographyList.add(appTypography);
 
@@ -61,14 +64,29 @@ ${await _generateTypographyBody()}
 
   Future<String> _generateTypographyBody() async {
     final typographyList = await _parseJson();
-
     final buffer = StringBuffer();
+
+    buffer.writeln(_generateColorMaps(typographyList));
 
     for (final typography in typographyList) {
       buffer.writeln(
-        '\nstatic const TextStyle ${_getTypographyName(typography.name!)} = TextStyle(${typographyParser(typography)});',
+        '\nstatic const TextStyle ${typography.name!} = TextStyle(${typographyParser(typography)});',
       );
     }
+
+    return buffer.toString();
+  }
+
+  String _generateColorMaps(List<AppTypography> typography) {
+    final buffer = StringBuffer();
+
+    buffer.writeln('\nMap<String, TextStyle> get allStyles => {');
+
+    for (final typo in typography) {
+      buffer.writeln('"${typo.description}": ${typo.name},');
+    }
+
+    buffer.writeln("};");
 
     return buffer.toString();
   }
