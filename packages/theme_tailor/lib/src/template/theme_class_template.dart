@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
@@ -17,7 +16,7 @@ class ThemeClassTemplate {
       constructorBuffer.write('required this.$key,');
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
-        ..write('final ${value.typeStr} $key;');
+        ..write('final ${value.typeName} $key;');
     });
 
     if (config.fields.isEmpty) {
@@ -40,6 +39,8 @@ class ThemeClassTemplate {
     config.themes.forEachIndexed((i, e) {
       buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
     });
+    final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
+    buffer.writeln('static final themes = [$themesList];');
     return buffer.toString();
   }
 
@@ -72,7 +73,7 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${fmt.asNullableType(value.typeStr)} $key,');
+      methodParams.write('${fmt.asNullableType(value.typeName)} $key,');
       classParams.write('$key: $key ?? this.$key,');
     });
 
@@ -91,10 +92,13 @@ class ThemeClassTemplate {
   String _lerpMethod() {
     final returnType = config.returnType;
     final classParams = StringBuffer();
-
     config.fields.forEach((key, value) {
-      classParams.write(
-          '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+      if (value.implementsThemeExtension) {
+        classParams.write('$key: $key.lerp(other.$key,t),');
+      } else {
+        classParams.write(
+            '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+      }
     });
 
     return '''
@@ -118,7 +122,7 @@ class ThemeClassTemplate {
   String toString() {
     return '''
     ${config.annotationManager.expandClassAnnotations()}
-    class ${config.returnType} extends ThemeExtension<${config.returnType}>{
+    class ${config.returnType} extends ThemeExtension<${config.returnType}> {
       ${_constructorAndParams()}
       ${_jsonAnnotationFactory()}
       ${_generateThemes()}

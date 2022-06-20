@@ -2,10 +2,12 @@ import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 import 'package:theme_tailor/src/model/annotation_data_manager.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
@@ -20,6 +22,21 @@ import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+bool isTailorAnnotation(ElementAnnotation element) {
+  return const TypeChecker.fromRuntime(Tailor)
+      .isAssignableFromType(element.computeConstantValue()!.type!);
+}
+
+bool isTailorThemeExtension(ElementAnnotation element) {
+  return TypeChecker.fromRuntime(themeExtension.runtimeType)
+      .isAssignableFrom(element.computeConstantValue()!.type!.element!);
+}
+
+bool isThemeExtensionType(DartType type) {
+  return type.typeImplementations.any((e) =>
+      e.getDisplayString(withNullability: false).startsWith('ThemeExtension'));
+}
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
@@ -46,11 +63,22 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final classLevelAnnotations = <String>[];
     final fieldLevelAnnotations = <String, List<String>>{};
 
-    final astVisitor = _TailorClassASTVisitor();
-    _getAstNodeFromElement(element).visitChildren(astVisitor);
-
     final tailorClassVisitor = _TailorClassVisitor();
     element.visitChildren(tailorClassVisitor);
+    final fields = tailorClassVisitor.fields;
+
+    final fieldsToCheck =
+        fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
+
+    final astVisitor = _TailorClassASTVisitor(fieldNamesToCheck: fieldsToCheck);
+    _getAstNodeFromElement(element).visitChildren(astVisitor);
+
+    for (final typeEntry in astVisitor.fieldTypes.entries) {
+      final fieldValue = fields[typeEntry.key];
+      if (fieldValue != null) {
+        fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
+      }
+    }
 
     for (var i = 0; i < element.metadata.length; i++) {
       final annotation = element.metadata[i];
@@ -104,12 +132,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     return generatorBuffer.toString();
   }
 
-  bool isTailorAnnotation(ElementAnnotation element) {
-    const tailorAnnotation = TypeChecker.fromRuntime(Tailor);
-    return tailorAnnotation
-        .isAssignableFromType(element.computeConstantValue()!.type!);
-  }
-
   List<String> _computeThemes(ConstantReader annotation) {
     return List<String>.from(
       annotation.read('themes').listValue.map((e) => e.toStringValue()),
@@ -138,13 +160,24 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final Map<String, List<bool>> hasInternalAnnotations = {};
 
+  final extensionAnnotationTypeChecker =
+      TypeChecker.fromRuntime(themeExtension.runtimeType);
+
   @override
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
       final isInternalAnnotation = <bool>[];
 
+      var hasThemeExtensionAnnotation = false;
+
       for (final annotation in element.metadata) {
+        if (isTailorThemeExtension(annotation)) {
+          isInternalAnnotation.add(true);
+          hasThemeExtensionAnnotation = true;
+          continue;
+        }
+
         final encoderData = extractThemeEncoderData(
           annotation,
           annotation.computeConstantValue()!,
@@ -158,15 +191,32 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
+      final coreType = coreIterableGenericType(element.type);
+      final extendsThemeExtension = isThemeExtensionType(coreType);
+
+      final implementsThemeExtension =
+          hasThemeExtensionAnnotation || extendsThemeExtension;
+
       hasInternalAnnotations[propName] = isInternalAnnotation;
-      fields[propName] = Field(propName, coreIterableGenericType(element.type));
+
+      fields[propName] = Field(
+        name: propName,
+        typeName: coreType.getDisplayString(withNullability: true),
+        implementsThemeExtension: implementsThemeExtension,
+        isTailorThemeExtension: hasThemeExtensionAnnotation,
+      );
     }
   }
 }
 
 class _TailorClassASTVisitor extends SimpleAstVisitor {
+  _TailorClassASTVisitor({required this.fieldNamesToCheck});
+
   final List<String> rawClassAnnotations = [];
   final Map<String, List<String>> rawFieldsAnnotations = {};
+
+  final Iterable<String> fieldNamesToCheck;
+  final Map<String, String> fieldTypes = {};
 
   @override
   void visitAnnotation(Annotation node) {
@@ -175,7 +225,20 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
 
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
-    rawFieldsAnnotations[node.name] = node.annotations;
+    final fieldName = node.name;
+    final fieldType = node.fields.type;
+
+    rawFieldsAnnotations[fieldName] = node.annotations;
+
+    if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
+      final childTypeEntities =
+          fieldType.childEntities.map((e) => e.toString()).toList();
+      if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
+        final typeWithBraces = childTypeEntities[1];
+        fieldTypes[fieldName] =
+            typeWithBraces.substring(1, typeWithBraces.length - 1);
+      }
+    }
   }
 }
 
@@ -191,5 +254,13 @@ extension FieldDeclarationExtension on FieldDeclaration {
 
   List<String> get annotations {
     return metadata.map((e) => e.toString()).toList(growable: false);
+  }
+}
+
+extension DartTypeExtension on DartType {
+  bool isThemeExtension() {
+    return typeImplementations.any((e) => e
+        .getDisplayString(withNullability: false)
+        .startsWith('ThemeExtension'));
   }
 }

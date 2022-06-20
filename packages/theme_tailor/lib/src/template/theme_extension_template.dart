@@ -32,7 +32,7 @@ class ThemeExtensionTemplate {
     if (extension.hasGeneratedProps) {
       for (final prop in config.fields.entries) {
         extensionBody.write(GetterTemplate(
-          type: prop.value.typeStr,
+          type: prop.value.typeName,
           name: prop.key,
           accessor: '$themeGetterName.${prop.key}',
         ));

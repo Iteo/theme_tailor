@@ -85,7 +85,7 @@ class ThemeEncoderDataManager {
 
   ThemeEncoderData encoderFromField(Field field) {
     return fieldNameToEncoder[field.name] ??
-        typeToEncoder[field.typeStr] ??
+        typeToEncoder[field.typeName] ??
         _AnyEncoder.instance;
   }
 }

@@ -12,7 +12,7 @@ ThemeEncoderData? extractThemeEncoderData(
   final encoderClassElement = constantValue.type!.element as ClassElement;
 
   final encoderSuper = encoderClassElement.allSupertypes.singleWhereOrNull((e) {
-    return themeEncoderChecker.isExactly(e.element);
+    return themeEncoderChecker.isExactlyType(e);
   });
 
   if (encoderSuper == null) return null;
