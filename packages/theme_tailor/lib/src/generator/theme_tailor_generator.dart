@@ -2,12 +2,10 @@ import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/visitor.dart';
 import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:source_helper/source_helper.dart';
 import 'package:theme_tailor/src/model/annotation_data_manager.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
@@ -15,28 +13,15 @@ import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
 import 'package:theme_tailor/src/template/theme_extension_template.dart';
-import 'package:theme_tailor/src/util/extensions.dart';
-import 'package:theme_tailor/src/util/iterable_helper.dart';
-import 'package:theme_tailor/src/util/json_serializable_helper.dart';
+import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
+import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
+import 'package:theme_tailor/src/util/extension/element_extension.dart';
+import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-bool isTailorAnnotation(ElementAnnotation element) {
-  return const TypeChecker.fromRuntime(Tailor)
-      .isAssignableFromType(element.computeConstantValue()!.type!);
-}
-
-bool isTailorThemeExtension(ElementAnnotation element) {
-  return TypeChecker.fromRuntime(themeExtension.runtimeType)
-      .isAssignableFrom(element.computeConstantValue()!.type!.element!);
-}
-
-bool isThemeExtensionType(DartType type) {
-  return type.typeImplementations.any((e) =>
-      e.getDisplayString(withNullability: false).startsWith('ThemeExtension'));
-}
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
@@ -88,7 +73,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         annotation.computeConstantValue()!,
       )?.let((it) => classLevelEncoders[it.type] = it);
 
-      if (!isTailorAnnotation(annotation)) {
+      if (!annotation.isTailorAnnotation) {
         classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
       }
     }
@@ -172,7 +157,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
       var hasThemeExtensionAnnotation = false;
 
       for (final annotation in element.metadata) {
-        if (isTailorThemeExtension(annotation)) {
+        if (annotation.isTailorThemeExtension) {
           isInternalAnnotation.add(true);
           hasThemeExtensionAnnotation = true;
           continue;
@@ -191,11 +176,10 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         }
       }
 
-      final coreType = coreIterableGenericType(element.type);
-      final extendsThemeExtension = isThemeExtensionType(coreType);
+      final coreType = element.type.coreIterableGenericType;
 
       final implementsThemeExtension =
-          hasThemeExtensionAnnotation || extendsThemeExtension;
+          hasThemeExtensionAnnotation || coreType.isThemeExtensionType;
 
       hasInternalAnnotations[propName] = isInternalAnnotation;
 
@@ -247,20 +231,4 @@ AstNode _getAstNodeFromElement(Element element) {
   final result = library.session.getParsedLibraryByElement(library)
       as ParsedLibraryResult?;
   return result!.getElementDeclaration(element)!.node;
-}
-
-extension FieldDeclarationExtension on FieldDeclaration {
-  String get name => fields.variables.first.name.name;
-
-  List<String> get annotations {
-    return metadata.map((e) => e.toString()).toList(growable: false);
-  }
-}
-
-extension DartTypeExtension on DartType {
-  bool isThemeExtension() {
-    return typeImplementations.any((e) => e
-        .getDisplayString(withNullability: false)
-        .startsWith('ThemeExtension'));
-  }
 }

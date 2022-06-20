@@ -1,7 +1,7 @@
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/template/extension_template.dart';
 import 'package:theme_tailor/src/template/getter_template.dart';
-import 'package:theme_tailor/src/util/extensions.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
 class ThemeExtensionTemplate {

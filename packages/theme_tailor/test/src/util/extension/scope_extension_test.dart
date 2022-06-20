@@ -1,8 +1,8 @@
 import 'package:test/test.dart';
-import 'package:theme_tailor/src/util/extensions.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
 void main() {
-  group('ScopeExtensions', () {
+  group('ScopeExtension', () {
     test('let', () {
       const test = 'let';
       expect(test.let((it) => '$it it go'), 'let it go');

@@ -2,7 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:source_gen/source_gen.dart';
 
-extension JsonSerializableElementExtension on Element {
+extension ElementExtension on Element {
   bool get hasJsonSerializableAnnotation {
     return const TypeChecker.fromRuntime(JsonSerializable).hasAnnotationOf(
       this,
