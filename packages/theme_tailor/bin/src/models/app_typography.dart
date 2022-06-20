@@ -15,6 +15,7 @@ class AppTypography {
     this.fontStyle,
     this.letterSpacing,
     this.fontWeight,
+    this.decoration,
   });
 
   final String? name;
@@ -26,6 +27,8 @@ class AppTypography {
   final String? fontStyle;
   final num? letterSpacing;
   final int? fontWeight;
+  @JsonKey(name: "textDecoration")
+  final String? decoration;
 
   Map<String, dynamic> toJson() => _$AppTypographyToJson(this);
 
@@ -36,8 +39,9 @@ class AppTypography {
     int? fontSize,
     int? height,
     String? fontStyle,
-    int? letterSpacing,
+    num? letterSpacing,
     int? fontWeight,
+    String? decoration,
   }) {
     return AppTypography(
       name: name ?? this.name,
@@ -48,6 +52,7 @@ class AppTypography {
       fontStyle: fontStyle ?? this.fontStyle,
       letterSpacing: letterSpacing ?? this.letterSpacing,
       fontWeight: fontWeight ?? this.fontWeight,
+      decoration: decoration ?? this.decoration,
     );
   }
 }

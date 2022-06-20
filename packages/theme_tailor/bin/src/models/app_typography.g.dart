@@ -16,6 +16,7 @@ AppTypography _$AppTypographyFromJson(Map<String, dynamic> json) =>
       fontStyle: json['fontStyle'] as String?,
       letterSpacing: json['letterSpacing'] as num?,
       fontWeight: json['fontWeight'] as int?,
+      decoration: json['textDecoration'] as String?,
     );
 
 Map<String, dynamic> _$AppTypographyToJson(AppTypography instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$AppTypographyToJson(AppTypography instance) =>
       'fontStyle': instance.fontStyle,
       'letterSpacing': instance.letterSpacing,
       'fontWeight': instance.fontWeight,
+      'textDecoration': instance.decoration,
     };

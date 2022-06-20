@@ -10,32 +10,52 @@ String typographyParser(AppTypography typography) {
   final buffer = StringBuffer();
 
   if (typography.fontFamily != 'none') {
-    buffer.write("\nfontFamily: '${typography.fontFamily}',");
+    buffer.writeln("fontFamily: '${typography.fontFamily}',");
   }
 
   if (typography.fontSize != null) {
-    buffer.write('\nfontSize: ${typography.fontSize},');
+    buffer.writeln('fontSize: ${typography.fontSize},');
   }
 
   if (typography.height != null) {
-    buffer.write(
-      '\nheight: ${computeFontSize(typography.fontSize, typography.height)},',
+    buffer.writeln(
+      'height: ${computeFontSize(typography.fontSize, typography.height)},',
     );
   }
 
   if (typography.fontStyle != 'none') {
-    buffer.write('\nfontStyle: FontStyle.${typography.fontStyle},');
+    buffer.writeln('fontStyle: FontStyle.${typography.fontStyle},');
   }
 
   if (typography.letterSpacing != null) {
-    buffer.write('\nletterSpacing: ${typography.letterSpacing},');
+    buffer.writeln('letterSpacing: ${typography.letterSpacing},');
   }
 
   if (typography.fontWeight != null) {
-    buffer.write('\nfontWeight: FontWeight.w${typography.fontWeight},');
+    buffer.writeln('fontWeight: FontWeight.w${typography.fontWeight},');
   }
 
-  buffer.write('\ndebugLabel: "${typography.name}",');
+  if (typography.decoration != null) {
+    var decoration = "TextDecoration.none";
+
+    switch (typography.decoration) {
+      case "underline":
+        decoration = "TextDecoration.underline";
+        break;
+      case "overline":
+        decoration = "TextDecoration.overline";
+        break;
+      case "line-through":
+        decoration = "TextDecoration.lineThrough";
+        break;
+      default:
+        decoration = "TextDecoration.none";
+    }
+
+    buffer.writeln('decoration: $decoration,');
+  }
+
+  buffer.writeln('debugLabel: "${typography.name}",');
 
   return buffer.toString();
 }

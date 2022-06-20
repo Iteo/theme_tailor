@@ -11,6 +11,7 @@ AppColor _$AppColorFromJson(Map<String, dynamic> json) => AppColor(
       name: json['name'] as String?,
       parent: json['parent'] as String?,
       description: json['description'] as String?,
+      isDark: json['isDark'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AppColorToJson(AppColor instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$AppColorToJson(AppColor instance) => <String, dynamic>{
       'name': instance.name,
       'parent': instance.parent,
       'description': instance.description,
+      'isDark': instance.isDark,
     };

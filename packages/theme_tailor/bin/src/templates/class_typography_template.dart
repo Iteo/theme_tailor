@@ -66,7 +66,7 @@ ${await _generateTypographyBody()}
 
     for (final typography in typographyList) {
       buffer.writeln(
-        'static const TextStyle ${_getTypographyName(typography.name!)} = TextStyle(${typographyParser(typography)});',
+        '\nstatic const TextStyle ${_getTypographyName(typography.name!)} = TextStyle(${typographyParser(typography)});',
       );
     }
 
