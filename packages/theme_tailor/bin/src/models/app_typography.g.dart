@@ -14,7 +14,7 @@ AppTypography _$AppTypographyFromJson(Map<String, dynamic> json) =>
       fontSize: json['fontSize'] as int?,
       height: json['lineHeight'] as int?,
       fontStyle: json['fontStyle'] as String?,
-      letterSpacing: json['letterSpacing'] as int?,
+      letterSpacing: json['letterSpacing'] as num?,
       fontWeight: json['fontWeight'] as int?,
     );
 

@@ -66,10 +66,14 @@ ${await _generateTypographyBody()}
 
     for (final typography in typographyList) {
       buffer.writeln(
-        'static const TextStyle ${typography.name} = TextStyle(${typographyParser(typography)}\n);\n',
+        'static const TextStyle ${_getTypographyName(typography.name!)} = TextStyle(${typographyParser(typography)});',
       );
     }
 
     return buffer.toString();
+  }
+
+  String _getTypographyName(String name) {
+    return name.replaceAll(RegExp("[^A-Za-z0-9]"), "").replaceAll(" ", "");
   }
 }

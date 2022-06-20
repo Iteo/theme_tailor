@@ -24,7 +24,7 @@ class AppTypography {
   @JsonKey(name: "lineHeight")
   final int? height;
   final String? fontStyle;
-  final int? letterSpacing;
+  final num? letterSpacing;
   final int? fontWeight;
 
   Map<String, dynamic> toJson() => _$AppTypographyToJson(this);

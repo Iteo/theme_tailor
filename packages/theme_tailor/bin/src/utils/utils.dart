@@ -35,6 +35,8 @@ String typographyParser(AppTypography typography) {
     buffer.write('\nfontWeight: FontWeight.w${typography.fontWeight},');
   }
 
+  buffer.write('\ndebugLabel: "${typography.name}",');
+
   return buffer.toString();
 }
 
