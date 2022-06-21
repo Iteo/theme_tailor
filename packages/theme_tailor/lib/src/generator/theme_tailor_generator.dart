@@ -41,7 +41,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       );
     }
     final library = element.library;
-    print('${library.identifier} : ${library.hasFlutterDiagnosticableImport}');
     final hasDiagnostics = library.hasFlutterDiagnosticableImport;
 
     const stringUtil = StringFormat();

@@ -132,7 +132,7 @@ class ThemeClassTemplate {
 
     final diagnostics = [
       for (final e in config.fields.entries)
-        "..add(DiagnosticsProperty('${e.key}', ${e.value.typeName}))",
+        "..add(DiagnosticsProperty('${e.key}', ${e.key}))",
     ].join();
 
     return '''
