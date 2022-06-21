@@ -8,17 +8,19 @@ class ThemeClassConfig {
     required this.fields,
     required this.themes,
     required this.baseClassName,
-    required this.returnType,
+    required this.className,
     required this.encoderManager,
     required this.themeGetter,
     required this.annotationManager,
+    required this.isFlutterDiagnosticable,
   });
 
   final Map<String, Field> fields;
   final List<String> themes;
   final String baseClassName;
-  final String returnType;
+  final String className;
   final ThemeEncoderDataManager encoderManager;
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
+  final bool isFlutterDiagnosticable;
 }
