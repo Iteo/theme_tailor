@@ -21,12 +21,13 @@ class JsonColorConverter implements JsonConverter<Color, int> {
 @tailor
 @JsonSerializable()
 class _$SerializableTE {
-  static List<int> foo = [10, 20];
+  @JsonKey(name: 'foo_number')
+  static List<int> fooNumber = [10, 20];
 
   @JsonColorConverter()
-  @JsonKey(name: 'bar')
+  @JsonKey(name: 'bar_color')
   @CustomColorEncoder()
-  static List<Color> bar = [Colors.orange, Colors.pink];
+  static List<Color> barColor = [Colors.orange, Colors.pink];
 }
 
 @JsonSerializable()
