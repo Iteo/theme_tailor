@@ -13,3 +13,4 @@ coverage/
 .history
 .svn/
 coverage.lcov
+.DS_Store
