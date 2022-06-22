@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
@@ -17,6 +19,7 @@ import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
+import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
@@ -25,11 +28,11 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   @override
-  String generateForAnnotatedElement(
+  Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
-  ) {
+  ) async {
     if (element is! ClassElement || element is Enum) {
       throw InvalidGenerationSourceError(
         'Tailor can only annotate classes',
@@ -37,6 +40,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         todo: 'Move @Tailor annotation above `class`',
       );
     }
+    final library = element.library;
+    final hasDiagnostics = library.hasFlutterDiagnosticableImport;
 
     const stringUtil = StringFormat();
 
@@ -102,12 +107,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
-      returnType: stringUtil.themeClassName(className),
+      className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
       encoderManager: encoderDataManager,
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
+      isFlutterDiagnosticable: hasDiagnostics,
     );
 
     final generatorBuffer = StringBuffer()

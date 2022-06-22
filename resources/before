@@ -1,4 +1,4 @@
-class MyTheme extends ThemeExtension<MyTheme> {
+class MyTheme extends ThemeExtension<MyTheme> with DiagnosticableTreeMixin {
   const MyTheme({
     required this.background,
     required this.iconColor,
@@ -49,6 +49,17 @@ class MyTheme extends ThemeExtension<MyTheme> {
       h1: TextStyle.lerp(h1, other.h1, t)!,
       h2: TextStyle.lerp(h2, other.h2, t)!,
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'MyTheme'))
+      ..add(DiagnosticsProperty('background', Color))
+      ..add(DiagnosticsProperty('iconColor', Color))
+      ..add(DiagnosticsProperty('h1', TextStyle))
+      ..add(DiagnosticsProperty('h2', TextStyle));
   }
 }
 

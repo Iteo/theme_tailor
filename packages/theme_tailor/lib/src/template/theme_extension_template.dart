@@ -18,15 +18,15 @@ class ThemeExtensionTemplate {
 
     final extensionBody = StringBuffer();
 
-    final extensionName = '${config.returnType}${config.themeGetter.shortName}';
+    final extensionName = '${config.className}${config.themeGetter.shortName}';
     final themeGetterName = fmt
-        .typeAsVariableName(config.returnType, 'Theme')
+        .typeAsVariableName(config.className, 'Theme')
         .also((it) => extension.hasPublicThemeGetter ? it : fmt.asPrivate(it));
 
     extensionBody.write(GetterTemplate(
-      type: config.returnType,
+      type: config.className,
       name: themeGetterName,
-      accessor: extension.target.themeExtensionAccessor(config.returnType),
+      accessor: extension.target.themeExtensionAccessor(config.className),
     ));
 
     if (extension.hasGeneratedProps) {

@@ -8,6 +8,15 @@ class ThemeClassTemplate {
   final ThemeClassConfig config;
   final StringFormat fmt;
 
+  String _classTypesDeclaration() {
+    final mixins = [
+      if (config.isFlutterDiagnosticable) 'DiagnosticableTreeMixin'
+    ];
+    final mixinsString = mixins.isEmpty ? '' : ' with ${mixins.join(',')}';
+
+    return 'extends ThemeExtension<${config.className}>$mixinsString';
+  }
+
   String _constructorAndParams() {
     final constructorBuffer = StringBuffer();
     final fieldsBuffer = StringBuffer();
@@ -23,7 +32,7 @@ class ThemeClassTemplate {
       return fieldsBuffer.toString();
     } else {
       return '''
-      ${config.returnType}({
+      ${config.className}({
         ${constructorBuffer.toString()}
       });
     
@@ -47,7 +56,7 @@ class ThemeClassTemplate {
   /// Template for one static theme
   String _themeTemplate(int index, String themeName, List<String> props) {
     final buffer = StringBuffer();
-    final returnType = config.returnType;
+    final returnType = config.className;
 
     for (final prop in props) {
       buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
@@ -61,7 +70,7 @@ class ThemeClassTemplate {
   }
 
   String _copyWithMethod() {
-    final returnType = config.returnType;
+    final returnType = config.className;
     if (config.fields.isEmpty) {
       return '''
       @override
@@ -90,7 +99,7 @@ class ThemeClassTemplate {
   }
 
   String _lerpMethod() {
-    final returnType = config.returnType;
+    final returnType = config.className;
     final classParams = StringBuffer();
     config.fields.forEach((key, value) {
       if (value.implementsThemeExtension) {
@@ -114,20 +123,40 @@ class ThemeClassTemplate {
 
   String _jsonAnnotationFactory() {
     if (!config.annotationManager.hasJsonSerializable) return '';
-    return '''factory ${config.returnType}.fromJson(Map<String, dynamic> json) =>
-      _\$${config.returnType}FromJson(json);\n''';
+    return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>
+      _\$${config.className}FromJson(json);\n''';
+  }
+
+  String _debugFillPropertiesMethod() {
+    if (!config.isFlutterDiagnosticable) return '';
+
+    final diagnostics = [
+      for (final e in config.fields.entries)
+        "..add(DiagnosticsProperty('${e.key}', ${e.key}))",
+    ].join();
+
+    return '''
+    @override
+    void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+      super.debugFillProperties(properties);
+      properties
+        ..add(DiagnosticsProperty('type', '${config.className}'))
+        $diagnostics;
+    }
+    ''';
   }
 
   @override
   String toString() {
     return '''
     ${config.annotationManager.expandClassAnnotations()}
-    class ${config.returnType} extends ThemeExtension<${config.returnType}> {
+    class ${config.className} ${_classTypesDeclaration()} {
       ${_constructorAndParams()}
       ${_jsonAnnotationFactory()}
       ${_generateThemes()}
       ${_copyWithMethod()}
       ${_lerpMethod()}
+      ${_debugFillPropertiesMethod()}
     }
     ''';
   }

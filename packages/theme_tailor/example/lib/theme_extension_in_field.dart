@@ -45,8 +45,8 @@ class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {
       ThemeExtension<OtherThemeExtension>? other, double t) {
     if (other is! OtherThemeExtension) return this;
     return OtherThemeExtension(
-      floatingActionButtonColor:
-          t < 0.5 ? floatingActionButtonColor : other.floatingActionButtonColor,
+      floatingActionButtonColor: Color.lerp(
+          floatingActionButtonColor, other.floatingActionButtonColor, t)!,
     );
   }
 }
