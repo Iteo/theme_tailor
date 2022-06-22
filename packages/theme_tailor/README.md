@@ -126,6 +126,13 @@ To control the names and quantity of the themes, edit the "themes" property on t
 class _$MyTheme {}
 ```
 
+### Accessing generated themes list
+The generator will create static getter with list of the generated themes:
+
+``` dart
+final allThemes = MyTailorGeneratedTheme.themes;
+```
+
 ### Change generated extensions
 By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor"
 
@@ -134,6 +141,53 @@ By default, "@tailor" will generate an extension on "BuildContext" and expand th
 ```
 
 "ThemeGetter" has several variants for generating common extensions to ease access to the declared themes.
+
+### Nesting generated ThemeExtensions, Modular themes && DesignSystems
+It might be beneficial to split theme into smaller parts, where each part is responsible for the theme of one component. You can think about it as a modularization of the theme. ThemeExtensions allow for easier custom theme integration with Flutter ThemeData without creating additional Inherited widgets handling theme changes. It is especially beneficial when 
+- Creating DesignSystems,
+- Modularization of the application per feature and components,
+- Creating package that supplies widgets and needs more or additional properties not found in ThemeData.
+
+###### NestedThemeExample: Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.
+```yaml
+ThemeData: [] # Flutter's material widgets props
+ThemeDataExtensions:
+  - CustomButtonsTheme: [foo, bar]
+  - ChatComponentsTheme: 
+    - MsgBubble: 
+      - Bubble: myBubble
+      - Bubble: friendsBubble
+    - MsgList: [foo, bar, baz]
+```
+
+When using "@tailor" or "@Tailor()" annotation, generator may create additional extensions on ThemeData or ThemeContext, which is unnecessary for nested theme components, for this purpose please use "@tailorComponent" or "@TailorComponent()" it has the same applications as normal Tailor annotation but ensures that no extensions are generated.
+
+```dart
+@tailor
+class _$ChatComponentsTheme {
+  @themeExtension
+  static List<MsgBubble> messageTheme = MsgBubble.themes;
+
+  @themeExtension
+  static List<MsgList> messageListTheme = MsgList.themes;
+
+  /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
+  static List<NotGeneratedExtension> = [/*custom themes*/]
+}
+
+@tailorComponent
+class _$MsgBubble {}
+
+/// You can also nest classes marked with @tailor but it is not recommended.
+@tailor
+class _$MsgList {}
+
+class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
+  /// implementation
+}
+```
+
+As you can see in the example above, is is necessary to mark themes that are yet to be created with additional annotation "@tailorComponent". No additional work is needed if you integrate with existing ThemeExtensions that does not come from generated code.
 
 ## Custom property encoding
 ThemeTailor will attempt to provide lerp method for types like:
