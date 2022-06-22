@@ -1,3 +1,7 @@
+## 1.0.2
+* Improve documentation
+* Add support for json_serializable
+
 ## 1.0.1
 * Fix README.md
 
