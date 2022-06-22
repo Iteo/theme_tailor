@@ -10,8 +10,7 @@ void main() {
     final barColor = randomColor();
     final fooNumber = randomInt();
 
-    final themeStr =
-        '''{"bar_color":${barColor.value},"foo_number":$fooNumber}''';
+    final themeStr = '{"bar_color":${barColor.value},"foo_number":$fooNumber}';
 
     final json = jsonDecode(themeStr) as Map<String, dynamic>;
 
