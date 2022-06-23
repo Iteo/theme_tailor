@@ -30,6 +30,10 @@ class _$SerializableTE {
   static List<Color> barColor = [Colors.orange, Colors.pink];
 }
 
+extension SerializableTEExt on SerializableTE {
+  Map<String, dynamic> toJson() => _$SerializableTEToJson(this);
+}
+
 @JsonSerializable()
 class JsonSerializableTE extends ThemeExtension<JsonSerializableTE> {
   const JsonSerializableTE({

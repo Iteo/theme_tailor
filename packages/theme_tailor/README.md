@@ -256,3 +256,5 @@ Generator chooses proper lerp function for the given field based on the order:
 
 Custom supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 
+## Integration with other generators
+Theme Tailor will copy annotations from the base class annotated with @Tailor or @TailorComponent onto the generated ThemeExtension class.

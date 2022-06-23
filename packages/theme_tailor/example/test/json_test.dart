@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:example/json_serializable_example.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,5 +19,23 @@ void main() {
 
     expect(serializableTheme.barColor, barColor);
     expect(serializableTheme.fooNumber, fooNumber);
+  });
+
+  test('Serializable theme -> to JSON', () {
+    final barColor = randomColor();
+    final fooNumber = randomInt();
+
+    final theme = SerializableTE(barColor: barColor, fooNumber: fooNumber);
+    final themeMap = theme.toJson();
+
+    final expectedThemeMap = {
+      'bar_color': barColor.value,
+      'foo_number': fooNumber,
+    };
+
+    expect(
+      const DeepCollectionEquality().equals(themeMap, expectedThemeMap),
+      true,
+    );
   });
 }
