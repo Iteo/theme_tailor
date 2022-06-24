@@ -1,9 +1,10 @@
 ## 1.0.2
-* Improve documentation
-* Add support for json_serializable
+- Improve documentation,
+- Add support for json_serializable,
+- Generated class will overwrite `hashCode` and `==` operator. The equality operator will deeply compared collections in the class. 
 
 ## 1.0.1
-* Fix README.md
+- Fix README.md
 
 ## 1.0.0
-* Initial version of theme_tailor library
+- Initial version of theme_tailor library
