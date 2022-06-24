@@ -1,7 +1,6 @@
 analyzer:
   exclude:
     - "**/*.g.dart"
-    - "**/*.tailor.dart"
 
 linter:
   rules:
