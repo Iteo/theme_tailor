@@ -44,13 +44,15 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
-To declare theme extension, we may:
+To declare theme extension, we need to:
 - define a class that extends ThemeData,
 - define a constructor and fields,
-- implement copy with,
-- implement lerp,
-- (optionally) override hashCode,
-- (optionally) override == operator
+- implement `copyWith`,
+- implement `lerp`,
+- (optional) override `hashCode`,
+- (optional) override `==` operator
+- (optional) implement `debugFillProperties` method
+- (optional) add serialization code
 
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 Implementing this requires lots of additional lines of code and time. 
