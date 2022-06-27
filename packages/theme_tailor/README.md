@@ -37,7 +37,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Create Theme class](#create-theme-class)
         - [Change themes quantity and names](#change-themes-quantity-and-names)
         - [Change generated extensions](#change-generated-extensions)
-        - [Nesting generated ThemeExtensions, Modular themes && DesignSystems](#nesting-generated-themeextensions-modular-themes--designsystems)
+        - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
         - [Custom types encoding](#custom-types-encoding)
         - [Serialization](#serialization)
 
