@@ -2,7 +2,7 @@ name: theme_tailor_annotation
 description: >
   Annotations for the Theme Tailor code-generator.
   This package does nothing without Theme Tailor.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/Iteo/theme_tailor
 issue_tracker: https://github.com/Iteo/theme_tailor/issues
 homepage: https://github.com/Iteo/theme_tailor
@@ -13,3 +13,4 @@ environment:
 
 dependencies:
   meta: ^1.7.0
+  collection: ^1.15.0

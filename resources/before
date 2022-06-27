@@ -11,18 +11,18 @@ class MyTheme extends ThemeExtension<MyTheme> with DiagnosticableTreeMixin {
   final TextStyle h1;
   final TextStyle h2;
 
-  static final MyTheme light = MyTheme(
+  static final MyTheme light = const MyTheme(
     background: Colors.white,
     iconColor: Colors.orange,
-    h1: const TextStyle(),
-    h2: const TextStyle(),
+    h1: TextStyle(),
+    h2: TextStyle(),
   );
 
-  static final MyTheme dark = MyTheme(
+  static final MyTheme dark = const MyTheme(
     background: Colors.black,
     iconColor: Colors.blue,
-    h1: const TextStyle(),
-    h2: const TextStyle(),
+    h1: TextStyle(),
+    h2: TextStyle(),
   );
 
   @override
@@ -60,6 +60,27 @@ class MyTheme extends ThemeExtension<MyTheme> with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('iconColor', Color))
       ..add(DiagnosticsProperty('h1', TextStyle))
       ..add(DiagnosticsProperty('h2', TextStyle));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MyTheme &&
+        other.runtimeType == runtimeType &&
+        other.background == background &&
+        other.iconColor == iconColor &&
+        other.h1 == h1 &&
+        other.h2 == h2;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      runtimeType,
+      background,
+      iconColor,
+      h1,
+      h2,
+    );
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
@@ -146,6 +147,43 @@ class ThemeClassTemplate {
     ''';
   }
 
+  String _equalOperator() {
+    String equality(Field field) {
+      final name = field.name;
+      return 'const DeepCollectionEquality().equals($name, other.$name)';
+    }
+
+    final comparisons = [
+      'other.runtimeType == runtimeType',
+      'other is ${config.className}',
+      for (final field in config.fields.values) equality(field)
+    ];
+
+    return '''@override bool operator ==(Object other) {
+      return identical(this, other) || (${comparisons.join('&&')});
+    }
+    ''';
+  }
+
+  String _hashCodeMethod() {
+    String hashMethod(String val) => '@override int get hashCode{return $val;}';
+    String hash(Field field) =>
+        'const DeepCollectionEquality().hash(${field.name})';
+
+    final hashedProps = [
+      'runtimeType',
+      for (final field in config.fields.values) hash(field)
+    ];
+
+    if (hashedProps.length == 1)
+      return hashMethod('${hashedProps.first}.hashCode');
+
+    if (hashedProps.length <= 20)
+      return hashMethod('Object.hash(${hashedProps.join(',')})');
+
+    return hashMethod('Object.hashAll([${hashedProps.join(',')}])');
+  }
+
   @override
   String toString() {
     return '''
@@ -157,6 +195,8 @@ class ThemeClassTemplate {
       ${_copyWithMethod()}
       ${_lerpMethod()}
       ${_debugFillPropertiesMethod()}
+      ${_equalOperator()}
+      ${_hashCodeMethod()}
     }
     ''';
   }
