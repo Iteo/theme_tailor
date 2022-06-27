@@ -122,7 +122,7 @@ class ThemeClassTemplate {
     ''';
   }
 
-  String _jsonAnnotationFactory() {
+  String _fromJsonFactory() {
     if (!config.annotationManager.hasJsonSerializable) return '';
     return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>
       _\$${config.className}FromJson(json);\n''';
@@ -190,7 +190,7 @@ class ThemeClassTemplate {
     ${config.annotationManager.expandClassAnnotations()}
     class ${config.className} ${_classTypesDeclaration()} {
       ${_constructorAndParams()}
-      ${_jsonAnnotationFactory()}
+      ${_fromJsonFactory()}
       ${_generateThemes()}
       ${_copyWithMethod()}
       ${_lerpMethod()}

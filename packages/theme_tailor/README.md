@@ -4,8 +4,12 @@
 [ThemeTailor]: https://pub.dartlang.org/packages/theme_tailor
 [theme_tailor_annotation]: https://pub.dartlang.org/packages/theme_tailor_annotation
 
+[json_serializable_documentation]: https://github.com/google/json_serializable.dart/tree/master/json_serializable#build-configuration
+
 <!-- Examples -->
-[examples_folder]: https://github.com/Iteo/theme_tailor/raw/main/packages/theme_tailor/example/lib
+[example:json_serializable]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/json_serializable_example.dart
+[example:theme_encoders]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/json_serializable_example.dart
+[example:nested_themes]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/theme_extension_in_field.dart
 
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
@@ -47,11 +51,11 @@ Flutter 3.0 provides a new way of theming applications via ThemeData's theme ext
 To declare theme extension, we need to:
 - define a class that extends ThemeData,
 - define a constructor and fields,
-- implement `copyWith`,
-- implement `lerp`,
-- (optional) override `hashCode`,
-- (optional) override `==` operator
-- (optional) implement `debugFillProperties` method
+- implement "copyWith",
+- implement "lerp",
+- (optional) override "hashCode",
+- (optional) override "==" operator
+- (optional) implement "debugFillProperties" method
 - (optional) add serialization code
 
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
@@ -81,13 +85,13 @@ flutter pub add theme_tailor_annotation
 ## Add imports and part directive
 ThemeTailor is a generator for annotation that generates code in a part file that needs to be specified. Make sure to add the following imports and part directive in the file where you use the annotation.
 
-Make sure to specify the correct file name in a part directive. In the example below, replace 'this_is_a_name_of_your_file' with the file name.
+Make sure to specify the correct file name in a part directive. In the example below, replace "name" with the file name.
 
-###### this_is_a_name_of_your_file.dart
+###### name.dart
 ```dart
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-part 'this_is_a_name_of_your_file.tailor.dart'
+part 'name.tailor.dart'
 ```
 
 ## Run the code generator
@@ -117,9 +121,9 @@ class _$MyTheme {
 ```
 
 The following code snippet defines the "MyTheme" theme extension class.
-- "MyTheme" extnds `ThemeExtension<MyTheme>`
+- "MyTheme" extends `ThemeExtension<MyTheme>`
 - defined class is immutable with final fields
-- there is one field 'background' of type Color
+- there is one field "background" of type Color
 - "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
 - copy method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
 - lerp method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
@@ -160,11 +164,10 @@ It might be beneficial to split them into smaller parts, where each part is resp
 - Modularization of the application per feature and components,
 - Create a package that supplies widgets and needs more or additional properties not found in ThemeData.
 
-###### NestedThemeExample: Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.
+###### Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.
 ```yaml
 ThemeData: [] # Flutter's material widgets props
 ThemeDataExtensions:
-  - CustomButtonsTheme: [foo, bar]
   - ChatComponentsTheme: 
     - MsgBubble: 
       - Bubble: myBubble
@@ -172,35 +175,61 @@ ThemeDataExtensions:
     - MsgList: [foo, bar, baz]
 ```
 
-
 Use "@tailor" and "@Tailor" annotations if you may need additional extensions on ThemeData or ThemeContext.
 
 Use "@tailorComponent" or "@TailorComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow generator to recognize the type correctly. 
 
 ```dart
+/// Use generated "ChatComponentsTheme" in ThemeData
 @tailor
 class _$ChatComponentsTheme {
   @themeExtension
-  static List<MsgBubble> messageTheme = MsgBubble.themes;
+  static List<MsgBubble> msgBubble = MsgBubble.themes;
 
   @themeExtension
-  static List<MsgList> messageListTheme = MsgList.themes;
+  static List<MsgList> msgList = MsgList.themes;
 
   /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
   static List<NotGeneratedExtension> = [/*custom themes*/]
 }
 
 @tailorComponent
-class _$MsgBubble {}
+class _$MsgBubble {
+  // Keep in mind that Bubble type used here may be another Tailor component, and its generated themes can be selectively 
+  // assigned to proper fields. (By default tailor will generate 2 themes - light and blue)
+
+  /// Lets say that my message bubble in 
+  /// light mode is darkBlue
+  /// dark mode is lightBlue
+  static List<Bubble> myBubble = [Bubble.darkBlue, Bubble.lightBlue]
+
+  /// Lets say that my message bubble in 
+  /// light mode is darkOrange
+  /// dark mode is lightOrange
+  static List<Bubble> friendsBubble = [Bubble.darkOrange, Bubble.lightOrange]
+}
+
+@TailorComponent(themes: ['darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'])
+class _$Bubble {
+  static List<Color> background = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/]
+  static List<Color> textStyle = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/]
+}
 
 /// You can also nest classes marked with @tailor (not recommended)
 @tailor
-class _$MsgList {}
+class _$MsgList {
+  /// implementation
+  /// foo
+  /// bar 
+  /// baz
+}
 
 class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
   /// implementation
 }
 ```
+
+To see examle implementation of nested theme, head out to: [example:nested_themes][example: nested_themes]
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:
@@ -269,22 +298,35 @@ Generator chooses proper lerp function for the given field based on the order:
 
 Custom supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 
+To see more examples of custom theme encoders implementation, head out to: [example: theme encoders][example:theme_encoders]
+
 ## Flutter diagnosticable
-To add support for Flutter diagnosticable to the generated ThemeExtension class, import Flutter foundation.
+To add support for Flutter diagnosticable to the generated ThemeExtension class, import Flutter foundation. Then create the ThemeTailor config class as usual.
 ```dart
 import 'package:flutter/foundation.dart';
 ```
 
-## Serialization
-The generator will copy all the annotations on the class and the static fields, including @JsonSerializable @JsonKeys and custom JsonConverter(s) and generate fromJson factory. 
+## Json serialization
+The generator will copy all the annotations on the class and the static fields, including @JsonSerializable @JsonKeys and custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
 
 ```dart
 @tailor
 @JsonSerializable()
 class _$SerializableTheme {
 
-  /// This is a custom converter
+  /// This is a custom converter (it will be copied to the generated class)
   @JsonColorConverter()
   static List<Color> foo = [Colors.red, Colors.pink];
 }
+
+/// Extension for generated class to support toJson (JsonSerializable does not have to generate this method)
+extension SerializableThemeExtension on SerializableTheme {
+  Map<String, dynamic> toJson() => _$SerializableThemeToJson(this);
+}
+```
+To see an example implementation of "@JsonColorConverter" check out [example: json serializable][example:json_serializable]
+
+To serialize nested themes, declare your config classes as presented in the [Nesting generated theme extensions, modular themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems). Make sure to use proper json_serializable config either in the annotation on the class or your config "build.yaml" or "pubspec.yaml". For more information about customizing build config for json_serializable head to the [json_serializable documentation][json_serializable_documentation].
+```dart
+@JsonSerializable(explicitToJson: true)
 ```
