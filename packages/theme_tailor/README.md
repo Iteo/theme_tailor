@@ -4,6 +4,9 @@
 [ThemeTailor]: https://pub.dartlang.org/packages/theme_tailor
 [theme_tailor_annotation]: https://pub.dartlang.org/packages/theme_tailor_annotation
 
+<!-- Examples -->
+[examples_folder]: https://github.com/Iteo/theme_tailor/raw/main/packages/theme_tailor/example/lib
+
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
@@ -21,30 +24,12 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0!
+# Theme Tailor
 
-# Motivation
-Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
-To declare ThemeExtension we may:
-- define a class that extends ThemeData,
-- define a constructor and fields,
-- implement copyWith,
-- implement lerp,
-- (optionally) override hashCode,
-- (optionally) override == operator
+Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0! The generator helps to minimize the required boilerplate code.
 
-In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
-
-Implementing all of this takes a lot of time, lines of code and might be error-prone.
-
-
-| Before                | After               |
-| --------------------- | ------------------- |
-| ![before][img_before] | ![after][img_after] |
-
-# Index
+# Table of contents
 - [Motivation](#motivation)
-- [Index](#index)
 - [How to use](#how-to-use)
     - [Install](#install)
     - [Add imports and part directive](#add-imports-and-part-directive)
@@ -52,6 +37,28 @@ Implementing all of this takes a lot of time, lines of code and might be error-p
     - [Create Theme class](#create-theme-class)
         - [Change themes quantity and names](#change-themes-quantity-and-names)
         - [Change generated extensions](#change-generated-extensions)
+        - [Nesting generated ThemeExtensions, Modular themes && DesignSystems](#nesting-generated-themeextensions-modular-themes--designsystems)
+        - [Custom types encoding](#custom-types-encoding)
+        - [Serialization](#serialization)
+
+
+# Motivation
+Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
+To declare theme extension, we may:
+- define a class that extends ThemeData,
+- define a constructor and fields,
+- implement copy with,
+- implement lerp,
+- (optionally) override hashCode,
+- (optionally) override == operator
+
+In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
+Implementing this requires lots of additional lines of code and time. 
+
+
+| Before                | After               |
+| --------------------- | ------------------- |
+| ![before][img_before] | ![after][img_after] |
 
 
 # How to use
@@ -130,7 +137,7 @@ class _$MyTheme {}
 ```
 
 ### Accessing generated themes list
-The generator will create static getter with list of the generated themes:
+The generator will create a static getter with a list of the generated themes:
 
 ``` dart
 final allThemes = MyTailorGeneratedTheme.themes;
@@ -146,10 +153,10 @@ By default, "@tailor" will generate an extension on "BuildContext" and expand th
 "ThemeGetter" has several variants for generating common extensions to ease access to the declared themes.
 
 ### Nesting generated ThemeExtensions, Modular themes && DesignSystems
-It might be beneficial to split theme into smaller parts, where each part is responsible for the theme of one component. You can think about it as a modularization of the theme. ThemeExtensions allow for easier custom theme integration with Flutter ThemeData without creating additional Inherited widgets handling theme changes. It is especially beneficial when 
-- Creating DesignSystems,
+It might be beneficial to split them into smaller parts, where each part is responsible for the theme of one component. You can think about it as modularization of the theme. ThemeExtensions allow for easier custom theme integration with Flutter ThemeData without creating additional Inherited widgets handling theme changes. It is especially beneficial when 
+- Creating design systems,
 - Modularization of the application per feature and components,
-- Creating package that supplies widgets and needs more or additional properties not found in ThemeData.
+- Create a package that supplies widgets and needs more or additional properties not found in ThemeData.
 
 ###### NestedThemeExample: Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.
 ```yaml
@@ -163,7 +170,10 @@ ThemeDataExtensions:
     - MsgList: [foo, bar, baz]
 ```
 
-When using "@tailor" or "@Tailor()" annotation, generator may create additional extensions on ThemeData or ThemeContext, which is unnecessary for nested theme components, for this purpose please use "@tailorComponent" or "@TailorComponent()" it has the same applications as normal Tailor annotation but ensures that no extensions are generated.
+
+Use "@tailor" and "@Tailor" annotations if you may need additional extensions on ThemeData or ThemeContext.
+
+Use "@tailorComponent" or "@TailorComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow generator to recognize the type correctly. 
 
 ```dart
 @tailor
@@ -181,7 +191,7 @@ class _$ChatComponentsTheme {
 @tailorComponent
 class _$MsgBubble {}
 
-/// You can also nest classes marked with @tailor but it is not recommended.
+/// You can also nest classes marked with @tailor (not recommended)
 @tailor
 class _$MsgList {}
 
@@ -190,17 +200,15 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-As you can see in the example above, is is necessary to mark themes that are yet to be created with additional annotation "@tailorComponent". No additional work is needed if you integrate with existing ThemeExtensions that does not come from generated code.
-
-## Custom property encoding
+## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:
 - Color
 - Color?
 - TextStyle
 - TextStyle?
 
-In the case of unrecognized or unsupported types, the generator provides a default lerping function (That does not interpolate values linearly but switches between them). 
-You can specify a custom the lerp function for the given type (Color/TextStyle, etc.) or a property by extending "ThemeEncoder" class from [theme_tailor_annotation]
+In the case of an unrecognized or unsupported type, the generator provides a default lerping function (That does not interpolate values linearly but switches between them). 
+You can specify a custom the lerp function for the given type (Color/TextStyle, etc.) or property by extending "ThemeEncoder" class from [theme_tailor_annotation]
 
 Example of adding custom encoder for an int. 
 ###### my_theme.dart
@@ -259,5 +267,22 @@ Generator chooses proper lerp function for the given field based on the order:
 
 Custom supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 
-## Integration with other generators
-Theme Tailor will copy annotations from the base class annotated with @Tailor or @TailorComponent onto the generated ThemeExtension class.
+## Flutter diagnosticable
+To add support for Flutter diagnosticable to the generated ThemeExtension class, import Flutter foundation.
+```dart
+import 'package:flutter/foundation.dart';
+```
+
+## Serialization
+The generator will copy all the annotations on the class and the static fields, including @JsonSerializable @JsonKeys and custom JsonConverter(s) and generate fromJson factory. 
+
+```dart
+@tailor
+@JsonSerializable()
+class _$SerializableTheme {
+
+  /// This is a custom converter
+  @JsonColorConverter()
+  static List<Color> foo = [Colors.red, Colors.pink];
+}
+```
