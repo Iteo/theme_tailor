@@ -25,11 +25,13 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
-To declara ThemeExtension we have to:
+To declare ThemeExtension we may:
 - define a class that extends ThemeData,
 - define a constructor and fields,
 - implement copyWith,
-- implement lerp.
+- implement lerp,
+- (optionally) override hashCode,
+- (optionally) override == operator
 
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 
@@ -112,6 +114,7 @@ The following code snippet defines the "MyTheme" theme extension class.
 - "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
 - copy method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
 - lerp method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
+- an overwritten "hashCode" method && "==" operator
 
 Additionally [theme_tailor_annotation] by default generates extension on BuildContext
 - "MyThemeBuildContextProps" extension on "BuildContext" is generated
