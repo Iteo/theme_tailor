@@ -10,15 +10,24 @@ class $_SomeTheme {
   @themeExtension
   static List<AnotherThemePart> anotherThemePart = [
     AnotherThemePart.light,
-    AnotherThemePart.dark
+    AnotherThemePart.dark,
   ];
+
   @themeExtension
   static List<AnotherThemePart> anotherThemePartGeneratedConstructor =
       AnotherThemePart.themes;
+
   static List<OtherThemeExtension> otherThemeExtension = [
     OtherThemeExtension(),
     OtherThemeExtension()
   ];
+
+  @themeExtension
+  static List<AnotherThemePart?> nullablePart =
+      List.filled(SomeTheme.themes.length, null);
+
+  static List<OtherThemeExtension?> nullableOtherTheme =
+      List.filled(SomeTheme.themes.length, null);
 }
 
 @tailorComponent

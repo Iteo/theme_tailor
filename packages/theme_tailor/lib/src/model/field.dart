@@ -11,6 +11,8 @@ class Field {
   final bool implementsThemeExtension;
   final bool isTailorThemeExtension;
 
+  bool get isNullable => typeName.contains('?');
+
   Field copyWith({
     String? name,
     String? typeName,

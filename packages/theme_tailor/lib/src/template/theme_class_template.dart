@@ -104,7 +104,8 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
     config.fields.forEach((key, value) {
       if (value.implementsThemeExtension) {
-        classParams.write('$key: $key.lerp(other.$key,t),');
+        classParams.write(
+            '$key: $key${value.isNullable ? '?' : ''}.lerp(other.$key, t),');
       } else {
         classParams.write(
             '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
