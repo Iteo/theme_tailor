@@ -104,7 +104,7 @@ flutter run build_runner build --delete-conflicting-outputs
 ## Create Theme class
 ThemeTailor will generate ThemeExtension class based on the configuration class you are required to annotate with [theme_tailor_annotation]. Please make sure to name class and theme properties appropriately according to the following rules:
 - class name starts with `_$` or `$_` (Recommendation is to use the former, as it ensures that the configuration class is private). If the class name does not contain the required prefix, then the generated class name will append an additional suffix,
-- class contains static `List<T>` fields (e.g. "static `List<Color> surface = []`). If no fields exist in the config class, the generator will create an empty ThemeExtension class.
+- class contains static `List<T>` fields (e.g. `static List<Color> surface = []`). If no fields exist in the config class, the generator will create an empty ThemeExtension class.
 
 Example
 ###### my_theme.dart
@@ -307,7 +307,7 @@ import 'package:flutter/foundation.dart';
 ```
 
 ## Json serialization
-The generator will copy all the annotations on the class and the static fields, including @JsonSerializable @JsonKeys and custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
+The generator will copy all the annotations on the class and the static fields, including "@JsonSerializable", "@JsonKey" and custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
 
 ```dart
 @tailor
