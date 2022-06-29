@@ -1,3 +1,3 @@
-dependency_overrides:
-  theme_tailor_annotation:
-    path: ../theme_tailor_annotation
+# dependency_overrides:
+#   theme_tailor_annotation:
+#     path: ../theme_tailor_annotation

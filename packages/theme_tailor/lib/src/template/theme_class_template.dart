@@ -33,7 +33,7 @@ class ThemeClassTemplate {
       return fieldsBuffer.toString();
     } else {
       return '''
-      ${config.className}({
+      const ${config.className}({
         ${constructorBuffer.toString()}
       });
     
@@ -104,7 +104,8 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
     config.fields.forEach((key, value) {
       if (value.implementsThemeExtension) {
-        classParams.write('$key: $key.lerp(other.$key,t),');
+        classParams.write(
+            '$key: $key${value.isNullable ? '?' : ''}.lerp(other.$key, t),');
       } else {
         classParams.write(
             '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
@@ -122,7 +123,7 @@ class ThemeClassTemplate {
     ''';
   }
 
-  String _jsonAnnotationFactory() {
+  String _fromJsonFactory() {
     if (!config.annotationManager.hasJsonSerializable) return '';
     return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>
       _\$${config.className}FromJson(json);\n''';
@@ -190,7 +191,7 @@ class ThemeClassTemplate {
     ${config.annotationManager.expandClassAnnotations()}
     class ${config.className} ${_classTypesDeclaration()} {
       ${_constructorAndParams()}
-      ${_jsonAnnotationFactory()}
+      ${_fromJsonFactory()}
       ${_generateThemes()}
       ${_copyWithMethod()}
       ${_lerpMethod()}
