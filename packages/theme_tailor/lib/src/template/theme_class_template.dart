@@ -33,7 +33,7 @@ class ThemeClassTemplate {
       return fieldsBuffer.toString();
     } else {
       return '''
-      ${config.className}({
+      const ${config.className}({
         ${constructorBuffer.toString()}
       });
     
