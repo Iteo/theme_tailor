@@ -1,7 +1,9 @@
 ## 1.0.2
 - Improve documentation,
 - Add support for json_serializable,
-- Generated class will overwrite `hashCode` and `==` operator. The equality operator will deeply compared collections in the class. 
+- Add support for nested themeExtension with `@themeExtension` annotation,
+- Add support for Flutter's DiagnosticableTreeMixin (debugFillProperties)
+- Generated class will overwrite the `hashCode` and `==` operator. The equality operator will deeply compare collections in the class. 
 
 ## 1.0.1
 - Fix README.md
