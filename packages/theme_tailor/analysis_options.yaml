@@ -79,3 +79,4 @@ linter:
     - use_function_type_syntax_for_parameters
     - use_rethrow_when_possible
     - valid_regexps
+    - depend_on_referenced_packages
