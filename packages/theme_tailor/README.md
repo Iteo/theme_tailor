@@ -10,6 +10,7 @@
 [example:json_serializable]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/json_serializable_example.dart
 [example:theme_encoders]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/json_serializable_example.dart
 [example:nested_themes]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/theme_extension_in_field.dart
+[example:debug_fill_properties]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/diagnosticable.dart
 
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
@@ -28,7 +29,9 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-# Theme Tailor
+<p align="center">
+<img src="https://github.com/Iteo/theme_tailor/raw/main/resources/branding/tt-text-logo-transparent.png?raw=true" width="100%" alt="Theme Tailor" />
+</p>
 
 Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0! The generator helps to minimize the required boilerplate code.
 
@@ -39,12 +42,13 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Add imports and part directive](#add-imports-and-part-directive)
     - [Run the code generator](#run-the-code-generator)
     - [Create Theme class](#create-theme-class)
-        - [Change themes quantity and names](#change-themes-quantity-and-names)
-        - [Change generated extensions](#change-generated-extensions)
-        - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
-        - [Custom types encoding](#custom-types-encoding)
-        - [Serialization](#serialization)
-
+    - [Change themes quantity and names](#change-themes-quantity-and-names)
+    - [Access generated themes list](#access-generated-themes-list)
+    - [Change generated extensions](#change-generated-extensions)
+    - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
+    - [Custom types encoding](#custom-types-encoding)
+    - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
+    - [Json serialization](#json-serialization)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -122,19 +126,19 @@ class _$MyTheme {
 
 The following code snippet defines the "MyTheme" theme extension class.
 - "MyTheme" extends `ThemeExtension<MyTheme>`
-- defined class is immutable with final fields
+- defined class is immutable with final fields with const constructor
 - there is one field "background" of type Color
 - "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
-- copy method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
-- lerp method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
-- an overwritten "hashCode" method && "==" operator
+- "copyWith" method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
+- "lerp" method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
+- "hashCode" method && "==" operator are created
 
 Additionally [theme_tailor_annotation] by default generates extension on BuildContext
 - "MyThemeBuildContextProps" extension on "BuildContext" is generated
 - getter on "background" of type "Color" is added directly to "BuildContext"
 
-### Change themes quantity and names
-By default,  "@tailor" will generate two themes: "light" and "dark".
+## Change themes quantity and names
+By default,  "@tailor" will generate two themes: "light" and "dark";
 To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.
 
 ```dart
@@ -142,24 +146,26 @@ To control the names and quantity of the themes, edit the "themes" property on t
 class _$MyTheme {}
 ```
 
-### Accessing generated themes list
+## Access generated themes list
 The generator will create a static getter with a list of the generated themes:
 
 ``` dart
 final allThemes = MyTailorGeneratedTheme.themes;
 ```
 
-### Change generated extensions
-By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor"
+## Change generated extensions
+By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or use "@TailorComponent" annotation.
 
 ```dart
 @Tailor(themeGetter: ThemeGetter.none)
+// OR
+@TailorComponent()
 ```
 
 "ThemeGetter" has several variants for generating common extensions to ease access to the declared themes.
 
-### Nesting generated ThemeExtensions, Modular themes && DesignSystems
-It might be beneficial to split them into smaller parts, where each part is responsible for the theme of one component. You can think about it as modularization of the theme. ThemeExtensions allow for easier custom theme integration with Flutter ThemeData without creating additional Inherited widgets handling theme changes. It is especially beneficial when 
+## Nesting generated ThemeExtensions, Modular themes && DesignSystems
+It might be beneficial to split them into smaller parts, where each part is responsible for the theme of one component. You can think about it as modularization of the theme. ThemeExtensions allow easier custom theme integration with Flutter ThemeData without creating additional Inherited widgets handling theme changes. It is especially beneficial when 
 - Creating design systems,
 - Modularization of the application per feature and components,
 - Create a package that supplies widgets and needs more or additional properties not found in ThemeData.
@@ -196,7 +202,7 @@ class _$ChatComponentsTheme {
 @tailorComponent
 class _$MsgBubble {
   // Keep in mind that Bubble type used here may be another Tailor component, and its generated themes can be selectively 
-  // assigned to proper fields. (By default tailor will generate 2 themes - light and blue)
+  // assigned to proper fields. (By default tailor will generate two themes: "light" and "dark")
 
   /// Lets say that my message bubble in 
   /// light mode is darkBlue
@@ -300,14 +306,16 @@ Custom supplied encoders override default ones provided by the code generator. U
 
 To see more examples of custom theme encoders implementation, head out to: [example: theme encoders][example:theme_encoders]
 
-## Flutter diagnosticable
+## Flutter diagnosticable / debugFillProperties
 To add support for Flutter diagnosticable to the generated ThemeExtension class, import Flutter foundation. Then create the ThemeTailor config class as usual.
 ```dart
 import 'package:flutter/foundation.dart';
 ```
 
+To see an example how to ensure debugFillProperties are generated, head out to: [example: debugFillProperties][example:debug_fill_properties]
+
 ## Json serialization
-The generator will copy all the annotations on the class and the static fields, including "@JsonSerializable", "@JsonKey" and custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
+The generator will copy all the annotations on the class and the static fields, including: "@JsonSerializable", "@JsonKey", custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
 
 ```dart
 @tailor
