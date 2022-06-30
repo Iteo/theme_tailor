@@ -1,3 +1,8 @@
+# 1.0.3
+- Improve documentation,
+- Fix broken readme link
+- Add branding materials
+
 ## 1.0.2
 - Improve documentation,
 - Add support for json_serializable,

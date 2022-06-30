@@ -176,11 +176,13 @@ class ThemeClassTemplate {
       for (final field in config.fields.values) hash(field)
     ];
 
-    if (hashedProps.length == 1)
+    if (hashedProps.length == 1) {
       return hashMethod('${hashedProps.first}.hashCode');
+    }
 
-    if (hashedProps.length <= 20)
+    if (hashedProps.length <= 20) {
       return hashMethod('Object.hash(${hashedProps.join(',')})');
+    }
 
     return hashMethod('Object.hashAll([${hashedProps.join(',')}])');
   }
