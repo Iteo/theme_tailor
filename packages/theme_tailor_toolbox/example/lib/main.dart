@@ -14,17 +14,23 @@ class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
 
   final _counter = ValueNotifier<int>(0);
-  final _canTap = ValueNotifier<bool>(true);
 
-  final _colorEncoderBenchmark = ColorEncoderBenchmark();
-  final _colorEncoderNullableBenchmark = ColorEncoderNullableBenchmark();
+  // final _colorEncoderNullableBenchmark = ColorEncoderNullableBenchmark();
+  // final _colorEncoderBenchmark = ColorEncoderBenchmark();
+  // final _materialColorEncoderBenchmark = MaterialColorEncoderBenchmark();
+  // final _materialColorEncoderNullableBenchmark =
+  //     MaterialColorEncoderNullableBenchmark();
+  final _materialAccentColorEncoderBenchmark =
+      MaterialAccentColorEncoderBenchmark();
+  final _materialAccentColorEncoderNullableBenchmark =
+      MaterialAccentColorEncoderNullableBenchmark();
 
   void onTap() {
-    _canTap.value = false;
     _counter.value++;
-    _colorEncoderBenchmark.report();
-    _colorEncoderNullableBenchmark.report();
-    _canTap.value = true;
+    // _colorEncoderNullableBenchmark.report();
+    // _colorEncoderBenchmark.report();
+    _materialAccentColorEncoderBenchmark.report();
+    _materialAccentColorEncoderNullableBenchmark.report();
   }
 
   @override
@@ -43,17 +49,10 @@ class MyHomePage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: ValueListenableBuilder<bool>(
-        valueListenable: _canTap,
-        builder: (context, canTap, child) => FloatingActionButton(
-          onPressed: _canTap.value ? onTap : null,
-          tooltip: 'Increment',
-          child: child,
-        ),
-        child: Opacity(
-          opacity: _canTap.value ? 1 : 0.5,
-          child: const Icon(Icons.play_arrow),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onTap,
+        tooltip: 'Increment',
+        child: const Icon(Icons.play_arrow),
       ),
     );
   }

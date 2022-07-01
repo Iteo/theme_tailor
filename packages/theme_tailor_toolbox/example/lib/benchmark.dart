@@ -36,3 +36,53 @@ class ColorEncoderNullableBenchmark extends BenchmarkBase {
     encoder.lerp(Colors.amber, Colors.pink, 0.3);
   }
 }
+
+class MaterialColorEncoderBenchmark extends BenchmarkBase {
+  MaterialColorEncoderBenchmark()
+      : super('Encoder: MaterialColor', emitter: BenchmarkScoreEmitter());
+
+  final MaterialColorEncoder encoder = const MaterialColorEncoder();
+
+  @override
+  void run() {
+    encoder.lerp(Colors.amber, Colors.pink, 0.3);
+  }
+}
+
+class MaterialColorEncoderNullableBenchmark extends BenchmarkBase {
+  MaterialColorEncoderNullableBenchmark()
+      : super('Encoder: MaterialColor?', emitter: BenchmarkScoreEmitter());
+
+  final MaterialColorNullEncoder encoder = const MaterialColorNullEncoder();
+
+  @override
+  void run() {
+    encoder.lerp(Colors.amber, Colors.pink, 0.3);
+  }
+}
+
+class MaterialAccentColorEncoderBenchmark extends BenchmarkBase {
+  MaterialAccentColorEncoderBenchmark()
+      : super('Encoder: MaterialAccentColor', emitter: BenchmarkScoreEmitter());
+
+  final MaterialAccentColorEncoder encoder = const MaterialAccentColorEncoder();
+
+  @override
+  void run() {
+    encoder.lerp(Colors.amberAccent, Colors.pinkAccent, 0.3);
+  }
+}
+
+class MaterialAccentColorEncoderNullableBenchmark extends BenchmarkBase {
+  MaterialAccentColorEncoderNullableBenchmark()
+      : super('Encoder: MaterialAccentColor?',
+            emitter: BenchmarkScoreEmitter());
+
+  final MaterialAccentColorNullEncoder encoder =
+      const MaterialAccentColorNullEncoder();
+
+  @override
+  void run() {
+    encoder.lerp(Colors.amberAccent, Colors.pinkAccent, 0.3);
+  }
+}
