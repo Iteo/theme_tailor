@@ -47,7 +47,7 @@
 /// }
 /// ```
 /// {@endtemplate}
-abstract class ThemeEncoder<T extends Object> {
+abstract class ThemeEncoder<T extends Object?> {
   const ThemeEncoder();
 
   /// Linearly interpolate between two values.
