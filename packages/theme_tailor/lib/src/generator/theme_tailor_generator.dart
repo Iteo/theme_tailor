@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -110,6 +111,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
+      themesFieldName: _getFreeThemeFieldName(fields.keys.toList()),
       encoderManager: encoderDataManager,
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
@@ -143,6 +145,37 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       if (encoderData != null) encoders[encoderData.type] = encoderData;
     }
     return encoders;
+  }
+
+  String _getFreeThemeFieldName(List<String> fieldNames) {
+    final themesFieldNames = [
+      'themes',
+      'tailorThemes',
+      'tailorThemesList',
+    ];
+
+    var i = 0;
+    while (true) {
+      final fieldName = themesFieldNames.length > i
+          ? themesFieldNames[i]
+          : 'themes${i - themesFieldNames.length}';
+
+      if (!fieldNames.contains(fieldName)) {
+        if (i != 0) {
+          final unavailablePropertyNames = themesFieldNames
+              .sublist(0, min(themesFieldNames.length, i))
+              .map((e) => '"$e"')
+              .toList();
+          print(
+            '$unavailablePropertyNames property name(s) for tailor theme list '
+            'would result in name collision, generated "$fieldName" instead.',
+          );
+        }
+
+        return fieldName;
+      }
+      i++;
+    }
   }
 }
 
