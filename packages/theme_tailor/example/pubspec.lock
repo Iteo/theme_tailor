@@ -407,7 +407,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.4"
   theme_tailor_annotation:
     dependency: "direct main"
     description:

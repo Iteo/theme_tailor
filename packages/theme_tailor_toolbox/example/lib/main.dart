@@ -1,5 +1,5 @@
-import 'package:example/benchmark.dart';
 import 'package:flutter/material.dart';
+import 'package:theme_tailor_toolbox_example/benchmark.dart';
 
 void main() => runApp(const MyApp());
 

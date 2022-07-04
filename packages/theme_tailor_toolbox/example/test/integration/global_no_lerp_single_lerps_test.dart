@@ -1,8 +1,8 @@
-import 'package:example/integration/global_no_lerp_single_lerps.dart'
-    as toolbox;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/material_color_encoder.dart';
+import 'package:theme_tailor_toolbox_example/integration/global_no_lerp_single_lerps.dart'
+    as toolbox;
 
 void main() {
   const color1 = Colors.black;

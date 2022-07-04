@@ -20,7 +20,6 @@ import 'package:theme_tailor/src/util/extension/element_annotation_extension.dar
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
 import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
