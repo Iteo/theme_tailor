@@ -49,6 +49,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
+    - [Ignore fields](#ignore-fields)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -95,7 +96,7 @@ Make sure to specify the correct file name in a part directive. In the example b
 ```dart
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-part 'name.tailor.dart'
+part 'name.tailor.dart';
 ```
 
 ## Run the code generator
@@ -196,7 +197,7 @@ class _$ChatComponentsTheme {
   static List<MsgList> msgList = MsgList.themes;
 
   /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
-  static List<NotGeneratedExtension> = [/*custom themes*/]
+  static List<NotGeneratedExtension> = [/*custom themes*/];
 }
 
 @tailorComponent
@@ -207,18 +208,18 @@ class _$MsgBubble {
   /// Lets say that my message bubble in 
   /// light mode is darkBlue
   /// dark mode is lightBlue
-  static List<Bubble> myBubble = [Bubble.darkBlue, Bubble.lightBlue]
+  static List<Bubble> myBubble = [Bubble.darkBlue, Bubble.lightBlue];
 
   /// Lets say that my message bubble in 
   /// light mode is darkOrange
   /// dark mode is lightOrange
-  static List<Bubble> friendsBubble = [Bubble.darkOrange, Bubble.lightOrange]
+  static List<Bubble> friendsBubble = [Bubble.darkOrange, Bubble.lightOrange];
 }
 
 @TailorComponent(themes: ['darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'])
 class _$Bubble {
-  static List<Color> background = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/]
-  static List<Color> textStyle = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/]
+  static List<Color> background = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/];
+  static List<Color> textStyle = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/];
 }
 
 /// You can also nest classes marked with @tailor (not recommended)
@@ -275,7 +276,7 @@ class _$Theme1 {}
 class _$Theme2 {}
 
 /// 3 Add it below your custom tailor annotation
-const appTailor = Tailor(themes: ['superLight'])
+const appTailor = Tailor(themes: ['superLight']);
 
 @appTailor
 @IntEncoder()
@@ -338,3 +339,19 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```dart
 @JsonSerializable(explicitToJson: true)
 ```
+
+## Ignore fields
+
+Fields other than `static List<T>` are ignored by default in the generator, but if you still want to ignore these, you can use `@ignore` annotation.\
+Example:
+```dart
+@tailor
+class _$IgnoreExample {
+  static List<Color> background = [AppColors.white, Colors.grey.shade900];
+  @ignore
+  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
+  @ignore
+  static List<int> numbers = [1, 2, 3];
+}
+```
+
