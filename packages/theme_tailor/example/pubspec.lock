@@ -402,12 +402,12 @@ packages:
     source: hosted
     version: "0.4.9"
   theme_tailor:
-    dependency: "direct dev"
+    dependency: "direct overridden"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   theme_tailor_annotation:
     dependency: "direct main"
     description:

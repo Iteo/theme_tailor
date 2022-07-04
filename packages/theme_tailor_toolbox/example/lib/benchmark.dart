@@ -1,8 +1,11 @@
+// ignore_for_file: implementation_imports
+
 import 'dart:developer';
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:flutter/material.dart';
-import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';
+import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/color_encoder.dart';
+import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/material_color_encoder.dart';
 
 class BenchmarkScoreEmitter extends ScoreEmitter {
   BenchmarkScoreEmitter();
@@ -29,7 +32,7 @@ class ColorEncoderNullableBenchmark extends BenchmarkBase {
   ColorEncoderNullableBenchmark()
       : super('Encoder: Color?', emitter: BenchmarkScoreEmitter());
 
-  final ColorEncoderNullable encoder = const ColorEncoderNullable();
+  final ColorNullEncoder encoder = const ColorNullEncoder();
 
   @override
   void run() {

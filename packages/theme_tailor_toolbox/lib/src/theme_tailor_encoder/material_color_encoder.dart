@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
+const materialColorEncoder = MaterialColorEncoder();
+const materialColorNullEncoder = MaterialColorNullEncoder();
+
+const materialAccentColorEncoder = MaterialAccentColorEncoder();
+const materialAccentColorNullEncoder = MaterialAccentColorNullEncoder();
+
 class MaterialColorEncoder extends ThemeEncoder<MaterialColor> {
   const MaterialColorEncoder();
 
