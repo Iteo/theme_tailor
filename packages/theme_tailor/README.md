@@ -342,7 +342,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 
 ## Ignore fields
 
-Fields other than `static List<T>` are ignored by default in the generator, but if you still want to ignore these, you can use `@ignore` annotation.\
+Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.\
 Example:
 ```dart
 @tailor
