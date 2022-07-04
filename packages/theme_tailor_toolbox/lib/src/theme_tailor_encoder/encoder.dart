@@ -1,11 +1,17 @@
 library theme_tailor_toolbox_encoder;
 
-export 'package:theme_tailor_toolbox/src/theme_tailor_encoder/color_encoder.dart'
-    show colorEncoder, colorNullEncoder;
-export 'package:theme_tailor_toolbox/src/theme_tailor_encoder/material_color_encoder.dart'
-    show
-        materialColorEncoder,
-        materialColorNullEncoder,
-        materialAccentColorEncoder,
-        materialAccentColorNullEncoder;
-export 'package:theme_tailor_toolbox/src/theme_tailor_encoder/no_interpolation_encoder.dart';
+export 'color/color_encoder.dart' show colorEncoder, colorEncoderNoLerp;
+export 'color/color_null_encoder.dart'
+    show colorNullEncoder, colorNullEncoderNoLerp;
+export 'material_accent_color/material_accent_color_encoder.dart'
+    show materialAccentColorEncoder, materialAccentColorEncoderNoLerp;
+export 'material_accent_color/material_accent_color_null_encoder.dart'
+    show materialAccentColorNullEncoder, materialAccentColorNullEncoderNoLerp;
+export 'material_color/material_color_encoder.dart'
+    show materialColorEncoder, materialColorEncoderNoLerp;
+export 'material_color/material_color_null_encoder.dart'
+    show materialColorNullEncoder, materialColorNullEncoderNoLerp;
+export 'text_style/text_style_encoder.dart'
+    show textStyleEncoder, textStyleEncoderNoLerp;
+export 'text_style/text_style_null_encoder.dart'
+    show textStyleNullEncoder, textStyleNullEncoderNoLerp;

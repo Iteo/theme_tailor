@@ -6,9 +6,10 @@ import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';
 part 'global_no_lerp_single_lerps.tailor.dart';
 
 @TailorComponent(themes: [])
-@colorNoLerpEncoder
-@materialColorNoLerpEncoder
-@materialAccentColorNoLerpEncoder
+@colorEncoderNoLerp
+@materialColorEncoderNoLerp
+@materialAccentColorEncoderNoLerp
+@textStyleEncoderNoLerp
 class _$Theme {
   @colorEncoder
   static const List<Color> color = [];
