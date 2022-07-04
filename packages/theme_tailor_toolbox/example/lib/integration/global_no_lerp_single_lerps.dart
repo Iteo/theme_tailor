@@ -19,6 +19,7 @@ class _$Theme {
   @materialColorEncoder
   static const List<MaterialColor> materialColor = [];
   static const List<MaterialColor> materialColorNoLerp = [];
+
   @materialAccentColorEncoder
   static const List<MaterialAccentColor> materialAccentColor = [];
   static const List<MaterialAccentColor> materialAccentColorNoLerp = [];

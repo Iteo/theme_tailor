@@ -1,20 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-const colorNoLerpEncoder = NoIntepolationEncoder<Color>;
-const colorNullNoLerpEncoder = NoIntepolationEncoder<Color?>;
+const colorNoLerpEncoder = ColorEncoderNoLerp();
+const colorNullNoLerpEncoder = ColorNullEncoderNoLerp();
 
-const materialColorNoLerpEncoder = NoIntepolationEncoder<MaterialColor>();
-const materialColorNullNoLerpEncoder = NoIntepolationEncoder<MaterialColor?>();
+const materialColorNoLerpEncoder = MaterialColorEncoder();
+const materialColorNullNoLerpEncoder = MaterialColorNullEncoder();
 
-const materialAccentColorNoLerpEncoder =
-    NoIntepolationEncoder<MaterialAccentColor>();
-const materialAccentColorNullNoLerpEncoder =
-    NoIntepolationEncoder<MaterialAccentColor?>();
+const materialAccentColorNoLerpEncoder = MaterialAccentColorEncoder();
+const materialAccentColorNullNoLerpEncoder = MaterialAccentColorNullEncoder();
 
-class NoIntepolationEncoder<T> extends ThemeEncoder<T> {
+abstract class NoIntepolationEncoder<T> extends ThemeEncoder<T> {
   const NoIntepolationEncoder();
 
   @override
   T lerp(T a, T b, double t) => t < 0.5 ? a : b;
+}
+
+class ColorEncoderNoLerp extends NoIntepolationEncoder<Color> {
+  const ColorEncoderNoLerp();
+}
+
+class ColorNullEncoderNoLerp extends NoIntepolationEncoder<Color?> {
+  const ColorNullEncoderNoLerp();
+}
+
+class MaterialColorEncoder extends NoIntepolationEncoder<MaterialColor> {
+  const MaterialColorEncoder();
+}
+
+class MaterialColorNullEncoder extends NoIntepolationEncoder<MaterialColor?> {
+  const MaterialColorNullEncoder();
+}
+
+class MaterialAccentColorEncoder
+    extends NoIntepolationEncoder<MaterialAccentColor> {
+  const MaterialAccentColorEncoder();
+}
+
+class MaterialAccentColorNullEncoder
+    extends NoIntepolationEncoder<MaterialAccentColor?> {
+  const MaterialAccentColorNullEncoder();
 }

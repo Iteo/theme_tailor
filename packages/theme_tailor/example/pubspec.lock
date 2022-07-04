@@ -402,7 +402,7 @@ packages:
     source: hosted
     version: "0.4.9"
   theme_tailor:
-    dependency: "direct overridden"
+    dependency: "direct dev"
     description:
       path: ".."
       relative: true
@@ -414,7 +414,7 @@ packages:
       path: "../../theme_tailor_annotation"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   timing:
     dependency: transitive
     description:
