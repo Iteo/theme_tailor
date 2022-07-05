@@ -153,6 +153,8 @@ The generator will create a static getter with a list of the generated themes:
 final allThemes = MyTailorGeneratedTheme.themes;
 ```
 
+If `themes` property is already used in the tailor class, the generator will use another name and print a warning.
+
 ## Change generated extensions
 By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or use "@TailorComponent" annotation.
 

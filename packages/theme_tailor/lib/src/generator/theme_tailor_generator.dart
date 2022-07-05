@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -22,6 +21,7 @@ import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
 import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
+import 'package:theme_tailor/src/util/field_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
@@ -106,12 +106,22 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       hasJsonSerializable: element.hasJsonSerializableAnnotation,
     );
 
+    final themeFieldName = getFreeFieldName(
+      fieldNames: fields.keys.toList(),
+      proposedNames: [
+        'themes',
+        'tailorThemes',
+        'tailorThemesList',
+      ],
+      warningPropertyName: 'tailor theme list',
+    );
+
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
       className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
-      themesFieldName: _getFreeThemeFieldName(fields.keys.toList()),
+      themesFieldName: themeFieldName,
       encoderManager: encoderDataManager,
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
@@ -145,37 +155,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       if (encoderData != null) encoders[encoderData.type] = encoderData;
     }
     return encoders;
-  }
-
-  String _getFreeThemeFieldName(List<String> fieldNames) {
-    final themesFieldNames = [
-      'themes',
-      'tailorThemes',
-      'tailorThemesList',
-    ];
-
-    var i = 0;
-    while (true) {
-      final fieldName = themesFieldNames.length > i
-          ? themesFieldNames[i]
-          : 'themes${i - themesFieldNames.length}';
-
-      if (!fieldNames.contains(fieldName)) {
-        if (i != 0) {
-          final unavailablePropertyNames = themesFieldNames
-              .sublist(0, min(themesFieldNames.length, i))
-              .map((e) => '"$e"')
-              .toList();
-          print(
-            '$unavailablePropertyNames property name(s) for tailor theme list '
-            'would result in name collision, generated "$fieldName" instead.',
-          );
-        }
-
-        return fieldName;
-      }
-      i++;
-    }
   }
 }
 
