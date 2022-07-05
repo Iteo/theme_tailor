@@ -1,3 +1,6 @@
+# 1.0.4
+- Fix name collision when theme class contains `themes` field
+
 # 1.0.3
 - Improve documentation,
 - Fix broken readme link

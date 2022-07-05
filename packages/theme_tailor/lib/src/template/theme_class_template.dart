@@ -50,7 +50,7 @@ class ThemeClassTemplate {
       buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
     });
     final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
-    buffer.writeln('static final themes = [$themesList];');
+    buffer.writeln('static final ${config.themesFieldName} = [$themesList];');
     return buffer.toString();
   }
 
