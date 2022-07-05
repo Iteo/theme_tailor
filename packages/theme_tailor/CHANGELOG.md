@@ -1,5 +1,6 @@
 # 1.0.4
 - Fix name collision when theme class contains `themes` field
+- Add support for typedefs
 
 # 1.0.3
 - Improve documentation,

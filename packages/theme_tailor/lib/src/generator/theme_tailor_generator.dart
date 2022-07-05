@@ -61,7 +61,15 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final fieldsToCheck =
         fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
-    final astVisitor = _TailorClassASTVisitor(fieldNamesToCheck: fieldsToCheck);
+    final typeDefAstVisitor = _TypeDefAstVisitor();
+    for (final unit in _getLibraryCompilationUnits(library)) {
+      unit.visitChildren(typeDefAstVisitor);
+    }
+
+    final astVisitor = _TailorClassASTVisitor(
+      fieldNamesToCheck: fieldsToCheck.toList(),
+      typeDefinitions: typeDefAstVisitor.typeDefinitions,
+    );
     _getAstNodeFromElement(element).visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
@@ -212,12 +220,16 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 }
 
 class _TailorClassASTVisitor extends SimpleAstVisitor {
-  _TailorClassASTVisitor({required this.fieldNamesToCheck});
+  _TailorClassASTVisitor({
+    required this.fieldNamesToCheck,
+    required this.typeDefinitions,
+  });
 
   final List<String> rawClassAnnotations = [];
   final Map<String, List<String>> rawFieldsAnnotations = {};
 
-  final Iterable<String> fieldNamesToCheck;
+  final List<String> fieldNamesToCheck;
+  final Map<String, TypeAnnotation> typeDefinitions;
   final Map<String, String> fieldTypes = {};
 
   @override
@@ -233,8 +245,14 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
     rawFieldsAnnotations[fieldName] = node.annotations;
 
     if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
+      final typeDefinitionChildEntities =
+          typeDefinitions[node.fields.childEntities.first.toString()]
+              ?.childEntities;
+
       final childTypeEntities =
-          fieldType.childEntities.map((e) => e.toString()).toList();
+          (typeDefinitionChildEntities ?? fieldType.childEntities)
+              .map((e) => e.toString())
+              .toList();
       if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
         final typeWithBraces = childTypeEntities[1];
         fieldTypes[fieldName] =
@@ -245,8 +263,28 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
 }
 
 AstNode _getAstNodeFromElement(Element element) {
-  final library = element.library!;
-  final result = library.session.getParsedLibraryByElement(library)
-      as ParsedLibraryResult?;
+  final result = _getParsedLibraryResultFromElement(element);
   return result!.getElementDeclaration(element)!.node;
+}
+
+List<CompilationUnit> _getLibraryCompilationUnits(Element library) {
+  final result = _getParsedLibraryResultFromElement(library);
+  return result!.units.map((u) => u.unit).toList();
+}
+
+ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
+  final library = element.library!;
+  return library.session.getParsedLibraryByElement(library)
+      as ParsedLibraryResult?;
+}
+
+class _TypeDefAstVisitor extends SimpleAstVisitor {
+  final typeDefinitions = <String, TypeAnnotation>{};
+
+  @override
+  void visitGenericTypeAlias(GenericTypeAlias node) {
+    typeDefinitions[node.name.toString().replaceAll('?','')] = node.type;
+
+    return super.visitGenericTypeAlias(node);
+  }
 }
