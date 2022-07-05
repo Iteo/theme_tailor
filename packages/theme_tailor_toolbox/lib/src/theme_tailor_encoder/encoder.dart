@@ -11,6 +11,7 @@ export 'material_color/material_color_encoder.dart'
     show materialColorEncoder, materialColorEncoderNoLerp;
 export 'material_color/material_color_null_encoder.dart'
     show materialColorNullEncoder, materialColorNullEncoderNoLerp;
+export 'no_lerp_encoder.dart';
 export 'text_style/text_style_encoder.dart'
     show textStyleEncoder, textStyleEncoderNoLerp;
 export 'text_style/text_style_null_encoder.dart'

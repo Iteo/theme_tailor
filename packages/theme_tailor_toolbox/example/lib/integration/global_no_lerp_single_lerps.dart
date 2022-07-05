@@ -5,11 +5,11 @@ import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';
 
 part 'global_no_lerp_single_lerps.tailor.dart';
 
-@TailorComponent(themes: [])
-@colorEncoderNoLerp
-@materialColorEncoderNoLerp
-@materialAccentColorEncoderNoLerp
-@textStyleEncoderNoLerp
+@TailorComponent(themes: ['light'])
+@NoLerpEncoder<Color>()
+@NoLerpEncoder<MaterialColor>()
+@NoLerpEncoder<MaterialAccentColor>()
+@NoLerpEncoder<TextStyle>()
 class _$Theme {
   @colorEncoder
   static const List<Color> color = [];

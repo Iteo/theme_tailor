@@ -1,6 +1,6 @@
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-abstract class NoLerpEncoder<T> extends ThemeEncoder<T> {
+class NoLerpEncoder<T> extends ThemeEncoder<T> {
   const NoLerpEncoder();
 
   @override
