@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
@@ -16,8 +17,11 @@ ThemeEncoderData? extractThemeEncoderData(
   });
 
   if (encoderSuper == null) return null;
+  final genericTypeArg =
+      (constantValue.type as InterfaceType).typeArguments.firstOrNull;
 
-  final encoderType = encoderSuper.typeArguments[0];
+  final encoderType = genericTypeArg ?? encoderSuper.typeArguments[0];
+
   final encoderTypeStr = encoderType.toString();
 
   final annotationElement = annotation?.element;
@@ -51,5 +55,6 @@ ThemeEncoderData? extractThemeEncoderData(
     constantValue.type!.element!.name!,
     reviver.accessor,
     encoderTypeStr,
+    genericTypeArg != null,
   );
 }
