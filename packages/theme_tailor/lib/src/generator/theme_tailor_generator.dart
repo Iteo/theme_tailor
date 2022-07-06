@@ -62,7 +62,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
     final typeDefAstVisitor = _TypeDefAstVisitor();
-    for (final unit in _getLibraryCompilationUnits(library)) {
+    for (final unit in _getLibrariesCompilationUnits(
+        [library, ...library.importedLibraries])) {
       unit.visitChildren(typeDefAstVisitor);
     }
 
@@ -267,15 +268,24 @@ AstNode _getAstNodeFromElement(Element element) {
   return result!.getElementDeclaration(element)!.node;
 }
 
-List<CompilationUnit> _getLibraryCompilationUnits(Element library) {
-  final result = _getParsedLibraryResultFromElement(library);
-  return result!.units.map((u) => u.unit).toList();
+List<CompilationUnit> _getLibrariesCompilationUnits(
+    List<LibraryElement> libraries) {
+  return libraries
+      .map(_getParsedLibraryResultFromElement)
+      .whereNotNull()
+      .map((lib) => lib.units.map((u) => u.unit))
+      .flattened
+      .toList();
 }
 
 ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
   final library = element.library!;
-  return library.session.getParsedLibraryByElement(library)
-      as ParsedLibraryResult?;
+  final parsedLibrary = library.session.getParsedLibraryByElement(library);
+  if (parsedLibrary is ParsedLibraryResult) {
+    return parsedLibrary;
+  } else {
+    return null;
+  }
 }
 
 class _TypeDefAstVisitor extends SimpleAstVisitor {
@@ -283,7 +293,7 @@ class _TypeDefAstVisitor extends SimpleAstVisitor {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    typeDefinitions[node.name.toString().replaceAll('?','')] = node.type;
+    typeDefinitions[node.name.toString().replaceAll('?', '')] = node.type;
 
     return super.visitGenericTypeAlias(node);
   }
