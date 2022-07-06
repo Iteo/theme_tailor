@@ -20,6 +20,7 @@ import 'package:theme_tailor/src/util/extension/element_annotation_extension.dar
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
 import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
+import 'package:theme_tailor/src/util/field_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
@@ -109,11 +110,22 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       hasJsonSerializable: element.hasJsonSerializableAnnotation,
     );
 
+    final themeFieldName = getFreeFieldName(
+      fieldNames: fields.keys.toList(),
+      proposedNames: [
+        'themes',
+        'tailorThemes',
+        'tailorThemesList',
+      ],
+      warningPropertyName: 'tailor theme list',
+    );
+
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
       className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
+      themesFieldName: themeFieldName,
       encoderManager: encoderDataManager,
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
