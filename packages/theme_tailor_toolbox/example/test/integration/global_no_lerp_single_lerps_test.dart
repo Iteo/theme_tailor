@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/material_accent_color/util.dart';
-import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/material_color/util.dart';
+import 'package:theme_tailor_toolbox/src/util/color.dart';
 import 'package:theme_tailor_toolbox_example/integration/global_no_lerp_single_lerps.dart'
     as toolbox;
 
@@ -32,7 +31,7 @@ void main() {
   );
 
   test('Proper encoder is called per field / class', () {
-    final t = 0.6;
+    const t = 0.6;
 
     final themeExpectedLerp = toolbox.Theme(
       color: Color.lerp(theme1.color, theme2.color, t)!,

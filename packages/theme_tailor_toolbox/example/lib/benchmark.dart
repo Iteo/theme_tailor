@@ -19,7 +19,7 @@ class ColorEncoderBenchmark extends BenchmarkBase {
   ColorEncoderBenchmark()
       : super('Encoder: Color', emitter: BenchmarkScoreEmitter());
 
-  final encoder = colorEncoder;
+  final encoder = EncoderToolbox.colorLerp;
 
   @override
   void run() {
@@ -31,7 +31,7 @@ class ColorEncoderNullableBenchmark extends BenchmarkBase {
   ColorEncoderNullableBenchmark()
       : super('Encoder: Color?', emitter: BenchmarkScoreEmitter());
 
-  final encoder = colorNullEncoder;
+  final encoder = EncoderToolbox.colorNullableLerp;
 
   @override
   void run() {
@@ -43,7 +43,7 @@ class MaterialColorEncoderBenchmark extends BenchmarkBase {
   MaterialColorEncoderBenchmark()
       : super('Encoder: MaterialColor', emitter: BenchmarkScoreEmitter());
 
-  final encoder = materialColorEncoder;
+  final encoder = EncoderToolbox.materialColorLerp;
 
   @override
   void run() {
@@ -55,7 +55,7 @@ class MaterialColorEncoderNullableBenchmark extends BenchmarkBase {
   MaterialColorEncoderNullableBenchmark()
       : super('Encoder: MaterialColor?', emitter: BenchmarkScoreEmitter());
 
-  final encoder = materialColorNullEncoder;
+  final encoder = EncoderToolbox.materialColorNullableLerp;
 
   @override
   void run() {
@@ -67,7 +67,7 @@ class MaterialAccentColorEncoderBenchmark extends BenchmarkBase {
   MaterialAccentColorEncoderBenchmark()
       : super('Encoder: MaterialAccentColor', emitter: BenchmarkScoreEmitter());
 
-  final encoder = materialAccentColorEncoder;
+  final encoder = EncoderToolbox.materialAccentColorLerp;
 
   @override
   void run() {
@@ -80,7 +80,7 @@ class MaterialAccentColorEncoderNullableBenchmark extends BenchmarkBase {
       : super('Encoder: MaterialAccentColor?',
             emitter: BenchmarkScoreEmitter());
 
-  final encoder = materialAccentColorNullEncoder;
+  final encoder = EncoderToolbox.materialAccentColorNullableLerp;
 
   @override
   void run() {

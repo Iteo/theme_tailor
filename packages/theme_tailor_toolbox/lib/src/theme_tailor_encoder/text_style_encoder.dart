@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-/// Default implementations of ThemeEncoders for TextStyle and TextStyle?
-/// Use TextStyleEncoder() for ThemeEncoder<TextStyle> encoder,
-/// Use TextStyleEncoder.nullable() for ThemeEncoder<TextStyle?> encoder,
-abstract class TextStyleEncoder {
-  const factory TextStyleEncoder() = TextStyleEncoderImpl;
-  const factory TextStyleEncoder.nullable() = TextStyleNullableEncoderImpl;
-}
-
-/// @nodoc
-class TextStyleEncoderImpl extends ThemeEncoder<TextStyle>
-    implements TextStyleEncoder {
-  const TextStyleEncoderImpl();
+/// ### TextStyleEncoder
+/// The default implementations of the ThemeEncoder for TextStyle
+///
+/// {@macro tttoolbox.encoders.encoderUsage}
+class TextStyleEncoder extends ThemeEncoder<TextStyle> {
+  const TextStyleEncoder();
 
   @override
   TextStyle lerp(TextStyle a, TextStyle b, double t) {
@@ -20,10 +14,12 @@ class TextStyleEncoderImpl extends ThemeEncoder<TextStyle>
   }
 }
 
-/// @nodoc
-class TextStyleNullableEncoderImpl extends ThemeEncoder<TextStyle?>
-    implements TextStyleEncoder {
-  const TextStyleNullableEncoderImpl();
+/// ### TextStyleNullableEncoder
+/// The default implementations of the ThemeEncoder for TextStyle?
+///
+/// {@macro tttoolbox.encoders.encoderUsage}
+class TextStyleNullableEncoder extends ThemeEncoder<TextStyle?> {
+  const TextStyleNullableEncoder();
 
   @override
   TextStyle? lerp(TextStyle? a, TextStyle? b, double t) {

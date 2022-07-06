@@ -11,15 +11,15 @@ part 'global_no_lerp_single_lerps.tailor.dart';
 @NoLerpEncoder<MaterialAccentColor>()
 @NoLerpEncoder<TextStyle>()
 class _$Theme {
-  @colorEncoder
+  @EncoderToolbox.colorLerp
   static const List<Color> color = [];
   static const List<Color> colorNoLerp = [];
 
-  @materialColorEncoder
+  @EncoderToolbox.materialColorLerp
   static const List<MaterialColor> materialColor = [];
   static const List<MaterialColor> materialColorNoLerp = [];
 
-  @materialAccentColorEncoder
+  @EncoderToolbox.materialAccentColorLerp
   static const List<MaterialAccentColor> materialAccentColor = [];
   static const List<MaterialAccentColor> materialAccentColorNoLerp = [];
 }

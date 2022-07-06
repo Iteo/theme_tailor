@@ -1,10 +1,12 @@
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-/// Default implementation of non linear interpolation.
-/// Encoder will use either first or second value depending on t value
-/// (No interpolation will take place)
+/// ### NoLerpEncoder
+/// The default implementation of non-interpolating encoder.\
+/// The encoder will use either first or second value depending on t value
 /// ```dart
+/// // Example of no-lerping encoder for Color and Color?
 /// const dontLerpColor = NoLerpEncoder<Color>();
+/// const dontLerpNullableColor = NoLerpEncoder<Color?>();
 /// ```
 class NoLerpEncoder<T> extends ThemeEncoder<T> {
   const NoLerpEncoder();
