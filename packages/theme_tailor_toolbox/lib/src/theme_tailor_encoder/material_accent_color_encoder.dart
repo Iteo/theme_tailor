@@ -1,5 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:theme_tailor_toolbox/src/theme_tailor_encoder/color/util.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:theme_tailor_toolbox/src/util/color.dart';
+
+abstract class MaterialAccentEncoder {
+  const factory MaterialAccentEncoder() = MaterialAccentEncoderImpl;
+  const factory MaterialAccentEncoder.nullable() =
+      MaterialAccentEncoderNullableImpl;
+}
+
+class MaterialAccentEncoderImpl extends ThemeEncoder<MaterialAccentColor>
+    implements MaterialAccentEncoder {
+  const MaterialAccentEncoderImpl();
+
+  @override
+  MaterialAccentColor lerp(
+    MaterialAccentColor a,
+    MaterialAccentColor b,
+    double t,
+  ) {
+    return lerpMaterialAccentColor(a, b, t)!;
+  }
+}
+
+class MaterialAccentEncoderNullableImpl
+    extends ThemeEncoder<MaterialAccentColor?>
+    implements MaterialAccentEncoder {
+  const MaterialAccentEncoderNullableImpl();
+
+  @override
+  MaterialAccentColor? lerp(
+      MaterialAccentColor? a, MaterialAccentColor? b, double t) {
+    return lerpMaterialAccentColor(a, b, t);
+  }
+}
 
 MaterialAccentColor? lerpMaterialAccentColor(
   MaterialAccentColor? a,

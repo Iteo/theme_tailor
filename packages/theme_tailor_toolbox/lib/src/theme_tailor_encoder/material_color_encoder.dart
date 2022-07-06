@@ -1,6 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:theme_tailor_toolbox/src/util/color.dart';
 
-import '../color/util.dart';
+abstract class MaterialColorEncoder {
+  const factory MaterialColorEncoder() = MaterialColorEncoderImpl;
+  const factory MaterialColorEncoder.nullable() =
+      MaterialColorEncoderNullableImpl;
+}
+
+class MaterialColorEncoderImpl extends ThemeEncoder<MaterialColor>
+    implements MaterialColorEncoder {
+  const MaterialColorEncoderImpl();
+
+  @override
+  MaterialColor lerp(MaterialColor a, MaterialColor b, double t) =>
+      lerpMaterialColor(a, b, t)!;
+}
+
+class MaterialColorEncoderNullableImpl extends ThemeEncoder<MaterialColor?>
+    implements MaterialColorEncoder {
+  const MaterialColorEncoderNullableImpl();
+
+  @override
+  MaterialColor? lerp(MaterialColor? a, MaterialColor? b, double t) =>
+      lerpMaterialColor(a, b, t);
+}
 
 MaterialColor? lerpMaterialColor(MaterialColor? a, MaterialColor? b, double t) {
   if (b == null) {
