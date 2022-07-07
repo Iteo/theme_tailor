@@ -1,5 +1,6 @@
 # 1.0.4
 - Fix name collision when theme class contains `themes` field
+- Empty theme class will now generate with const constructor 
 
 # 1.0.3
 - Improve documentation,
