@@ -1,3 +1,2 @@
-## 0.0.1
-
-* TODO: Describe initial release.
+# 1.0.0
+* Initial version of theme_tailor_toolbox library
