@@ -6,6 +6,17 @@ import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';
 
+abstract class CustomBenchmarkBase extends BenchmarkBase {
+  const CustomBenchmarkBase(super.name, {super.emitter});
+
+  @override
+  void exercise() {
+    for (var i = 0; i < 1000; i++) {
+      run();
+    }
+  }
+}
+
 class BenchmarkScoreEmitter extends ScoreEmitter {
   BenchmarkScoreEmitter();
 
@@ -15,7 +26,7 @@ class BenchmarkScoreEmitter extends ScoreEmitter {
   }
 }
 
-class ColorEncoderBenchmark extends BenchmarkBase {
+class ColorEncoderBenchmark extends CustomBenchmarkBase {
   ColorEncoderBenchmark()
       : super('Encoder: Color', emitter: BenchmarkScoreEmitter());
 
@@ -27,7 +38,7 @@ class ColorEncoderBenchmark extends BenchmarkBase {
   }
 }
 
-class ColorEncoderNullableBenchmark extends BenchmarkBase {
+class ColorEncoderNullableBenchmark extends CustomBenchmarkBase {
   ColorEncoderNullableBenchmark()
       : super('Encoder: Color?', emitter: BenchmarkScoreEmitter());
 
@@ -39,7 +50,7 @@ class ColorEncoderNullableBenchmark extends BenchmarkBase {
   }
 }
 
-class MaterialColorEncoderBenchmark extends BenchmarkBase {
+class MaterialColorEncoderBenchmark extends CustomBenchmarkBase {
   MaterialColorEncoderBenchmark()
       : super('Encoder: MaterialColor', emitter: BenchmarkScoreEmitter());
 
@@ -51,7 +62,7 @@ class MaterialColorEncoderBenchmark extends BenchmarkBase {
   }
 }
 
-class MaterialColorEncoderNullableBenchmark extends BenchmarkBase {
+class MaterialColorEncoderNullableBenchmark extends CustomBenchmarkBase {
   MaterialColorEncoderNullableBenchmark()
       : super('Encoder: MaterialColor?', emitter: BenchmarkScoreEmitter());
 
@@ -63,7 +74,7 @@ class MaterialColorEncoderNullableBenchmark extends BenchmarkBase {
   }
 }
 
-class MaterialAccentColorEncoderBenchmark extends BenchmarkBase {
+class MaterialAccentColorEncoderBenchmark extends CustomBenchmarkBase {
   MaterialAccentColorEncoderBenchmark()
       : super('Encoder: MaterialAccentColor', emitter: BenchmarkScoreEmitter());
 
@@ -75,7 +86,7 @@ class MaterialAccentColorEncoderBenchmark extends BenchmarkBase {
   }
 }
 
-class MaterialAccentColorEncoderNullableBenchmark extends BenchmarkBase {
+class MaterialAccentColorEncoderNullableBenchmark extends CustomBenchmarkBase {
   MaterialAccentColorEncoderNullableBenchmark()
       : super('Encoder: MaterialAccentColor?',
             emitter: BenchmarkScoreEmitter());

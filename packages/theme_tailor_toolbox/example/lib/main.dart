@@ -15,21 +15,14 @@ class MyHomePage extends StatelessWidget {
 
   final _counter = ValueNotifier<int>(0);
 
-  // final _colorEncoderNullableBenchmark = ColorEncoderNullableBenchmark();
-  // final _colorEncoderBenchmark = ColorEncoderBenchmark();
-  // final _materialColorEncoderBenchmark = MaterialColorEncoderBenchmark();
-  // final _materialColorEncoderNullableBenchmark =
-  //     MaterialColorEncoderNullableBenchmark();
-  final _materialAccentColorEncoderBenchmark =
-      MaterialAccentColorEncoderBenchmark();
+  final _materialColorEncoderNullableBenchmark =
+      MaterialColorEncoderNullableBenchmark();
   final _materialAccentColorEncoderNullableBenchmark =
       MaterialAccentColorEncoderNullableBenchmark();
 
   void onTap() {
     _counter.value++;
-    // _colorEncoderNullableBenchmark.report();
-    // _colorEncoderBenchmark.report();
-    _materialAccentColorEncoderBenchmark.report();
+    _materialColorEncoderNullableBenchmark.report();
     _materialAccentColorEncoderNullableBenchmark.report();
   }
 
