@@ -166,8 +166,13 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final extensionAnnotationTypeChecker =
       TypeChecker.fromRuntime(themeExtension.runtimeType);
 
+  final ignoreAnnotationTypeChecker =
+      TypeChecker.fromRuntime(ignore.runtimeType);
+
   @override
   void visitFieldElement(FieldElement element) {
+    if (ignoreAnnotationTypeChecker.hasAnnotationOf(element)) return;
+
     if (element.isStatic && element.type.isDartCoreList) {
       final propName = element.name;
       final isInternalAnnotation = <bool>[];
