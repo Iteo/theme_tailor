@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// @nodoc
-Color colorAlphaScale(Color a, double factor) {
-  return a.withAlpha((a.alpha * factor).round().clamp(0, 255));
+Color colorAlphaScale(Color color, double factor) {
+  return color.withAlpha((color.alpha * factor).round().clamp(0, 255));
 }
 
 /// @nodoc
