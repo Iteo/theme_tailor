@@ -1,6 +1,8 @@
 # 1.0.4
 - Fix name collision when theme class contains `themes` field
-- Fix the bug where the generator copies encoders below the `@tailor` annotation to the generated class
+- Fix the bug where the generator could not handle encoders extending generic type encoders
+- Empty theme class will now generate with const constructor 
+
 
 # 1.0.3
 - Improve documentation,
