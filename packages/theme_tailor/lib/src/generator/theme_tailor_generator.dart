@@ -41,7 +41,10 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         todo: 'Move @Tailor annotation above `class`',
       );
     }
-    final library = element.library;
+    final resolver = buildStep.resolver;
+    final library = await resolver
+        .libraryFor(await resolver.assetIdForElement(element.library));
+
     final hasDiagnostics = library.hasFlutterDiagnosticableImport;
 
     const stringUtil = StringFormat();
