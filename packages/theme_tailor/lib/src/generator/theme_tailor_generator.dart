@@ -26,8 +26,13 @@ import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:yaml/yaml.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
+  ThemeTailorGenerator({required this.builderOptions});
+
+  final BuilderOptions builderOptions;
+
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -58,8 +63,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
 
-    final fieldsToCheck =
-        fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
+    final fieldsToCheck = fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
     final astVisitor = _TailorClassASTVisitor(fieldNamesToCheck: fieldsToCheck);
     _getAstNodeFromElement(element).visitChildren(astVisitor);
@@ -136,9 +140,24 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 
   List<String> _computeThemes(ConstantReader annotation) {
-    return List<String>.from(
-      annotation.read('themes').listValue.map((e) => e.toStringValue()),
-    );
+    List<String> annotationThemes;
+    if (!annotation.read('themes').isNull) {
+      annotationThemes = List<String>.from(
+        annotation.read('themes').listValue.map((e) => e.toStringValue()),
+      );
+    } else {
+      annotationThemes = [];
+    }
+
+    var pubspecThemes = (builderOptions.config['themes'] as YamlList).map((element) => element.toString()).toList();
+
+    if (annotationThemes.isNotEmpty) {
+      return annotationThemes;
+    } else if (pubspecThemes.isNotEmpty) {
+      return pubspecThemes;
+    } else {
+      return ['light', 'dark'];
+    }
   }
 
   ExtensionData _computeThemeGetter(ConstantReader annotation) {
@@ -163,8 +182,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final Map<String, List<bool>> hasInternalAnnotations = {};
 
-  final extensionAnnotationTypeChecker =
-      TypeChecker.fromRuntime(themeExtension.runtimeType);
+  final extensionAnnotationTypeChecker = TypeChecker.fromRuntime(themeExtension.runtimeType);
 
   @override
   void visitFieldElement(FieldElement element) {
@@ -196,8 +214,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 
       final coreType = element.type.coreIterableGenericType;
 
-      final implementsThemeExtension =
-          hasThemeExtensionAnnotation || coreType.isThemeExtensionType;
+      final implementsThemeExtension = hasThemeExtensionAnnotation || coreType.isThemeExtensionType;
 
       hasInternalAnnotations[propName] = isInternalAnnotation;
 
@@ -233,12 +250,10 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
     rawFieldsAnnotations[fieldName] = node.annotations;
 
     if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
-      final childTypeEntities =
-          fieldType.childEntities.map((e) => e.toString()).toList();
+      final childTypeEntities = fieldType.childEntities.map((e) => e.toString()).toList();
       if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
         final typeWithBraces = childTypeEntities[1];
-        fieldTypes[fieldName] =
-            typeWithBraces.substring(1, typeWithBraces.length - 1);
+        fieldTypes[fieldName] = typeWithBraces.substring(1, typeWithBraces.length - 1);
       }
     }
   }
@@ -246,7 +261,6 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
 
 AstNode _getAstNodeFromElement(Element element) {
   final library = element.library!;
-  final result = library.session.getParsedLibraryByElement(library)
-      as ParsedLibraryResult?;
+  final result = library.session.getParsedLibraryByElement(library) as ParsedLibraryResult?;
   return result!.getElementDeclaration(element)!.node;
 }

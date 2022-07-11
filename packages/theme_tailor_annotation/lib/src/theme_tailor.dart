@@ -11,12 +11,12 @@ const tailor = Tailor();
 class Tailor {
   /// {@macro theme_tailor.theme_tailor}
   const Tailor({
-    this.themes = const ['light', 'dark'],
+    this.themes,
     this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
   });
 
-  final List<String> themes;
+  final List<String>? themes;
 
   /// Create getters for the easy access of the theme properties
   /// In case of creating component/modular themes, set it to
