@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:example/app_colors.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
@@ -51,7 +52,9 @@ class $_SimpleTheme {
   ];
 }
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

@@ -11,8 +11,10 @@ class ThemeEncoderData {
     String className,
     String accessor,
     String type,
+    bool isGeneric,
   ) {
-    final accessString = 'const $className${_withAccessor(accessor)}()';
+    final accessString =
+        'const $className${_withAccessor(accessor)}${_withType(isGeneric, type)}()';
     return ThemeEncoderData(accessString, type, false);
   }
 
@@ -35,6 +37,9 @@ class ThemeEncoderData {
 
   static String _withAccessor(String accessor) =>
       accessor.isEmpty ? '' : '.$accessor';
+
+  static String _withType(bool isGeneric, String type) =>
+      isGeneric ? '<$type>' : '';
 
   @override
   String toString() =>
