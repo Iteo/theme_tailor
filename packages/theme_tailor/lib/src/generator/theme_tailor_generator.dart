@@ -21,7 +21,6 @@ import 'package:theme_tailor/src/util/extension/element_annotation_extension.dar
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
 import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/field_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
@@ -97,10 +96,15 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     for (var i = 0; i < element.metadata.length; i++) {
       final annotation = element.metadata[i];
 
-      extractThemeEncoderData(
+      final encoder = extractThemeEncoderData(
         annotation,
         annotation.computeConstantValue()!,
-      )?.let((it) => classLevelEncoders[it.type] = it);
+      );
+
+      if (encoder != null) {
+        classLevelEncoders[encoder.type] = encoder;
+        continue;
+      }
 
       if (!annotation.isTailorAnnotation) {
         classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
@@ -194,8 +198,13 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final extensionAnnotationTypeChecker =
       TypeChecker.fromRuntime(themeExtension.runtimeType);
 
+  final ignoreAnnotationTypeChecker =
+      TypeChecker.fromRuntime(ignore.runtimeType);
+
   @override
   void visitFieldElement(FieldElement element) {
+    if (ignoreAnnotationTypeChecker.hasAnnotationOf(element)) return;
+
     if (element.isStatic && element.type.isDartCoreList) {
       if (constantThemes && !element.isConst) {
         print(
