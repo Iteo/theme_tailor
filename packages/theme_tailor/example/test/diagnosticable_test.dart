@@ -62,7 +62,7 @@ void main() {
   });
 
   test('no debugFillProperties if not importing flutter#foundation', () {
-    final theme = EmptyTheme();
+    const theme = EmptyTheme();
 
     expect(theme, isNot(isA<DiagnosticableTree>()));
   });
