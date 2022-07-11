@@ -14,6 +14,7 @@ class Tailor {
     this.themes = const ['light', 'dark'],
     this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
+    this.constantThemes = false,
   });
 
   final List<String> themes;
@@ -39,7 +40,7 @@ class Tailor {
   /// class ExampleTheme {...}
   /// ```
   ///
-  /// It allows to reuse tailor annotation accross several theme classes
+  /// It allows to reuse tailor annotation across several theme classes
   ///
   /// ```dart
   /// const myCustomAnnotation = Tailor(
@@ -53,4 +54,24 @@ class Tailor {
   /// class OtherExampleTheme {...}
   /// ```
   final List<ThemeEncoder>? encoders;
+
+  /// If true, the generator will generate constant themes.\
+  /// However, this feature comes with additional requirements:
+  /// - All fields to be included in the theme should be `const List<T>` type
+  /// - List length should match theme count, otherwise an error will be thrown
+  /// - List initializers should be declared in place, for example:
+  ///
+  /// ```dart
+  /// const someOtherList = ['a','b'];
+  ///
+  /// @Tailor(constantThemes: true)
+  /// class _$ConstantThemes {
+  ///   // This is correct
+  ///   static const someNumberList = [1, 2];
+  ///
+  ///   // This is bad
+  ///   static const otherList = someOtherList;
+  /// }
+  /// ```
+  final bool constantThemes;
 }

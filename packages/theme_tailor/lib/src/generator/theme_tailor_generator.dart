@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
+import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
@@ -49,25 +50,47 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final className = element.name;
     final themes = _computeThemes(annotation);
     final themeGetter = _computeThemeGetter(annotation);
+    final constantThemes = annotation.read('constantThemes').boolValue;
 
     final classLevelEncoders = _computeEncoders(annotation);
     final classLevelAnnotations = <String>[];
     final fieldLevelAnnotations = <String, List<String>>{};
 
-    final tailorClassVisitor = _TailorClassVisitor();
+    final tailorClassVisitor = _TailorClassVisitor(
+      constantThemes: constantThemes,
+    );
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
 
     final fieldsToCheck =
         fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
-    final astVisitor = _TailorClassASTVisitor(fieldNamesToCheck: fieldsToCheck);
-    _getAstNodeFromElement(element).visitChildren(astVisitor);
-
+    final classAstNode = _getAstNodeFromElement(element);
+    final astVisitor = _TailorClassASTVisitor(
+      fieldNamesToCheck: fieldsToCheck,
+    );
+    classAstNode.visitChildren(astVisitor);
     for (final typeEntry in astVisitor.fieldTypes.entries) {
       final fieldValue = fields[typeEntry.key];
       if (fieldValue != null) {
         fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
+      }
+    }
+
+    if (constantThemes) {
+      final fieldInitializerVisitor = _TailorFieldInitializerVisitor(
+        themeCount: themes.length,
+        fieldsToCheck: tailorClassVisitor.fields.keys.toList(),
+      );
+      classAstNode.visitChildren(fieldInitializerVisitor);
+
+      for (final fieldValueEntry
+          in fieldInitializerVisitor.fieldValues.entries) {
+        final fieldValue = fields[fieldValueEntry.key];
+        if (fieldValue != null) {
+          fields[fieldValueEntry.key] = fieldValue.copyWith(
+              values: fieldInitializerVisitor.fieldValues[fieldValueEntry.key]);
+        }
       }
     }
 
@@ -126,6 +149,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
       isFlutterDiagnosticable: hasDiagnostics,
+      constantThemes: constantThemes,
     );
 
     final generatorBuffer = StringBuffer()
@@ -159,6 +183,10 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
+  _TailorClassVisitor({required this.constantThemes});
+
+  final bool constantThemes;
+
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final Map<String, List<bool>> hasInternalAnnotations = {};
@@ -169,6 +197,13 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   @override
   void visitFieldElement(FieldElement element) {
     if (element.isStatic && element.type.isDartCoreList) {
+      if (constantThemes && !element.isConst) {
+        print(
+            'Field "${element.name}" needs to be a const in order to be included'
+            ' in generated theme');
+        return;
+      }
+
       final propName = element.name;
       final isInternalAnnotation = <bool>[];
 
@@ -240,6 +275,89 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
         fieldTypes[fieldName] =
             typeWithBraces.substring(1, typeWithBraces.length - 1);
       }
+    }
+  }
+}
+
+class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
+  _TailorFieldInitializerVisitor({
+    required this.themeCount,
+    required this.fieldsToCheck,
+  });
+
+  final int themeCount;
+  final List<String> fieldsToCheck;
+
+  final Map<String, List<String>> fieldValues = {};
+
+  final _constKeyword = 'const';
+
+  @override
+  void visitFieldDeclaration(FieldDeclaration node) {
+    final fieldName = node.name;
+    if (!fieldsToCheck.contains(fieldName)) {
+      return;
+    }
+
+    for (final variable in node.fields.variables) {
+      final initializer = variable.initializer;
+      if (initializer == null) {
+        continue;
+      }
+
+      var token = initializer.beginToken.previous!;
+
+      var stringValue = '';
+      final values = <String>[];
+
+      var parenthesis = -1;
+
+      while (token.type != TokenType.SEMICOLON) {
+        final next = token.next;
+        if (next != null) {
+          token = next;
+        } else {
+          break;
+        }
+
+        if (parenthesis == -1 && token.type == TokenType.OPEN_SQUARE_BRACKET) {
+          parenthesis++;
+          continue;
+        }
+
+        if (parenthesis == 0 && token.type == TokenType.CLOSE_SQUARE_BRACKET) {
+          if (stringValue.isNotEmpty) {
+            values.add(stringValue.replaceAll(_constKeyword, ''));
+          }
+          break;
+        }
+
+        if (token.type == TokenType.OPEN_PAREN ||
+            token.type == TokenType.OPEN_SQUARE_BRACKET) {
+          parenthesis++;
+        }
+
+        if (token.type == TokenType.CLOSE_PAREN ||
+            token.type == TokenType.CLOSE_SQUARE_BRACKET) {
+          parenthesis--;
+        }
+
+        if (token.type == TokenType.COMMA && parenthesis == 0) {
+          values.add(stringValue.replaceAll(_constKeyword, ''));
+          stringValue = '';
+        } else {
+          stringValue += token.toString();
+        }
+      }
+
+      if (values.length != themeCount) {
+        throw InvalidGenerationSourceError(
+          'List length should match theme count',
+          element: node.declaredElement,
+        );
+      }
+      fieldValues[fieldName] = values;
+      break;
     }
   }
 }

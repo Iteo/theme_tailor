@@ -1,5 +1,6 @@
 # 1.0.4
 - Fix name collision when theme class contains `themes` field
+- Add option to generate constant themes
 
 # 1.0.3
 - Improve documentation,

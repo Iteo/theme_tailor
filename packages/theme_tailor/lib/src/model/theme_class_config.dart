@@ -14,6 +14,7 @@ class ThemeClassConfig {
     required this.themeGetter,
     required this.annotationManager,
     required this.isFlutterDiagnosticable,
+    required this.constantThemes,
   });
 
   final Map<String, Field> fields;
@@ -25,4 +26,5 @@ class ThemeClassConfig {
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
   final bool isFlutterDiagnosticable;
+  final bool constantThemes;
 }

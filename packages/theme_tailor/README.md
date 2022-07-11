@@ -46,6 +46,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Access generated themes list](#access-generated-themes-list)
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
+    - [Generate constant theme constructors](#generate-constant-theme-constructors)
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
@@ -238,6 +239,27 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 ```
 
 To see examle implementation of nested theme, head out to: [example:nested_themes][example: nested_themes]
+
+## Generate constant theme constructors
+
+It is possible to generate constant constructors by setting `constantThemes` parameter to true in 
+the `@Tailor(...)` annotation, however this feature comes with additional requirements:
+
+- All fields to be included in the theme should be `const List<T>` type
+- List length should match theme count, otherwise an error will be thrown
+- List initializers should be declared in place, for example:
+```dart
+const someOtherList = ['a','b'];
+
+@Tailor(constantThemes: true)
+class _$ConstantThemes {
+  // This is correct
+  static const someNumberList = [1, 2];
+  
+  // This is bad
+  static const otherList = someOtherList;
+}
+```
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:
