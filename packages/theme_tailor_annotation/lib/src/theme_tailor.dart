@@ -14,7 +14,7 @@ class Tailor {
     this.themes = const ['light', 'dark'],
     this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
-    this.constantThemes = false,
+    this.requireStaticConst = false,
   });
 
   final List<String> themes;
@@ -55,7 +55,7 @@ class Tailor {
   /// ```
   final List<ThemeEncoder>? encoders;
 
-  /// If true, the generator will generate constant themes.\
+  /// If true, the generator will force generating constant themes.\
   /// However, this feature comes with additional requirements:
   /// - All fields to be included in the theme should be `const List<T>` type
   /// - List length should match theme count, otherwise an error will be thrown
@@ -64,7 +64,7 @@ class Tailor {
   /// ```dart
   /// const someOtherList = ['a','b'];
   ///
-  /// @Tailor(constantThemes: true)
+  /// @Tailor(requireStaticConst: true)
   /// class _$ConstantThemes {
   ///   // This is correct
   ///   static const someNumberList = [1, 2];
@@ -73,5 +73,5 @@ class Tailor {
   ///   static const otherList = someOtherList;
   /// }
   /// ```
-  final bool constantThemes;
+  final bool requireStaticConst;
 }

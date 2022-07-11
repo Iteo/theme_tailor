@@ -2,7 +2,7 @@
 
 import 'package:example/diagnosticable_lib.dart';
 
-part 'constant_themes.tailor.dart';
+part 'constant_theme.tailor.dart';
 
 class SomeClass {
   const SomeClass({
@@ -20,8 +20,8 @@ class ClassWithList<T> {
   final List<T> list;
 }
 
-@Tailor(constantThemes: true)
-class _$ConstantThemes {
+@Tailor(requireStaticConst: true)
+class _$ConstantTheme {
   static const someNumberList = [1, 2];
 
   static const someClass = [
