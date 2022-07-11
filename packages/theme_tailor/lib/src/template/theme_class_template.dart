@@ -50,7 +50,8 @@ class ThemeClassTemplate {
       buffer.write(_themeTemplate(i, e));
     });
     final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
-    buffer.writeln('static final ${config.themesFieldName} = [$themesList];');
+    buffer.writeln(
+        'static ${_themeModifier()} ${config.themesFieldName} = [$themesList];');
     return buffer.toString();
   }
 
@@ -68,11 +69,8 @@ class ThemeClassTemplate {
             '${field.key}: ${config.baseClassName}.${field.key}[$index],');
       }
     }
-
-    final themeModifier = config.constantThemes ? 'const' : 'final';
-
     return '''
-    static $themeModifier $returnType $themeName = $returnType(
+    static ${_themeModifier()} $returnType $themeName = $returnType(
       ${buffer.toString()}
     );\n
     ''';
@@ -194,6 +192,8 @@ class ThemeClassTemplate {
 
     return hashMethod('Object.hashAll([${hashedProps.join(',')}])');
   }
+
+  String _themeModifier() => config.constantThemes ? 'const' : 'final';
 
   @override
   String toString() {
