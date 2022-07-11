@@ -83,9 +83,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print(_lightThemeData);
-    print(SimpleTheme.light);
-
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: themeModeNotifier,
       builder: (_, themeMode, __) {
