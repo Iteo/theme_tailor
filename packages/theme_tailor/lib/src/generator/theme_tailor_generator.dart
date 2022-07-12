@@ -26,7 +26,6 @@ import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-import 'package:yaml/yaml.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   ThemeTailorGenerator({required this.builderOptions});
@@ -150,7 +149,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       annotationThemes = [];
     }
 
-    var pubspecThemes = (builderOptions.config['themes'] as YamlList)
+    var pubspecThemes = (builderOptions.config['themes'] as List)
         .map((element) => element.toString())
         .toList();
 
