@@ -1,4 +1,5 @@
 # 1.0.4
+- Get themes from build.yaml
 - Fix name collision when theme class contains `themes` field
 
 # 1.0.3
