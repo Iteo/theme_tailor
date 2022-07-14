@@ -49,7 +49,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
-    - [Setup themes in build.yaml](#setup-themes-in-build.yaml)
+    - [Build configuration](#build-configuration)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -342,7 +342,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 @JsonSerializable(explicitToJson: true)
 ```
 
-## Setup themes in build.yaml
+## Build configuration
 To set themes from build.yaml you should create build.yaml file in the lib folder with following content:
 ```yaml
 targets:
