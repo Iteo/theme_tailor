@@ -344,7 +344,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 
 ## Setup themes in build.yaml
 To set themes from build.yaml you should create build.yaml file in the lib folder with following content:
-```
+```yaml
 targets:
   $default:
     builders:
@@ -352,4 +352,4 @@ targets:
         options:
           themes: ["light", "dark", "superDark"]
 ```
-where themes is the list of themes.
+where ```themes``` is the list of themes.
