@@ -1,8 +1,8 @@
 # 1.0.4
 - Fix name collision when theme class contains `themes` field
 - Fix the bug where the generator could not handle encoders extending generic type encoders
-- Empty theme class will now generate with const constructor 
-
+- Empty theme class will now generate with const constructor
+- Add support for typedefs
 
 # 1.0.3
 - Improve documentation,
