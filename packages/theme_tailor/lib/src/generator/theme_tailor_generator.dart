@@ -140,26 +140,18 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 
   List<String> _computeThemes(ConstantReader annotation) {
-    List<String> annotationThemes;
     if (!annotation.read('themes').isNull) {
-      annotationThemes = List<String>.from(
+      return List<String>.from(
         annotation.read('themes').listValue.map((e) => e.toStringValue()),
       );
-    } else {
-      annotationThemes = [];
     }
-
-    var pubspecThemes = (builderOptions.config['themes'] as List)
+    var pubThemes = (builderOptions.config['themes'] as List)
         .map((element) => element.toString())
         .toList();
 
-    if (annotationThemes.isNotEmpty) {
-      return annotationThemes;
-    } else if (pubspecThemes.isNotEmpty) {
-      return pubspecThemes;
-    } else {
-      return ['light', 'dark'];
-    }
+    const defaultThemes = ['light', 'dark'];
+
+    return pubThemes.isNotEmpty ? pubThemes : defaultThemes;
   }
 
   ExtensionData _computeThemeGetter(ConstantReader annotation) {
