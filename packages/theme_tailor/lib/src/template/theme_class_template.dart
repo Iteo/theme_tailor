@@ -30,7 +30,11 @@ class ThemeClassTemplate {
     });
 
     if (config.fields.isEmpty) {
-      return fieldsBuffer.toString();
+      return '''
+      const ${config.className}();
+    
+      ${fieldsBuffer.toString()}
+    ''';
     } else {
       return '''
       const ${config.className}({

@@ -3,4 +3,4 @@ targets:
     builders:
       theme_tailor:
         options:
-          themes: [ "light", "dark", "superDark" ]
+          themes: ["light", "dark"]
