@@ -27,6 +27,10 @@ import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
+  ThemeTailorGenerator({required this.builderOptions});
+
+  final BuilderOptions builderOptions;
+
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -149,9 +153,18 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 
   List<String> _computeThemes(ConstantReader annotation) {
-    return List<String>.from(
-      annotation.read('themes').listValue.map((e) => e.toStringValue()),
-    );
+    if (!annotation.read('themes').isNull) {
+      return List<String>.from(
+        annotation.read('themes').listValue.map((e) => e.toStringValue()),
+      );
+    }
+    var pubThemes = (builderOptions.config['themes'] as List)
+        .map((element) => element.toString())
+        .toList();
+
+    const defaultThemes = ['light', 'dark'];
+
+    return pubThemes.isNotEmpty ? pubThemes : defaultThemes;
   }
 
   ExtensionData _computeThemeGetter(ConstantReader annotation) {

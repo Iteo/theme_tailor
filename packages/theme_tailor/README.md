@@ -50,6 +50,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
     - [Ignore fields](#ignore-fields)
+    - [Build configuration](#build-configuration)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -343,9 +344,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```
 
 ## Ignore fields
-
-Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.\
-Example:
+Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.
 ```dart
 @tailor
 class _$IgnoreExample {
@@ -355,5 +354,17 @@ class _$IgnoreExample {
   @ignore
   static List<int> numbers = [1, 2, 3];
 }
+```
+
+## Build configuration
+You can also configure the generator by setting values in the build.yaml.
+
+```yaml
+targets:
+  $default:
+    builders:
+      theme_tailor:
+        options:
+          themes: ["light", "dark", "superDark"]
 ```
 
