@@ -21,17 +21,12 @@ import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/extension/field_declaration_extension.dart';
 import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
-import 'package:theme_tailor/src/util/field_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
-  ThemeTailorGenerator({required this.builderOptions});
-
-  final BuilderOptions builderOptions;
-
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -110,22 +105,11 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       hasJsonSerializable: element.hasJsonSerializableAnnotation,
     );
 
-    final themeFieldName = getFreeFieldName(
-      fieldNames: fields.keys.toList(),
-      proposedNames: [
-        'themes',
-        'tailorThemes',
-        'tailorThemesList',
-      ],
-      warningPropertyName: 'tailor theme list',
-    );
-
     final config = ThemeClassConfig(
       fields: tailorClassVisitor.fields,
       className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
-      themesFieldName: themeFieldName,
       encoderManager: encoderDataManager,
       themeGetter: themeGetter,
       annotationManager: annotationDataManager,
@@ -140,18 +124,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 
   List<String> _computeThemes(ConstantReader annotation) {
-    if (!annotation.read('themes').isNull) {
-      return List<String>.from(
-        annotation.read('themes').listValue.map((e) => e.toStringValue()),
-      );
-    }
-    var pubThemes = (builderOptions.config['themes'] as List)
-        .map((element) => element.toString())
-        .toList();
-
-    const defaultThemes = ['light', 'dark'];
-
-    return pubThemes.isNotEmpty ? pubThemes : defaultThemes;
+    return List<String>.from(
+      annotation.read('themes').listValue.map((e) => e.toStringValue()),
+    );
   }
 
   ExtensionData _computeThemeGetter(ConstantReader annotation) {

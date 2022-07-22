@@ -15,7 +15,6 @@ dependencies:
   json_annotation: ^4.5.0
   theme_tailor_annotation: ^1.0.0
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

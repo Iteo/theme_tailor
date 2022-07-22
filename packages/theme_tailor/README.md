@@ -49,7 +49,6 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
-    - [Build configuration](#build-configuration)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -153,8 +152,6 @@ The generator will create a static getter with a list of the generated themes:
 ``` dart
 final allThemes = MyTailorGeneratedTheme.themes;
 ```
-
-If `themes` property is already used in the tailor class, the generator will use another name and print a warning.
 
 ## Change generated extensions
 By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or use "@TailorComponent" annotation.
@@ -341,15 +338,3 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```dart
 @JsonSerializable(explicitToJson: true)
 ```
-
-## Build configuration
-To set themes from build.yaml you should create build.yaml file in the lib folder with following content:
-```yaml
-targets:
-  $default:
-    builders:
-      theme_tailor:
-        options:
-          themes: ["light", "dark", "superDark"]
-```
-where ```themes``` is the list of themes.

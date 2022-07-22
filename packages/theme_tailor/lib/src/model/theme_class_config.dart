@@ -9,7 +9,6 @@ class ThemeClassConfig {
     required this.themes,
     required this.baseClassName,
     required this.className,
-    required this.themesFieldName,
     required this.encoderManager,
     required this.themeGetter,
     required this.annotationManager,
@@ -20,7 +19,6 @@ class ThemeClassConfig {
   final List<String> themes;
   final String baseClassName;
   final String className;
-  final String themesFieldName;
   final ThemeEncoderDataManager encoderManager;
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
