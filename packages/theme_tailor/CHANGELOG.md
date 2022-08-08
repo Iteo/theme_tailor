@@ -1,3 +1,7 @@
+# 1.0.5
+- Fix generator not loading default theme names if they were not specified in the annotation or build.yaml
+- Improve documentation
+
 # 1.0.4
 - Build configuration. It is possible to configure `themes` within the build.yaml
 - Fix name collision when theme class contains `themes` field

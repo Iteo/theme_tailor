@@ -5,10 +5,11 @@ part 'themes_name_collision.tailor.dart';
 
 @tailor
 class $_SimpleTheme {
+  @themeExtension
   static List<AnotherTheme> anotherTheme = AnotherTheme.tailorThemes;
 }
 
-@tailor
+@tailorComponent
 class $_AnotherTheme {
   static List<Color> themes = [Colors.amber, Colors.blueGrey.shade800];
 }

@@ -414,7 +414,7 @@ packages:
       path: "../../theme_tailor_annotation"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   timing:
     dependency: transitive
     description:
