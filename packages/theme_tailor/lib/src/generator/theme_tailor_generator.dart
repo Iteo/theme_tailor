@@ -320,6 +320,6 @@ class _TypeDefAstVisitor extends SimpleAstVisitor {
   void visitGenericTypeAlias(GenericTypeAlias node) {
     typeDefinitions[node.name.toString().replaceAll('?', '')] = node.type;
 
-    return super.visitGenericTypeAlias(node);
+    super.visitGenericTypeAlias(node);
   }
 }
