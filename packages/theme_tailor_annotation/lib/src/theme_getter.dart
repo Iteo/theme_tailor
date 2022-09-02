@@ -80,7 +80,7 @@ enum ThemeGetter {
   /// Add extension on BuildContext with getters to the
   /// properties of the generated theme class.
   /// ```dart
-  /// final background = context.myTheme.background;
+  /// final background = context.background;
   /// ```
   /// {@endtemplate}
   ///

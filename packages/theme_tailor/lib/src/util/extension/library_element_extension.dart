@@ -6,7 +6,7 @@ extension LibraryElementExtension on LibraryElement {
     return ImportFinder(
       lib: this,
       whereElement: isClass('Diagnosticable'),
-      whereLibrary: isWithinLibrary('flutter'),
+      whereLibrary: isWithinLibrary('diagnostics'),
     ).recursiveSearch();
   }
 }

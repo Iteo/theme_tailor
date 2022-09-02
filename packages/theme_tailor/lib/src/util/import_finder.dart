@@ -14,7 +14,7 @@ ElementMatcher isWithinLibrary(String name) {
 }
 
 class ImportFinder {
-  const ImportFinder({
+  ImportFinder({
     required this.lib,
     required this.whereElement,
     this.whereLibrary,
@@ -38,17 +38,29 @@ class ImportFinder {
       }
     }
 
-    return libraries.any(_isExportedRecursivaly);
+    return libraries.any((lib) => _isExportedRecursivaly(
+          lib,
+          {lib.lib.librarySource.fullName},
+        ));
   }
 
-  bool _isExportedRecursivaly(LibraryElementWithVisibility lib) {
+  bool _isExportedRecursivaly(
+    LibraryElementWithVisibility lib,
+    Set<String> visited,
+  ) {
     if (lib.isRelevant(whereLibrary)) {
       if (lib.libTopLevelExportElements.any(whereElement)) {
         return true;
       }
     }
 
-    return lib.exportedLibraries.any(_isExportedRecursivaly);
+    return lib.exportedLibraries.any((exported) {
+      final name = exported.lib.librarySource.fullName;
+      if (!visited.contains(name)) {
+        return _isExportedRecursivaly(lib, visited..add(name));
+      }
+      return false;
+    });
   }
 }
 
@@ -86,7 +98,7 @@ class LibraryElementWithVisibility {
 
   /// based on exportedLibraries from analyzer-4.1.0
   /// lib/src/dart/element/element.dart
-  Iterable<LibraryElementWithVisibility> get exportedLibraries {
+  List<LibraryElementWithVisibility> get exportedLibraries {
     final libraries = <LibraryElementWithVisibility>{};
     for (final export in lib.exports) {
       final library = export.exportedLibrary;
