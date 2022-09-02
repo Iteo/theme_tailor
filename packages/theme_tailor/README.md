@@ -141,7 +141,8 @@ Additionally [theme_tailor_annotation] by default generates extension on BuildCo
 
 ## Change themes quantity and names
 By default,  "@tailor" will generate two themes: "light" and "dark";
-To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.
+To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
+You can also change theme names globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info
 
 ```dart
 @Tailor(themes: ['baseTheme'])
@@ -357,7 +358,12 @@ class _$IgnoreExample {
 ```
 
 ## Build configuration
-You can also configure the generator by setting values in the build.yaml.
+You can also configure the generator by setting values in the build.yaml.\
+Supported options (If a given option is present in the build option and annotation, the generator uses the annotation's value)
+
+| Build option | Annotation property | Default           | Other                                                          |
+|--------------|---------------------|-------------------|----------------------------------------------------------------|
+| themes       | themes              | ["light", "dark"] | Set to [] in build option or annotation to not generate themes |
 
 ```yaml
 targets:
