@@ -57,7 +57,7 @@ class ImportFinder {
     return lib.exportedLibraries.any((exported) {
       final name = exported.lib.librarySource.fullName;
       if (!visited.contains(name)) {
-        return _isExportedRecursivaly(lib, visited..add(name));
+        return _isExportedRecursivaly(exported, visited..add(name));
       }
       return false;
     });
@@ -93,7 +93,7 @@ class LibraryElementWithVisibility {
   }
 
   Iterable<Element> get libTopLevelExportElements {
-    return lib.topLevelElements.where(isExported);
+    return lib.exportNamespace.definedNames.values.where(isExported);
   }
 
   /// based on exportedLibraries from analyzer-4.1.0
