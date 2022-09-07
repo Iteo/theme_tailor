@@ -1,3 +1,6 @@
+# 1.0.6
+- Fix compatibility issues with Flutter 3.3.0
+
 # 1.0.5
 - Fix generator not loading default theme names if they were not specified in the annotation or build.yaml
 - Improve documentation
