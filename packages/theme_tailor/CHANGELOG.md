@@ -1,3 +1,6 @@
+# 1.0.7
+- Bump analyzer version
+
 # 1.0.6
 - Fix compatibility issues with Flutter 3.3.0
 
