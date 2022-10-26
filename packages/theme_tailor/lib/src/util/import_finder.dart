@@ -28,7 +28,7 @@ class ImportFinder {
   /// lib/src/dart/element/element.dart
   bool recursiveSearch() {
     final libraries = <LibraryElementWithVisibility>{};
-    for (final import in lib.imports) {
+    for (final import in lib.libraryImports) {
       final library = import.importedLibrary;
       if (library != null) {
         libraries.add(LibraryElementWithVisibility.root(
@@ -100,7 +100,7 @@ class LibraryElementWithVisibility {
   /// lib/src/dart/element/element.dart
   List<LibraryElementWithVisibility> get exportedLibraries {
     final libraries = <LibraryElementWithVisibility>{};
-    for (final export in lib.exports) {
+    for (final export in lib.libraryExports) {
       final library = export.exportedLibrary;
       if (library != null) {
         libraries.add(LibraryElementWithVisibility(
