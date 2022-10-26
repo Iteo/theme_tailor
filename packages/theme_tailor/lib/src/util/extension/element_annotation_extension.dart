@@ -10,6 +10,6 @@ extension ElementAnnotationExtension on ElementAnnotation {
 
   bool get isTailorThemeExtension {
     return TypeChecker.fromRuntime(themeExtension.runtimeType)
-        .isAssignableFrom(computeConstantValue()!.type!.element!);
+        .isAssignableFrom(computeConstantValue()!.type!.element2!);
   }
 }
