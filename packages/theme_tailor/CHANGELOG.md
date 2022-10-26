@@ -1,3 +1,6 @@
+# 1.0.8
+- Fix analyzer constraints
+
 # 1.0.7
 - Bump analyzer version
 
