@@ -10,7 +10,7 @@ const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
 
 ThemeEncoderData? extractThemeEncoderData(
     ElementAnnotation? annotation, DartObject constantValue) {
-  final encoderClassElement = constantValue.type!.element2 as ClassElement;
+  final encoderClassElement = constantValue.type!.element2 as ClassElement?;
   if (encoderClassElement == null) return null;
 
   final encoderSuper = encoderClassElement.allSupertypes.singleWhereOrNull((e) {
