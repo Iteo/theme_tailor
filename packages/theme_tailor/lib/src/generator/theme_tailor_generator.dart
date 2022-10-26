@@ -28,6 +28,10 @@ import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
+  ThemeTailorGenerator({required this.builderOptions});
+
+  final BuilderOptions builderOptions;
+
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
@@ -67,11 +71,18 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     final fieldsToCheck =
         fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
 
-    final classAstNode = _getAstNodeFromElement(element);
+    final typeDefAstVisitor = _TypeDefAstVisitor();
+    for (final unit in _getLibrariesCompilationUnits(
+        [library, ...library.importedLibraries])) {
+      unit.visitChildren(typeDefAstVisitor);
+    }
+
     final astVisitor = _TailorClassASTVisitor(
-      fieldNamesToCheck: fieldsToCheck,
+      fieldNamesToCheck: fieldsToCheck.toList(),
+      typeDefinitions: typeDefAstVisitor.typeDefinitions,
     );
-    classAstNode.visitChildren(astVisitor);
+    _getAstNodeFromElement(element).visitChildren(astVisitor);
+
     for (final typeEntry in astVisitor.fieldTypes.entries) {
       final fieldValue = fields[typeEntry.key];
       if (fieldValue != null) {
@@ -177,9 +188,21 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
   }
 
   List<String> _computeThemes(ConstantReader annotation) {
-    return List<String>.from(
-      annotation.read('themes').listValue.map((e) => e.toStringValue()),
-    );
+    if (!annotation.read('themes').isNull) {
+      return annotation
+          .read('themes')
+          .listValue
+          .map((e) => e.toStringValue())
+          .whereNotNull()
+          .toList();
+    }
+
+    var pubThemes = builderOptions.config['themes'] as List<dynamic>?;
+
+    const defaultThemes = ['light', 'dark'];
+    if (pubThemes == null) return defaultThemes;
+
+    return pubThemes.whereNotNull().map((e) => e.toString()).toList();
   }
 
   ExtensionData _computeThemeGetter(ConstantReader annotation) {
@@ -274,12 +297,16 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 }
 
 class _TailorClassASTVisitor extends SimpleAstVisitor {
-  _TailorClassASTVisitor({required this.fieldNamesToCheck});
+  _TailorClassASTVisitor({
+    required this.fieldNamesToCheck,
+    required this.typeDefinitions,
+  });
 
   final List<String> rawClassAnnotations = [];
   final Map<String, List<String>> rawFieldsAnnotations = {};
 
-  final Iterable<String> fieldNamesToCheck;
+  final List<String> fieldNamesToCheck;
+  final Map<String, TypeAnnotation> typeDefinitions;
   final Map<String, String> fieldTypes = {};
 
   @override
@@ -295,8 +322,14 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
     rawFieldsAnnotations[fieldName] = node.annotations;
 
     if (fieldType != null && fieldNamesToCheck.contains(fieldName)) {
+      final typeDefinitionChildEntities =
+          typeDefinitions[node.fields.childEntities.first.toString()]
+              ?.childEntities;
+
       final childTypeEntities =
-          fieldType.childEntities.map((e) => e.toString()).toList();
+          (typeDefinitionChildEntities ?? fieldType.childEntities)
+              .map((e) => e.toString())
+              .toList();
       if (childTypeEntities.length >= 2 && childTypeEntities[0] == 'List') {
         final typeWithBraces = childTypeEntities[1];
         fieldTypes[fieldName] =
@@ -410,8 +443,37 @@ class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
 }
 
 AstNode _getAstNodeFromElement(Element element) {
-  final library = element.library!;
-  final result = library.session.getParsedLibraryByElement(library)
-      as ParsedLibraryResult?;
+  final result = _getParsedLibraryResultFromElement(element);
   return result!.getElementDeclaration(element)!.node;
+}
+
+List<CompilationUnit> _getLibrariesCompilationUnits(
+    List<LibraryElement> libraries) {
+  return libraries
+      .map(_getParsedLibraryResultFromElement)
+      .whereNotNull()
+      .map((lib) => lib.units.map((u) => u.unit))
+      .flattened
+      .toList();
+}
+
+ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
+  final library = element.library!;
+  final parsedLibrary = library.session.getParsedLibraryByElement(library);
+  if (parsedLibrary is ParsedLibraryResult) {
+    return parsedLibrary;
+  } else {
+    return null;
+  }
+}
+
+class _TypeDefAstVisitor extends SimpleAstVisitor {
+  final typeDefinitions = <String, TypeAnnotation>{};
+
+  @override
+  void visitGenericTypeAlias(GenericTypeAlias node) {
+    typeDefinitions[node.name.toString().replaceAll('?', '')] = node.type;
+
+    super.visitGenericTypeAlias(node);
+  }
 }

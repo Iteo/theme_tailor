@@ -51,6 +51,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
     - [Ignore fields](#ignore-fields)
+    - [Build configuration](#build-configuration)
 
 # Motivation
 Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
@@ -141,7 +142,8 @@ Additionally [theme_tailor_annotation] by default generates extension on BuildCo
 
 ## Change themes quantity and names
 By default,  "@tailor" will generate two themes: "light" and "dark";
-To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.
+To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
+You can also change theme names globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info
 
 ```dart
 @Tailor(themes: ['baseTheme'])
@@ -368,9 +370,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```
 
 ## Ignore fields
-
-Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.\
-Example:
+Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.
 ```dart
 @tailor
 class _$IgnoreExample {
@@ -380,5 +380,22 @@ class _$IgnoreExample {
   @ignore
   static List<int> numbers = [1, 2, 3];
 }
+```
+
+## Build configuration
+You can also configure the generator by setting values in the build.yaml.\
+Supported options (If a given option is present in the build option and annotation, the generator uses the annotation's value)
+
+| Build option | Annotation property | Default           | Other                                                          |
+|--------------|---------------------|-------------------|----------------------------------------------------------------|
+| themes       | themes              | ["light", "dark"] | Set to [] in build option or annotation to not generate themes |
+
+```yaml
+targets:
+  $default:
+    builders:
+      theme_tailor:
+        options:
+          themes: ["light", "dark", "superDark"]
 ```
 

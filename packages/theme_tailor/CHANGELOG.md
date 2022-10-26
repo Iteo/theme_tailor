@@ -1,8 +1,22 @@
+# 1.0.8
+- Generate constant themes if possible
+
+# 1.0.7
+- Bump analyzer version
+
+# 1.0.6
+- Fix compatibility issues with Flutter 3.3.0
+
+# 1.0.5
+- Fix generator not loading default theme names if they were not specified in the annotation or build.yaml
+- Improve documentation
+
 # 1.0.4
+- Build configuration. It is possible to configure `themes` within the build.yaml
 - Fix name collision when theme class contains `themes` field
 - Fix the bug where the generator could not handle encoders extending generic type encoders
 - Empty theme class will now generate with const constructor
-- Generate constant themes if possible
+- Add support for typedefs
 
 # 1.0.3
 - Improve documentation,
