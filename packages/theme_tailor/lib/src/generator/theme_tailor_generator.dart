@@ -45,9 +45,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         todo: 'Move @Tailor annotation above `class`',
       );
     }
-    final resolver = buildStep.resolver;
-    final library = await resolver
-        .libraryFor(await resolver.assetIdForElement(element.library));
+    final library = element.library;
 
     final hasDiagnostics = library.hasFlutterDiagnosticableImport;
 
@@ -81,7 +79,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       fieldNamesToCheck: fieldsToCheck.toList(),
       typeDefinitions: typeDefAstVisitor.typeDefinitions,
     );
-    _getAstNodeFromElement(element).visitChildren(astVisitor);
+    final classAstNode = _getAstNodeFromElement(element);
+    classAstNode.visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
       final fieldValue = fields[typeEntry.key];
@@ -247,10 +246,11 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         hasNonConstantElement = true;
 
         if (requireConstThemes) {
-          print(
-              'Field "${element.name}" needs to be a const in order to be included'
-              ' in generated theme');
-          return;
+          throw InvalidGenerationSourceError(
+            'Field "${element.name}" needs to be a const in order to be included',
+            element: element,
+            todo: 'Move this field const',
+          );
         }
       }
 
@@ -425,11 +425,14 @@ class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
         hasValuesForAllFields = false;
         if (requireConstThemes) {
           if (values.isEmpty && !containsBrackets) {
-            print(
-                'To generate constant theme, list value of "${node.name}" has to '
-                'be defined in place');
+            throw InvalidGenerationSourceError(
+              'To generate constant theme, list value of "${node.name}" has to '
+              'be defined in place',
+              element: node.declaredElement2,
+              todo: 'Move this field const',
+            );
           } else {
-            print('List length of "${node.name} should match theme count');
+            print('List length of "${node.name}" should match theme count');
           }
         }
 
@@ -472,7 +475,7 @@ class _TypeDefAstVisitor extends SimpleAstVisitor {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    typeDefinitions[node.name.toString().replaceAll('?', '')] = node.type;
+    typeDefinitions[node.name2.toString().replaceAll('?', '')] = node.type;
 
     super.visitGenericTypeAlias(node);
   }

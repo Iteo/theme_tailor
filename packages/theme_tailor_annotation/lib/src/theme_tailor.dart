@@ -55,7 +55,7 @@ class Tailor {
   /// ```
   final List<ThemeEncoder>? encoders;
 
-  /// If true, the generator will force generating constant themes.\
+  /// If true, the generator will force generating constant themes.
   /// However, this feature comes with additional requirements:
   /// - All fields to be included in the theme should be `const List<T>` type
   /// - List length should match theme count, otherwise an error will be thrown

@@ -36,7 +36,7 @@ class _$ConstantTheme {
     [Colors.white, Colors.pink],
   ];
 
-  static const doubleListOfClassWithList = [
+  static const nestedLists = [
     [
       ClassWithList(list: [1, 2, 3])
     ],
@@ -47,7 +47,7 @@ class _$ConstantTheme {
           '12,;][][)()()[,',
           'test',
         ],
-      )
+      ),
     ],
   ];
 }
