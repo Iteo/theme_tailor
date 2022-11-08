@@ -5,6 +5,7 @@ class Field {
     required this.implementsThemeExtension,
     required this.isTailorThemeExtension,
     this.values,
+    this.documentationComment,
   });
 
   final String name;
@@ -12,6 +13,7 @@ class Field {
   final bool implementsThemeExtension;
   final bool isTailorThemeExtension;
   final List<String>? values;
+  final String? documentationComment;
 
   bool get isNullable => typeName.contains('?');
 
@@ -21,6 +23,7 @@ class Field {
     bool? implementsThemeExtension,
     bool? isTailorThemeExtension,
     List<String>? values,
+    String? documentationComment,
   }) {
     return Field(
       name: name ?? this.name,
@@ -30,6 +33,7 @@ class Field {
       isTailorThemeExtension:
           isTailorThemeExtension ?? this.isTailorThemeExtension,
       values: values ?? this.values,
+      documentationComment: documentationComment ?? this.documentationComment,
     );
   }
 }

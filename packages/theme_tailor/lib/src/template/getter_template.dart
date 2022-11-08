@@ -3,12 +3,16 @@ class GetterTemplate {
     required this.type,
     required this.name,
     required this.accessor,
+    this.documentationComment,
   });
 
   final String type;
   final String name;
   final String accessor;
+  final String? documentationComment;
 
   @override
-  String toString() => '$type get $name => $accessor;';
+  String toString() => documentationComment != null
+      ? '$documentationComment\n$type get $name => $accessor;'
+      : '$type get $name => $accessor;';
 }
