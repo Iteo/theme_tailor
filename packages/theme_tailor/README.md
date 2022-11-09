@@ -241,7 +241,7 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-To see example implementation of nested theme, head out to: [example:nested_themes][example: nested_themes]
+To see example implementation of nested theme, head out to: [example: nested_themes][example:nested_themes]
 
 ## Generate constant themes
 
