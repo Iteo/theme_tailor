@@ -1,6 +1,10 @@
 # 1.0.9
 - Generate constant themes if possible
 
+# 1.0.8
+- Fix analyzer constraints
+- Improve documentation,
+
 # 1.0.7
 - Bump analyzer version
 

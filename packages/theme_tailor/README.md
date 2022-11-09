@@ -213,11 +213,13 @@ class _$MsgBubble {
   /// Lets say that my message bubble in 
   /// light mode is darkBlue
   /// dark mode is lightBlue
+  @themeExtension
   static List<Bubble> myBubble = [Bubble.darkBlue, Bubble.lightBlue];
 
   /// Lets say that my message bubble in 
   /// light mode is darkOrange
   /// dark mode is lightOrange
+  @themeExtension
   static List<Bubble> friendsBubble = [Bubble.darkOrange, Bubble.lightOrange];
 }
 
