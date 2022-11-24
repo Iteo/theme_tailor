@@ -53,6 +53,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 
     final className = element.name;
     final themes = _computeThemes(annotation);
+
     final themeGetter = _computeThemeGetter(annotation);
     final requireConstThemes = annotation.read('requireStaticConst').boolValue;
 
@@ -291,6 +292,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
         typeName: coreType.getDisplayString(withNullability: true),
         implementsThemeExtension: implementsThemeExtension,
         isTailorThemeExtension: hasThemeExtensionAnnotation,
+        documentationComment: element.documentationComment,
       );
     }
   }

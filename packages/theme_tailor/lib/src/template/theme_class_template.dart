@@ -26,6 +26,11 @@ class ThemeClassTemplate {
       constructorBuffer.write('required this.$key,');
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
+        ..write(
+          value.documentationComment != null
+              ? '${value.documentationComment}\n'
+              : '',
+        )
         ..write('final ${value.typeName} $key;');
     });
 
