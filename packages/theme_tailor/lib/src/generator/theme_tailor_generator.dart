@@ -85,8 +85,10 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     classAstNode.visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
-      final field = fields[typeEntry.key]!;
-      fields[typeEntry.key] = field.copyWith(typeName: typeEntry.value);
+      final fieldValue = fields[typeEntry.key];
+      if (fieldValue != null) {
+        fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
+      }
     }
 
     final fieldInitializerVisitor = _TailorFieldInitializerVisitor(
@@ -134,10 +136,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       final astAnnotations = <String>[];
 
       entry.value.forEachIndexed((i, isInternal) {
-        late final value = astVisitor.rawFieldsAnnotations[entry.key]?[i];
-        if (!isInternal && value != null) {
-          astAnnotations.add(value);
-        }
+        late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
+        if (!isInternal) astAnnotations.add(value);
       });
       fieldLevelAnnotations[entry.key] = astAnnotations;
     }
