@@ -67,8 +67,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
 
-    final fieldsToCheck =
-        fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
+    final fieldsToCheck = fields.values
+        .where((f) => f.isTailorThemeExtension || f.typeName == 'dynamic')
+        .map((f) => f.name);
 
     final typeDefAstVisitor = _TypeDefAstVisitor();
     for (final unit in _getLibrariesCompilationUnits(
@@ -84,10 +85,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     classAstNode.visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
-      final fieldValue = fields[typeEntry.key];
-      if (fieldValue != null) {
-        fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
-      }
+      final field = fields[typeEntry.key]!;
+      fields[typeEntry.key] = field.copyWith(typeName: typeEntry.value);
     }
 
     final fieldInitializerVisitor = _TailorFieldInitializerVisitor(
@@ -95,7 +94,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       fieldsToCheck: tailorClassVisitor.fields.keys.toList(),
       requireConstThemes: requireConstThemes,
     );
-
     if (requireConstThemes || !tailorClassVisitor.hasNonConstantElement) {
       classAstNode.visitChildren(fieldInitializerVisitor);
 
@@ -134,9 +132,12 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       if (entry.value.isEmpty) continue;
 
       final astAnnotations = <String>[];
+
       entry.value.forEachIndexed((i, isInternal) {
-        late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
-        if (!isInternal) astAnnotations.add(value);
+        late final value = astVisitor.rawFieldsAnnotations[entry.key]?[i];
+        if (!isInternal && value != null) {
+          astAnnotations.add(value);
+        }
       });
       fieldLevelAnnotations[entry.key] = astAnnotations;
     }
@@ -463,8 +464,8 @@ List<CompilationUnit> _getLibrariesCompilationUnits(
 }
 
 ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
-  final library = element.library!;
-  final parsedLibrary = library.session.getParsedLibraryByElement(library);
+  final library = element.library;
+  final parsedLibrary = library?.session.getParsedLibraryByElement(library);
   if (parsedLibrary is ParsedLibraryResult) {
     return parsedLibrary;
   } else {
