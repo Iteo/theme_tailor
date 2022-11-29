@@ -1,3 +1,6 @@
+# 1.1.1
+- Generate static getters, allowing the theme to be updated on hot reload.
+
 # 1.1.0
 - Nullable fields are no longer required in a generated theme constructor
 - Theme fields are now ordered alphabetically in generated code

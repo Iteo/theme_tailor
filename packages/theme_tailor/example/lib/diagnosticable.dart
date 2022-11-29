@@ -4,7 +4,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'diagnosticable.tailor.dart';
 
-@tailor
+@Tailor(generateStaticGetters: false)
 class _$MyTheme {
   static List<Color> background = [Colors.white, Colors.black];
   static List<TextStyle> textStyle = const [TextStyle(), TextStyle()];

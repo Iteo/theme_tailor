@@ -3,7 +3,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'themes_name_collision.tailor.dart';
 
-@tailor
+@Tailor(generateStaticGetters: false)
 class $_SimpleTheme {
   @themeExtension
   static List<AnotherTheme> anotherTheme = AnotherTheme.tailorThemes;

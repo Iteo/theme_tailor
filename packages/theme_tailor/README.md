@@ -47,6 +47,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
     - [Generate constant themes](#generate-constant-themes)
+    - [Hot reload support](#hot-reload-support)
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
@@ -247,7 +248,7 @@ To see example implementation of nested theme, head out to: [example: nested_the
 
 ## Generate constant themes
 
-If following conditions are meet, constant themes will be generated:
+If following conditions are met, constant themes will be generated:
 
 - All `List<T>` fields are `const`
 - List length matches theme count
@@ -268,6 +269,48 @@ class _$ConstantThemes {
 
 It is also possible to force generating constant themes using `Tailor(requireStaticConst: true)` annotation.
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
+
+## Hot reload support
+
+Using `generateStaticGetters` property of `@Tailor()` annotation it is possible to generate getters for particular themes.
+They will conditionally return either a getter for the theme itself (if kDebugMode == true) or final theme otherwise.
+Additionally, for hot reload to work properly, following requirements must be satisfied:
+- Any property of the anotated class that you want to be updated on hot reload must either be a getter or const.
+- ThemeData has to be declared in place (most often theme property of the MaterialApp).
+- Annotated class must include `package:flutter/foundation.dart` import for the sake of using `kDebugMode` constant in generated class;
+
+```dart
+import 'package:flutter/foundation.dart';
+
+const lightColor = Color(0xFFA1B2C3);
+const darkColor = Color(0xFF123ABC);
+
+@tailor
+class _$GetterTheme {
+  // This is correct
+  static const color1 = [lightColor, darkColor];
+  static List<Color> get color2 => [lightColor, darkColor];
+
+  // This is bad
+  static List<Color> color3 = [lightColor, darkColor];
+}
+
+class GetterPage extends StatelessWidget {
+  const GetterPage({super.key});
+
+  final _lightThemeData = ThemeData(extensions: [GetterTheme.light]);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // This is bad
+      theme: _lightThemeData,
+      // This is correct
+      darkTheme: ThemeData(extensions: [GetterTheme.dark]),
+    );
+  }
+}
+```
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:

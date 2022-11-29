@@ -28,6 +28,7 @@ part 'main.tailor.dart';
 @Tailor(
   themes: ['light', 'dark'],
   themeGetter: ThemeGetter.onBuildContext,
+  generateStaticGetters: false,
 )
 class $_SimpleTheme {
   /// Only List<> fields are turned into theme properties, h1Style and h2Style

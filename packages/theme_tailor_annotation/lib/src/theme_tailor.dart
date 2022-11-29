@@ -15,6 +15,7 @@ class Tailor {
     this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
     this.requireStaticConst = false,
+    this.generateStaticGetters = true,
   });
 
   final List<String>? themes;
@@ -74,4 +75,29 @@ class Tailor {
   /// }
   /// ```
   final bool requireStaticConst;
+
+  /// If true, static getters will be generated to support updating theme
+  /// properties on hot reload. They will conditionally return either a getter
+  /// for the theme itself (if kDebugMode == true) or final theme otherwise.
+  /// Additional requirements:
+  ///  - Any property of the anotated class that you want to be updated
+  ///  on hot reload must either be a getter or const.
+  ///  - ThemeData has to be declared in place (most often theme property
+  ///  of the MaterialApp).
+  ///
+  /// ```dart
+  /// const lightColor = Color(0xFFA1B2C3);
+  /// const darkColor = Color(0xFF123ABC);
+  ///
+  /// @tailor
+  /// class _$GetterTheme {
+  ///   // This is correct
+  ///   static const color1 = [lightColor, darkColor];
+  ///   static List<Color> get color2 => [lightColor, darkColor];
+  ///
+  ///   // This is bad
+  ///   static List<Color> color3 = [lightColor, darkColor];
+  /// }
+  /// ```
+  final bool generateStaticGetters;
 }

@@ -29,7 +29,10 @@ class CustomColorEncoder extends ThemeEncoder<Color> {
 
 /// Use @Tailor annotation to declare custom themes or different
 /// quantity of themes than the default 2 (light and dark)
-@Tailor(themes: ['superLight', 'amoledDark'])
+@Tailor(
+  themes: ['superLight', 'amoledDark'],
+  generateStaticGetters: false,
+)
 class $_Theme1 {
   @CustomColorEncoder()
   static List<Color> background = [AppColors.white, AppColors.black];
@@ -46,7 +49,10 @@ const customColorEncoder = CustomColorEncoder();
 const textStyleEncoder = TextStyleEncoder();
 const textStyleNullableEncoder = TextStyleNullableEncoder();
 
-@Tailor(themes: ['superLight', 'amoledDark'])
+@Tailor(
+  themes: ['superLight', 'amoledDark'],
+  generateStaticGetters: false,
+)
 class $_Theme2 {
   @customColorEncoder
   static List<Color> background = [AppColors.white, AppColors.black];
@@ -66,6 +72,7 @@ class $_Theme2 {
     TextStyleEncoder(),
     TextStyleNullableEncoder(),
   ],
+  generateStaticGetters: false,
 )
 class $_Theme3 {
   static List<Color> background = [AppColors.white, AppColors.black];
@@ -78,6 +85,7 @@ class $_Theme3 {
 const tailorWithEncoders = Tailor(
   themes: ['superLight', 'amoledDark'],
   encoders: [customColorEncoder, textStyleEncoder, textStyleNullableEncoder],
+  generateStaticGetters: false,
 );
 
 @tailorWithEncoders
