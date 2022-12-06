@@ -67,8 +67,9 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
 
-    final fieldsToCheck =
-        fields.values.where((f) => f.isTailorThemeExtension).map((f) => f.name);
+    final fieldsToCheck = fields.values
+        .where((f) => f.isTailorThemeExtension || f.typeName == 'dynamic')
+        .map((f) => f.name);
 
     final typeDefAstVisitor = _TypeDefAstVisitor();
     for (final unit in _getLibrariesCompilationUnits(
@@ -95,7 +96,6 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       fieldsToCheck: tailorClassVisitor.fields.keys.toList(),
       requireConstThemes: requireConstThemes,
     );
-
     if (requireConstThemes || !tailorClassVisitor.hasNonConstantElement) {
       classAstNode.visitChildren(fieldInitializerVisitor);
 
@@ -134,6 +134,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       if (entry.value.isEmpty) continue;
 
       final astAnnotations = <String>[];
+
       entry.value.forEachIndexed((i, isInternal) {
         late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
         if (!isInternal) astAnnotations.add(value);
@@ -463,8 +464,8 @@ List<CompilationUnit> _getLibrariesCompilationUnits(
 }
 
 ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
-  final library = element.library!;
-  final parsedLibrary = library.session.getParsedLibraryByElement(library);
+  final library = element.library;
+  final parsedLibrary = library?.session.getParsedLibraryByElement(library);
   if (parsedLibrary is ParsedLibraryResult) {
     return parsedLibrary;
   } else {
