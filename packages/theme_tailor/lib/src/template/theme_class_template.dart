@@ -22,8 +22,20 @@ class ThemeClassTemplate {
     final constructorBuffer = StringBuffer();
     final fieldsBuffer = StringBuffer();
 
-    config.fields.forEach((key, value) {
-      constructorBuffer.write('required this.$key,');
+    final sortedFields = Map.fromEntries(config.fields.entries.sorted((a, b) {
+      if (a.value.isNullable && !b.value.isNullable) {
+        return 1;
+      } else if (!a.value.isNullable && b.value.isNullable) {
+        return -1;
+      }
+      return 0;
+    }));
+
+    sortedFields.forEach((key, value) {
+      if (!value.isNullable) {
+        constructorBuffer.write('required ');
+      }
+      constructorBuffer.write('this.$key,');
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
         ..write(

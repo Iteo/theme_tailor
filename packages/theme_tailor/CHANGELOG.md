@@ -1,3 +1,6 @@
+# 1.0.10
+- Nullable fields are no longer required in a generated theme constructor
+
 # 1.0.9
 - Generate constant themes if possible
 

@@ -202,7 +202,7 @@ class _$ChatComponentsTheme {
   static List<MsgList> msgList = MsgList.themes;
 
   /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
-  static List<NotGeneratedExtension> = [/*custom themes*/];
+  static List<NotGeneratedExtension> notGeneratedExtension = [/*custom themes*/];
 }
 
 @tailorComponent
