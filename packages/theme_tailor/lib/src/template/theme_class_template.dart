@@ -22,16 +22,7 @@ class ThemeClassTemplate {
     final constructorBuffer = StringBuffer();
     final fieldsBuffer = StringBuffer();
 
-    final sortedFields = Map.fromEntries(config.fields.entries.sorted((a, b) {
-      if (a.value.isNullable && !b.value.isNullable) {
-        return 1;
-      } else if (!a.value.isNullable && b.value.isNullable) {
-        return -1;
-      }
-      return 0;
-    }));
-
-    sortedFields.forEach((key, value) {
+    config.fields.forEach((key, value) {
       if (!value.isNullable) {
         constructorBuffer.write('required ');
       }

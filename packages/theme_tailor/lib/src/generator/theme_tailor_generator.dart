@@ -168,8 +168,14 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         : (!tailorClassVisitor.hasNonConstantElement &&
             fieldInitializerVisitor.hasValuesForAllFields);
 
+    final sortedFields = Map.fromEntries(
+      tailorClassVisitor.fields.entries.sorted(
+        (a, b) => a.value.compareTo(b.value),
+      ),
+    );
+
     final config = ThemeClassConfig(
-      fields: tailorClassVisitor.fields,
+      fields: sortedFields,
       className: stringUtil.themeClassName(className),
       baseClassName: className,
       themes: themes,
