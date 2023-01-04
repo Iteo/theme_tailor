@@ -1,4 +1,4 @@
-class Field {
+class Field implements Comparable {
   const Field({
     required this.name,
     required this.typeName,
@@ -35,5 +35,20 @@ class Field {
       values: values ?? this.values,
       documentationComment: documentationComment ?? this.documentationComment,
     );
+  }
+
+  @override
+  int compareTo(other) {
+    if (other is Field) {
+      if (isNullable && !other.isNullable) {
+        return 1;
+      } else if (!isNullable && other.isNullable) {
+        return -1;
+      }
+
+      return name.compareTo(other.name);
+    } else {
+      return 0;
+    }
   }
 }

@@ -23,7 +23,10 @@ class ThemeClassTemplate {
     final fieldsBuffer = StringBuffer();
 
     config.fields.forEach((key, value) {
-      constructorBuffer.write('required this.$key,');
+      if (!value.isNullable) {
+        constructorBuffer.write('required ');
+      }
+      constructorBuffer.write('this.$key,');
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
         ..write(
