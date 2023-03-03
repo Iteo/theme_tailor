@@ -46,6 +46,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Access generated themes list](#access-generated-themes-list)
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
+    - [Generate constant themes](#generate-constant-themes)
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
@@ -201,7 +202,7 @@ class _$ChatComponentsTheme {
   static List<MsgList> msgList = MsgList.themes;
 
   /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
-  static List<NotGeneratedExtension> = [/*custom themes*/];
+  static List<NotGeneratedExtension> notGeneratedExtension = [/*custom themes*/];
 }
 
 @tailorComponent
@@ -242,7 +243,31 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-To see examle implementation of nested theme, head out to: [example:nested_themes][example: nested_themes]
+To see example implementation of nested theme, head out to: [example: nested_themes][example:nested_themes]
+
+## Generate constant themes
+
+If following conditions are meet, constant themes will be generated:
+
+- All `List<T>` fields are `const`
+- List length matches theme count
+- List initializers are declared in place, for example:
+
+```dart
+const someOtherList = ['a','b'];
+
+@Tailor(constantThemes: true)
+class _$ConstantThemes {
+  // This is correct
+  static const someNumberList = [1, 2];
+  
+  // This is bad
+  static const otherList = someOtherList;
+}
+```
+
+It is also possible to force generating constant themes using `Tailor(requireStaticConst: true)` annotation.
+In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:

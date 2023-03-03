@@ -1,3 +1,10 @@
+# 1.1.0
+- Nullable fields are no longer required in a generated theme constructor
+- Theme fields are now ordered alphabetically in generated code
+
+# 1.0.9
+- Generate constant themes if possible
+
 # 1.0.8
 - Fix analyzer constraints
 - Improve documentation,
