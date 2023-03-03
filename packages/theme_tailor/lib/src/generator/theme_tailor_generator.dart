@@ -437,7 +437,7 @@ class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
             throw InvalidGenerationSourceError(
               'To generate constant theme, list value of "${node.name}" has to '
               'be defined in place',
-              element: node.declaredElement2,
+              element: node.declaredElement,
               todo: 'Move this field const',
             );
           } else {
@@ -484,7 +484,7 @@ class _TypeDefAstVisitor extends SimpleAstVisitor {
 
   @override
   void visitGenericTypeAlias(GenericTypeAlias node) {
-    typeDefinitions[node.name2.toString().replaceAll('?', '')] = node.type;
+    typeDefinitions[node.name.toString().replaceAll('?', '')] = node.type;
 
     super.visitGenericTypeAlias(node);
   }
