@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  json_annotation: ^4.6.0
+  json_annotation: ^4.7.0
   theme_tailor_annotation: ^1.0.0
 
 dev_dependencies:
