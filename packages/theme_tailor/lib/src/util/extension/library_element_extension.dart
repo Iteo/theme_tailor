@@ -1,9 +1,11 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:theme_tailor/src/util/import_finder.dart';
+import 'package:theme_tailor/src/util/recursive_import_locator.dart';
 
 extension LibraryElementExtension on LibraryElement {
-  bool get hasFlutterDiagnosticableImport => liraryExports(
-        className: 'DiagnosticableTreeMixin',
-        fromPackage: 'flutter',
-      );
+  bool get hasFlutterDiagnosticableImport {
+    return findAllAvailableTopLevelElements().any((element) {
+      return element.name == 'DiagnosticableTreeMixin' &&
+          (element.library?.isFromPackage('flutter') ?? false);
+    });
+  }
 }

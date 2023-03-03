@@ -1,6 +1,4 @@
-// Based of freezed's "recursive_import_locator.dart" (https://pub.dev/packages/freezed)
-// https://github.com/rrousselGit/freezed/blob/master/packages/freezed/lib/src/tools/recursive_import_locator.dart
-//
+// From Freezed 2.3.2 packages/freezed/lib/src/tools/recursive_import_locator.dart
 // MIT License
 //
 // Copyright (c) 2020 Remi Rousselet
@@ -29,13 +27,6 @@ import 'package:collection/collection.dart';
 extension FindAllAvailableTopLevelElements on LibraryElement {
   bool isFromPackage(String packageName) {
     return librarySource.fullName.startsWith('/$packageName/');
-  }
-
-  bool liraryExports({required String className, required String fromPackage}) {
-    return findAllAvailableTopLevelElements().any((element) {
-      return element.name == className &&
-          (element.library?.isFromPackage(fromPackage) ?? false);
-    });
   }
 
   /// Recursively loops at the import/export directives to know what is available
