@@ -60,10 +60,10 @@ To declare theme extension, we need to:
 - define a constructor and fields,
 - implement "copyWith",
 - implement "lerp",
-- (optional) override "hashCode",
-- (optional) override "==" operator
-- (optional) implement "debugFillProperties" method
-- (optional) add serialization code
+- (optionally) override "hashCode",
+- (optionally) override "==" operator
+- (optionally) implement "debugFillProperties" method
+- (optionally) add serialization code
 
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 Implementing this requires lots of additional lines of code and time. 
@@ -241,6 +241,32 @@ class _$MsgList {
 class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
   /// implementation
 }
+```
+
+*Good and bad practices for modular or nested themes:*
+```dart
+/// Good:
+@tailorComponent
+class _$AppBarTheme {
+  static List<Color> foreground = [Colors.white, Colors.white];
+  static List<Color> background = [Colors.blue, Colors.black];
+}
+
+@tailor
+class _$MyTheme {
+  @themeExtension
+  static List<AppBarTheme> appBarTheme = [AppBarTheme.light, AppBarTheme.dark];
+}
+
+/// Bad:
+@tailor
+class _$MyTheme {
+  // This will not be animated and generated theme may result in List<dynamic> property instead of expected List<Color>
+  static List<List<Color>> appBarTheme = [
+    [Colors.white, Colors.blue],
+    [Colors.white, Colors.black]
+  ];
+} 
 ```
 
 To see example implementation of nested theme, head out to: [example: nested_themes][example:nested_themes]
