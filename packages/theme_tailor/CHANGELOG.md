@@ -1,11 +1,12 @@
 # 1.1.0
+- Generate constant themes if possible
 - Nullable fields are no longer required in a generated theme constructor
 - Theme fields are now ordered alphabetically in generated code
 - Update examples and documentation for good / bad practices
+- Increase minimum analyzer version to 5.2
+- Fix debug fill properties not generated
+- Fix the case when some of the properties were generated as dynamic for Flutter types like Color / TextStyle
 - Add package logo to the pub.dev
-
-# 1.0.9
-- Generate constant themes if possible
 
 # 1.0.8
 - Fix analyzer constraints
