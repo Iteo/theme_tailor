@@ -1,5 +1,5 @@
 name: example
-description: A new Flutter package project.
+description: Examples how to use ThemeTailor
 version: 0.0.1
 publish_to: none
 
@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
-  analyzer: ^5.2.0
+  analyzer: ^5.7.1
   collection: ^1.16.0
   flutter:
     sdk: flutter
