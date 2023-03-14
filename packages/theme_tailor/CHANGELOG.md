@@ -2,7 +2,7 @@
 - Nullable fields are no longer required in a generated theme constructor
 - Theme fields are now ordered alphabetically in generated code
 - Update examples and documentation for good / bad practices
-- Add package logo to the pubd.ev
+- Add package logo to the pub.dev
 
 # 1.0.9
 - Generate constant themes if possible
