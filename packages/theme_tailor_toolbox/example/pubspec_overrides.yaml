@@ -4,3 +4,6 @@ dependency_overrides:
 
   theme_tailor:
     path: ../../theme_tailor
+
+  analyzer: ^5.2.0
+  

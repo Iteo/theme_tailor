@@ -4,7 +4,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'theme_extension_in_field.tailor.dart';
 
-@tailor
+@Tailor(generateStaticGetters: false)
 class $_SomeTheme {
   static List<Color> appBackground = [AppColors.white, AppColors.black];
   @themeExtension

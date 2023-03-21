@@ -56,6 +56,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 
     final themeGetter = _computeThemeGetter(annotation);
     final requireConstThemes = annotation.read('requireStaticConst').boolValue;
+    final generateStaticGetters =
+        annotation.read('generateStaticGetters').boolValue;
 
     final classLevelEncoders = _computeEncoders(annotation);
     final classLevelAnnotations = <String>[];
@@ -63,6 +65,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 
     final tailorClassVisitor = _TailorClassVisitor(
       requireConstThemes: requireConstThemes,
+      generateStaticGetters: generateStaticGetters,
     );
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
@@ -125,7 +128,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         continue;
       }
 
-      if (!annotation.isTailorAnnotation) {
+      if (!annotation.isTailorAnnotation && !annotation.isSourceGenAnnotation) {
         classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
       }
     }
@@ -185,6 +188,7 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       annotationManager: annotationDataManager,
       isFlutterDiagnosticable: hasDiagnostics,
       constantThemes: generateConstantThemes,
+      staticGetters: generateStaticGetters,
     );
 
     final generatorBuffer = StringBuffer()
@@ -230,9 +234,13 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor({required this.requireConstThemes});
+  _TailorClassVisitor({
+    required this.requireConstThemes,
+    required this.generateStaticGetters,
+  });
 
   final bool requireConstThemes;
+  final bool generateStaticGetters;
 
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
@@ -250,6 +258,14 @@ class _TailorClassVisitor extends SimpleElementVisitor {
     if (ignoreAnnotationTypeChecker.hasAnnotationOf(element)) return;
 
     if (element.isStatic && element.type.isDartCoreList) {
+      if (!requireConstThemes && generateStaticGetters) {
+        if (!element.isSynthetic && !element.isConst) {
+          print(
+            'Field "${element.name}" will not be updated on hot reload, since it is neither a getter nor a const.',
+          );
+        }
+      }
+
       if (!element.isConst) {
         hasNonConstantElement = true;
 
