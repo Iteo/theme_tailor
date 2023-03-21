@@ -1,3 +1,6 @@
+# 1.1.1
+- Fix: required version of theme_tailor_annotation is 1.1.1
+
 # 1.1.0
 - Generate constant themes if possible
 - Nullable fields are no longer required in a generated theme constructor
