@@ -1,4 +1,5 @@
 # 1.1.1
+- Update documentation
 - Fix: required version of theme_tailor_annotation is 1.1.1
 
 # 1.1.0

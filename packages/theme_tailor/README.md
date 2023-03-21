@@ -282,7 +282,7 @@ If the following conditions are met, constant themes will be generated:
 ```dart
 const someOtherList = ['a','b'];
 
-@Tailor(constantThemes: true)
+@Tailor(requireStaticConst: true)
 class _$ConstantThemes {
   // This is correct
   static const someNumberList = [1, 2];
