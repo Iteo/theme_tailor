@@ -35,6 +35,7 @@ class ThemeExtensionTemplate {
           type: prop.value.typeName,
           name: prop.key,
           accessor: '$themeGetterName.${prop.key}',
+          documentationComment: prop.value.documentationComment,
         ));
       }
     }

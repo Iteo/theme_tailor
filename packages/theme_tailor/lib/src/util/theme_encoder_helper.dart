@@ -10,7 +10,7 @@ const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
 
 ThemeEncoderData? extractThemeEncoderData(
     ElementAnnotation? annotation, DartObject constantValue) {
-  final encoderClassElement = constantValue.type!.element2 as ClassElement?;
+  final encoderClassElement = constantValue.type!.element as ClassElement?;
   if (encoderClassElement == null) return null;
 
   final encoderSuper = encoderClassElement.allSupertypes.singleWhereOrNull((e) {
@@ -27,7 +27,7 @@ ThemeEncoderData? extractThemeEncoderData(
 
   final annotationElement = annotation?.element;
   if (annotationElement is PropertyAccessorElement) {
-    final enclosing = annotationElement.enclosingElement3;
+    final enclosing = annotationElement.enclosingElement;
 
     var accessString = annotationElement.name;
 
@@ -53,7 +53,7 @@ ThemeEncoderData? extractThemeEncoderData(
   }
 
   return ThemeEncoderData.className(
-    constantValue.type!.element2!.name!,
+    constantValue.type!.element!.name!,
     reviver.accessor,
     encoderTypeStr,
     genericTypeArg != null,

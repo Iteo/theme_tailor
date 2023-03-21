@@ -23,9 +23,17 @@ class ThemeClassTemplate {
     final fieldsBuffer = StringBuffer();
 
     config.fields.forEach((key, value) {
-      constructorBuffer.write('required this.$key,');
+      if (!value.isNullable) {
+        constructorBuffer.write('required ');
+      }
+      constructorBuffer.write('this.$key,');
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
+        ..write(
+          value.documentationComment != null
+              ? '${value.documentationComment}\n'
+              : '',
+        )
         ..write('final ${value.typeName} $key;');
     });
 
@@ -51,24 +59,30 @@ class ThemeClassTemplate {
     if (config.themes.isEmpty) return '';
     final buffer = StringBuffer();
     config.themes.forEachIndexed((i, e) {
-      buffer.write(_themeTemplate(i, e, config.fields.keys.toList()));
+      buffer.write(_themeTemplate(i, e));
     });
     final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
-    buffer.writeln('static final ${config.themesFieldName} = [$themesList];');
+    buffer.writeln(
+        'static ${_themeModifier()} ${config.themesFieldName} = [$themesList];');
     return buffer.toString();
   }
 
   /// Template for one static theme
-  String _themeTemplate(int index, String themeName, List<String> props) {
+  String _themeTemplate(int index, String themeName) {
     final buffer = StringBuffer();
     final returnType = config.className;
 
-    for (final prop in props) {
-      buffer.write('$prop: ${config.baseClassName}.$prop[$index],');
+    for (final field in config.fields.entries) {
+      final values = field.value.values;
+      if (values != null) {
+        buffer.write('${field.key}: ${values[index]},');
+      } else {
+        buffer.write(
+            '${field.key}: ${config.baseClassName}.${field.key}[$index],');
+      }
     }
-
     return '''
-    static final $returnType $themeName = $returnType(
+    static ${_themeModifier()} $returnType $themeName = $returnType(
       ${buffer.toString()}
     );\n
     ''';
@@ -190,6 +204,8 @@ class ThemeClassTemplate {
 
     return hashMethod('Object.hashAll([${hashedProps.join(',')}])');
   }
+
+  String _themeModifier() => config.constantThemes ? 'const' : 'final';
 
   @override
   String toString() {
