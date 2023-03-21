@@ -25,10 +25,13 @@ part 'main.tailor.dart';
 ///
 /// By default generated theme class is the name of the annotated class stripped
 /// from '$_' or '_$, in this case: SimpleTheme
+///
+// TODO: Changes here don't reflect after hot-reload
+// (they do after restart same as when generateStaticGetters is set to false)
 @Tailor(
   themes: ['light', 'dark'],
   themeGetter: ThemeGetter.onBuildContext,
-  generateStaticGetters: false,
+  generateStaticGetters: true,
 )
 class $_SimpleTheme {
   /// Only List<> fields are turned into theme properties, h1Style and h2Style
@@ -41,14 +44,18 @@ class $_SimpleTheme {
   /// Declaration of the fields of the theme, list values are default values
   /// for the generated themes ['light', 'dark']
   /// You can configure ammount of generated themes in the @Tailor "themes".
-  static List<Color> background = [AppColors.white, Colors.grey.shade900];
-  static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
+  // static List<Color> background = [AppColors.white, Colors.grey.shade900];
+  // static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
+
+  static const List<Color> background = [AppColors.white, Colors.black];
+  static const List<Color> appBar = [Colors.pink, Colors.deepPurple];
+
   static List<TextStyle> h1 = [
     h1Style.copyWith(color: const Color.fromARGB(221, 25, 25, 25)),
     h1Style.copyWith(color: Colors.grey.shade200),
   ];
   static List<TextStyle> h2 = [
-    h2Style.copyWith(color: Colors.amber.shade700),
+    h2Style.copyWith(color: Colors.green.shade700),
     h2Style.copyWith(color: Colors.blueGrey.shade300),
   ];
 }
