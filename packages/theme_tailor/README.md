@@ -42,7 +42,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Add imports and part directive](#add-imports-and-part-directive)
     - [Run the code generator](#run-the-code-generator)
     - [Create Theme class](#create-theme-class)
-    - [Change themes quantity and names](#change-themes-quantity-and-names)
+    - [Change themes' quantity and names](#change-themes-quantity-and-names)
     - [Access generated themes list](#access-generated-themes-list)
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
@@ -61,10 +61,10 @@ To declare theme extension, we need to:
 - define a constructor and fields,
 - implement "copyWith",
 - implement "lerp",
-- (optional) override "hashCode",
-- (optional) override "==" operator
-- (optional) implement "debugFillProperties" method
-- (optional) add serialization code
+- (optionally) override "hashCode",
+- (optionally) override "==" operator
+- (optionally) implement "debugFillProperties" method
+- (optionally) add serialization code
 
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 Implementing this requires lots of additional lines of code and time. 
@@ -141,7 +141,7 @@ Additionally [theme_tailor_annotation] by default generates extension on BuildCo
 - "MyThemeBuildContextProps" extension on "BuildContext" is generated
 - getter on "background" of type "Color" is added directly to "BuildContext"
 
-## Change themes quantity and names
+## Change themes' quantity and names
 By default,  "@tailor" will generate two themes: "light" and "dark";
 To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
 You can also change theme names globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info
@@ -158,10 +158,10 @@ The generator will create a static getter with a list of the generated themes:
 final allThemes = MyTailorGeneratedTheme.themes;
 ```
 
-If `themes` property is already used in the tailor class, the generator will use another name and print a warning.
+If the `themes` property is already used in the Tailor class, the generator will use another name and print a warning.
 
 ## Change generated extensions
-By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or use "@TailorComponent" annotation.
+By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or using the "@TailorComponent" annotation.
 
 ```dart
 @Tailor(themeGetter: ThemeGetter.none)
@@ -190,7 +190,7 @@ ThemeDataExtensions:
 
 Use "@tailor" and "@Tailor" annotations if you may need additional extensions on ThemeData or ThemeContext.
 
-Use "@tailorComponent" or "@TailorComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow generator to recognize the type correctly. 
+Use "@tailorComponent" or "@TailorComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
 
 ```dart
 /// Use generated "ChatComponentsTheme" in ThemeData
@@ -202,7 +202,7 @@ class _$ChatComponentsTheme {
   @themeExtension
   static List<MsgList> msgList = MsgList.themes;
 
-  /// "NotGeneratedExtension" is a theme extension that is not created using code generator. It is not necessary to mark it with "@themeExtension" annotation
+  /// "NotGeneratedExtension" is a theme extension that is not created using the code generator. It is not necessary to mark it with "@themeExtension" annotation
   static List<NotGeneratedExtension> notGeneratedExtension = [/*custom themes*/];
 }
 
@@ -211,7 +211,7 @@ class _$MsgBubble {
   // Keep in mind that Bubble type used here may be another Tailor component, and its generated themes can be selectively 
   // assigned to proper fields. (By default tailor will generate two themes: "light" and "dark")
 
-  /// Lets say that my message bubble in 
+  /// Let's say that my message bubble in 
   /// light mode is darkBlue
   /// dark mode is lightBlue
   @themeExtension
@@ -244,11 +244,37 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-To see example implementation of nested theme, head out to: [example: nested_themes][example:nested_themes]
+*Good and bad practices for modular or nested themes:*
+```dart
+/// Good:
+@tailorComponent
+class _$AppBarTheme {
+  static List<Color> foreground = [Colors.white, Colors.white];
+  static List<Color> background = [Colors.blue, Colors.black];
+}
+
+@tailor
+class _$MyTheme {
+  @themeExtension
+  static List<AppBarTheme> appBarTheme = [AppBarTheme.light, AppBarTheme.dark];
+}
+
+/// Bad:
+@tailor
+class _$MyTheme {
+  // This will not be animated and generated theme may result in List<dynamic> property instead of expected List<Color>
+  static List<List<Color>> appBarTheme = [
+    [Colors.white, Colors.blue],
+    [Colors.white, Colors.black]
+  ];
+} 
+```
+
+To see an example implementation of a nested theme, head out to [example: nested_themes][example:nested_themes]
 
 ## Generate constant themes
 
-If following conditions are met, constant themes will be generated:
+If the following conditions are met, constant themes will be generated:
 
 - All `List<T>` fields are `const`
 - List length matches theme count
@@ -267,7 +293,7 @@ class _$ConstantThemes {
 }
 ```
 
-It is also possible to force generating constant themes using `Tailor(requireStaticConst: true)` annotation.
+It is possible to force generate constant themes using `Tailor(requireStaticConst: true)` annotation.
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Hot reload support
@@ -372,14 +398,14 @@ const intEncoder = IntEncoder();
 class _$Theme5 {}
 ```
 
-Generator chooses proper lerp function for the given field based on the order:
+The generator chooses the proper lerp function for the given field based on the order:
 - annotation on the field
 - annotation on top of the class
 - property from encoders list in the "@Tailor" annotation.
 
-Custom supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
+Custom-supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 
-To see more examples of custom theme encoders implementation, head out to: [example: theme encoders][example:theme_encoders]
+To see more examples of custom theme encoders implementation, head out to [example: theme encoders][example:theme_encoders]
 
 ## Flutter diagnosticable / debugFillProperties
 To add support for Flutter diagnosticable to the generated ThemeExtension class, import Flutter foundation. Then create the ThemeTailor config class as usual.
@@ -387,7 +413,7 @@ To add support for Flutter diagnosticable to the generated ThemeExtension class,
 import 'package:flutter/foundation.dart';
 ```
 
-To see an example how to ensure debugFillProperties are generated, head out to: [example: debugFillProperties][example:debug_fill_properties]
+To see an example of how to ensure debugFillProperties are generated, head out to [example: debugFillProperties][example:debug_fill_properties]
 
 ## Json serialization
 The generator will copy all the annotations on the class and the static fields, including: "@JsonSerializable", "@JsonKey", custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
