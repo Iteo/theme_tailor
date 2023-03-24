@@ -1,3 +1,4 @@
+// Based on:
 // From Freezed 2.3.2 packages/freezed/lib/src/tools/recursive_import_locator.dart
 // MIT License
 //
@@ -35,60 +36,57 @@ extension FindAllAvailableTopLevelElements on LibraryElement {
   /// This function does not guarantees that the elements returned are unique.
   /// It is possible for the same object to be present multiple times in the list.
   Iterable<Element> findAllAvailableTopLevelElements() {
-    return _findAllAvailableTopLevelElements(
-      {},
-      checkExports: false,
-      key: _LibraryKey(
-        hideStatements: {},
-        showStatements: {},
-        librarySource: librarySource.fullName,
-      ),
-    );
+    final elements = libraryImports
+        .imports()
+        .expand((import) => import.library._visibleElements({}, import.key));
+
+    return elements;
   }
 
-  Iterable<Element> _findAllAvailableTopLevelElements(
-    Set<_LibraryKey> visitedLibraryPaths, {
-    required bool checkExports,
-    required _LibraryKey key,
-  }) sync* {
+  Iterable<Element> _visibleElements(
+    Set<String> visitedPaths,
+    _LibraryKey key,
+  ) sync* {
     yield* topLevelElements;
 
-    final librariesToCheck = checkExports
-        ? libraryExports.map(_LibraryDirectives.fromExport).whereNotNull()
-        : libraryImports.map(_LibraryDirectives.fromImport).whereNotNull();
-
-    for (final directive in librariesToCheck) {
-      if (!visitedLibraryPaths.add(directive.key)) {
+    for (final directive in libraryExports.exports()) {
+      if (!visitedPaths.add(key.toString() + directive.key.toString())) {
         continue;
       }
 
       yield* directive.library
-          ._findAllAvailableTopLevelElements(
-        visitedLibraryPaths,
-        checkExports: true,
-        key: directive.key,
-      )
-          .where(
-        (element) {
-          return (directive.showStatements.isEmpty &&
-                  directive.hideStatements.isEmpty) ||
-              (directive.hideStatements.isNotEmpty &&
-                  !directive.hideStatements.contains(element.name)) ||
-              directive.showStatements.contains(element.name);
-        },
-      );
+          ._visibleElements(visitedPaths, directive.key)
+          .where(directive.elementIsExported);
     }
   }
 }
 
-class _LibraryDirectives {
-  _LibraryDirectives({
+extension on List<LibraryExportElement> {
+  Iterable<_LibraryDirective> exports() {
+    return map(_LibraryDirective.fromExport).whereNotNull();
+  }
+}
+
+extension on List<LibraryImportElement> {
+  Iterable<_LibraryDirective> imports() {
+    return map(_LibraryDirective.fromImport).whereNotNull();
+  }
+}
+
+class _LibraryDirective {
+  _LibraryDirective({
     required this.hideStatements,
     required this.showStatements,
     required this.library,
   });
 
-  static _LibraryDirectives? fromExport(LibraryExportElement export) {
+  bool elementIsExported(Element element) {
+    return (showStatements.isEmpty && hideStatements.isEmpty) ||
+        (hideStatements.isNotEmpty && !hideStatements.contains(element.name)) ||
+        showStatements.contains(element.name);
+  }
+
+  static _LibraryDirective? fromExport(LibraryExportElement export) {
     final library = export.exportedLibrary;
     if (library == null) return null;
 
@@ -102,14 +100,14 @@ class _LibraryDirectives {
         .expand((e) => e.shownNames)
         .toSet();
 
-    return _LibraryDirectives(
+    return _LibraryDirective(
       hideStatements: hideStatements,
       showStatements: showStatements,
       library: library,
     );
   }
 
-  static _LibraryDirectives? fromImport(LibraryImportElement export) {
+  static _LibraryDirective? fromImport(LibraryImportElement export) {
     final library = export.importedLibrary;
     if (library == null) return null;
 
@@ -123,7 +121,7 @@ class _LibraryDirectives {
         .expand((e) => e.shownNames)
         .toSet();
 
-    return _LibraryDirectives(
+    return _LibraryDirective(
       hideStatements: hideStatements,
       showStatements: showStatements,
       library: library,
