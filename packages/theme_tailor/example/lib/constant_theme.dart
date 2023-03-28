@@ -1,6 +1,6 @@
 // ignore_for_file: unused_element, unused_field
-
-import 'package:example/diagnosticable_lib.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'constant_theme.tailor.dart';
 

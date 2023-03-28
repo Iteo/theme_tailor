@@ -1,3 +1,6 @@
+# 1.1.1-dev
+- Fix DiagnosticableTreeMixin not being generated if package:flutter/foundation.dart was proceeded by other Flutter import
+
 # 1.1.1
 - Update documentation
 - Fix: required version of theme_tailor_annotation is 1.1.1
