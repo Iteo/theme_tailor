@@ -26,16 +26,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 
 extension FindAllAvailableTopLevelElements on LibraryElement {
-  bool isFromPackage(String packageName) {
-    return librarySource.fullName.startsWith('/$packageName/');
-  }
-
   /// Recursively loops at the import/export directives to know what is available
   /// in the library.
   ///
   /// This function does not guarantees that the elements returned are unique.
   /// It is possible for the same object to be present multiple times in the list.
-  Iterable<Element> findAllAvailableTopLevelElements() {
+  Iterable<Element> allVisibleElements() {
     final elements = libraryImports
         .imports()
         .expand((import) => import.library._visibleElements({}, import.key));
