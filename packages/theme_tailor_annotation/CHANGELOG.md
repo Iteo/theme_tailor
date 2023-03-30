@@ -1,3 +1,7 @@
+# 1.0.3-dev
+- Add `generateStaticGetters` property to `@Tailor` and `@TailorComponent` which adds support for hot reload for const fields
+- `requireStaticConst` is now available for `@TailorComponent`
+
 # 1.0.3
 - Build configuration. It is possible to configure `themes` within the build.yaml
 
