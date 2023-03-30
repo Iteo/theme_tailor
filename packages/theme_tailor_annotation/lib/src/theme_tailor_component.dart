@@ -12,8 +12,7 @@ class TailorComponent extends Tailor {
   const TailorComponent({
     super.themes,
     super.encoders,
-  }) : super(
-          themeGetter: ThemeGetter.none,
-          generateStaticGetters: false,
-        );
+    super.requireStaticConst,
+    super.generateStaticGetters,
+  }) : super(themeGetter: ThemeGetter.none);
 }
