@@ -13,4 +13,8 @@ extension ElementExtension on Element {
   bool isFromPackage(String package) {
     return library?.librarySource.fullName.startsWith('/$package/') ?? false;
   }
+
+  bool get isClassElement {
+    return this is ClassElement && this is! Enum;
+  }
 }
