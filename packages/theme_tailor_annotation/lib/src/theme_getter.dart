@@ -1,3 +1,5 @@
+import 'package:json_annotation/json_annotation.dart';
+
 /// ### ThemeGetter
 /// Generate getters on ThemeData or BuildContext for alternative access
 /// to theme properties.
@@ -16,6 +18,7 @@
 ///
 /// #### ThemeGetter.onBuildContextProps
 /// {@macro theme_tailor.theme_getter.onBuildContextProps}
+@JsonEnum(fieldRename: FieldRename.snake)
 enum ThemeGetter {
   /// {@template theme_tailor.theme_getter.none}
   /// No extension on ThemeData nor BuildContext will be generated,

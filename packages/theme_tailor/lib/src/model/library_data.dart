@@ -1,5 +1,5 @@
-class LibraryData {
-  const LibraryData({
+class ImportsData {
+  const ImportsData({
     required this.hasJsonSerializable,
     required this.hasFlutterDiagnosticable,
   });

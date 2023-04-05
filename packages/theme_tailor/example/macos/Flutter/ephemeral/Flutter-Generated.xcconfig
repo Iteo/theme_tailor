@@ -2,12 +2,10 @@
 FLUTTER_ROOT=/Users/pfranitza/development/flutter
 FLUTTER_APPLICATION_PATH=/Users/pfranitza/Documents/iteo/theme_tailor/packages/theme_tailor/example
 COCOAPODS_PARALLEL_CODE_SIGN=true
-FLUTTER_TARGET=/Users/pfranitza/Documents/iteo/theme_tailor/packages/theme_tailor/example/lib/main.dart
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=0.0.1
 FLUTTER_BUILD_NUMBER=0.0.1
-DART_DEFINES=RkxVVFRFUl9XRUJfQVVUT19ERVRFQ1Q9dHJ1ZQ==
 DART_OBFUSCATION=false
 TRACK_WIDGET_CREATION=true
 TREE_SHAKE_ICONS=false
-PACKAGE_CONFIG=/Users/pfranitza/Documents/iteo/theme_tailor/packages/theme_tailor/example/.dart_tool/package_config.json
+PACKAGE_CONFIG=.dart_tool/package_config.json

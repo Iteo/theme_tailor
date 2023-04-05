@@ -1,3 +1,6 @@
+# 1.1.2-dev
+- Build configuration. It is possible to configure `themeGetter` and `requireStaticConst` annotation properties within the build.yaml with: theme_getter and require_static_const (all keys and values are snake_case)
+
 # 1.1.2
 - Fix: DiagnosticableTreeMixin not being generated if package:flutter/foundation.dart was proceeded by other Flutter import
 

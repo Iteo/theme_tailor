@@ -2,12 +2,10 @@ class AnnotationDataManager {
   AnnotationDataManager({
     required this.classAnnotations,
     required this.fieldsAnotations,
-    required this.hasJsonSerializable,
   });
 
   final List<String> classAnnotations;
   final Map<String, List<String>> fieldsAnotations;
-  final bool hasJsonSerializable;
 
   String expandClassAnnotations() {
     return '${classAnnotations.join('\n')}\n';

@@ -411,12 +411,13 @@ class _$IgnoreExample {
 ```
 
 ## Build configuration
-You can also configure the generator by setting values in the build.yaml.\
-Supported options (If a given option is present in the build option and annotation, the generator uses the annotation's value)
+The generator will use properties from build.yaml or default values for null properties in the @Tailor annotation.
 
-| Build option | Annotation property | Default           | Other                                                          |
-|--------------|---------------------|-------------------|----------------------------------------------------------------|
-| themes       | themes              | ["light", "dark"] | Set to [] in build option or annotation to not generate themes |
+| Build option | Annotation property | Default | Info |
+| --- | --- | --- | --- |
+| themes | themes | [light, dark] | <b>List<String></b> ([] empty array -> no themes generated) |
+| theme_getter | themeGetter | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \| on_theme_data \| on_theme_data_props \| on_build_context \| on_build_context_props |
+| require_static_const | requireStaticConst | false | <b>bool</b> |
 
 ```yaml
 targets:
@@ -424,6 +425,8 @@ targets:
     builders:
       theme_tailor:
         options:
-          themes: ["light", "dark", "superDark"]
+          themes: [light, dark, amoled]
+          theme_getter: on_build_context_props
+          require_static_const: false
 ```
 

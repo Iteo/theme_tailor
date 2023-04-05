@@ -18,6 +18,7 @@ extension ConstandReaderExtension on ConstantReader {
   }
 
   E? toEnum<E extends Enum>(E? Function(String name) fromName) {
-    return stringValue.split('.').last.let(fromName);
+    return revive().accessor.split('.').last.let(fromName);
+    // stringValue.split('.').last.let(fromName);
   }
 }
