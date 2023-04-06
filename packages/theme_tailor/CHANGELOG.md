@@ -1,4 +1,4 @@
-# 1.1.2-dev
+# 1.2.0-dev
 - Build configuration. It is possible to configure `themeGetter` and `requireStaticConst` annotation properties within the build.yaml with: theme_getter and require_static_const (all keys and values are snake_case)
 
 # 1.1.2

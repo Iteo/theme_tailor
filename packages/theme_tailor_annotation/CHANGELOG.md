@@ -1,4 +1,4 @@
-# 1.1.1-dev
+# 1.2.0-dev
 - Changes how `themeGetter` and `requireStaticConst` are handled internally by the generator, now these properties are nullable
 
 # 1.1.1
