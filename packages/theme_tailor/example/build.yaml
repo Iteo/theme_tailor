@@ -3,4 +3,6 @@ targets:
     builders:
       theme_tailor:
         options:
-          themes: ["light", "dark"]
+          themes: [light, dark]
+          theme_getter: on_theme_data
+          require_static_const: false

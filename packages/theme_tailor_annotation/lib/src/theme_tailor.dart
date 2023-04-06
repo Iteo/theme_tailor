@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta_meta.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+part 'theme_tailor.g.dart';
 
 const tailor = Tailor();
 
@@ -8,21 +11,28 @@ const tailor = Tailor();
 ///
 /// {@endtemplate}
 @Target({TargetKind.classType})
+@JsonSerializable(
+  fieldRename: FieldRename.snake,
+  createToJson: false,
+  anyMap: true,
+)
 class Tailor {
   /// {@macro theme_tailor.theme_tailor}
   const Tailor({
     this.themes,
-    this.themeGetter = ThemeGetter.onBuildContextProps,
+    this.themeGetter,
     this.encoders,
-    this.requireStaticConst = false,
+    this.requireStaticConst,
   });
+
+  factory Tailor.fromJson(Map json) => _$TailorFromJson(json);
 
   final List<String>? themes;
 
   /// Create getters for the easy access of the theme properties
   /// In case of creating component/modular themes, set it to
   /// [ThemeGetter.none]
-  final ThemeGetter themeGetter;
+  final ThemeGetter? themeGetter;
 
   /// A list of [ThemeEncoder]s to apply to this class.
   /// If this is null, default encoders will be used
@@ -53,6 +63,8 @@ class Tailor {
   /// @myCustomAnnotation
   /// class OtherExampleTheme {...}
   /// ```
+  // ignore: deprecated_member_use
+  @JsonKey(ignore: true)
   final List<ThemeEncoder>? encoders;
 
   /// If true, the generator will force generating constant themes.
@@ -73,5 +85,5 @@ class Tailor {
   ///   static const otherList = someOtherList;
   /// }
   /// ```
-  final bool requireStaticConst;
+  final bool? requireStaticConst;
 }

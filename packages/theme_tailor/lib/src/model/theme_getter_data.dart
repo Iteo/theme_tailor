@@ -1,4 +1,10 @@
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
 typedef Callback<T> = T Function();
+
+extension ThemeGetterExtension on ThemeGetter {
+  ExtensionData get extensionData => ExtensionData.values.byName(name);
+}
 
 enum ExtensionTarget {
   none('none'),
@@ -67,22 +73,6 @@ enum ExtensionData {
     required this.hasGeneratedProps,
     required this.hasPublicThemeGetter,
   });
-
-  factory ExtensionData.from(String name) {
-    switch (name) {
-      case 'onThemeData':
-        return ExtensionData.onThemeData;
-      case 'onThemeDataProps':
-        return ExtensionData.onThemeDataProps;
-      case 'onBuildContext':
-        return ExtensionData.onBuildContext;
-      case 'onBuildContextProps':
-        return ExtensionData.onBuildContextProps;
-      case 'none':
-      default:
-        return ExtensionData.none;
-    }
-  }
 
   final String shortName;
   final ExtensionTarget target;

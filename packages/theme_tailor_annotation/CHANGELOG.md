@@ -1,3 +1,6 @@
+# 1.2.0-dev
+- Changes how `themeGetter` and `requireStaticConst` are handled internally by the generator, now these properties are nullable
+
 # 1.1.1
 - Add `requireStaticConst` property to the `@Tailor` the annotation
 

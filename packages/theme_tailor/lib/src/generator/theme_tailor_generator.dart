@@ -1,21 +1,22 @@
-import 'dart:async';
-
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/visitor.dart';
-import 'package:build/build.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/annotation_data_manager.dart';
 import 'package:theme_tailor/src/model/field.dart';
+import 'package:theme_tailor/src/model/library_data.dart';
+import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
 import 'package:theme_tailor/src/template/theme_extension_template.dart';
+import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
@@ -24,45 +25,70 @@ import 'package:theme_tailor/src/util/extension/library_element_extension.dart';
 import 'package:theme_tailor/src/util/field_helper.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
-import 'package:theme_tailor/src/util/theme_getter_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
-  ThemeTailorGenerator({required this.builderOptions});
+class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
+    TailorAnnotationData, ThemeClassConfig, Tailor> {
+  TailorGenerator(this.buildYamlConfig);
 
-  final BuilderOptions builderOptions;
+  final Tailor buildYamlConfig;
 
   @override
-  Future<String> generateForAnnotatedElement(
-    Element element,
-    ConstantReader annotation,
-    BuildStep buildStep,
-  ) async {
-    if (element is! ClassElement || element is Enum) {
-      throw InvalidGenerationSourceError(
-        'Tailor can only annotate classes',
-        element: element,
-        todo: 'Move @Tailor annotation above `class`',
-      );
-    }
-    final library = element.library;
+  ClassElement ensureClassElement(Element element) {
+    if (element is ClassElement && element is! Enum) return element;
 
-    final hasDiagnostics = library.hasFlutterDiagnosticableImport;
+    throw InvalidGenerationSourceError(
+      'Tailor can only annotate classes',
+      element: element,
+      todo: 'Move @Tailor annotation above `class`',
+    );
+  }
 
-    const stringUtil = StringFormat();
+  @override
+  ImportsData parseLibraryData(LibraryElement library, ClassElement element) {
+    return ImportsData(
+      hasJsonSerializable: element.hasJsonSerializableAnnotation,
+      hasFlutterDiagnosticable: library.hasFlutterDiagnosticableImport,
+    );
+  }
 
-    final className = element.name;
-    final themes = _computeThemes(annotation);
+  @override
+  TailorAnnotationData parseAnnotation(ConstantReader annotation) {
+    return TailorAnnotationData(
+      themes: annotation.getFieldOrElse(
+        'themes',
+        decode: (o) => o.toStringList(),
+        orElse: () => buildYamlConfig.themes ?? ['light', 'dark'],
+      ),
+      themeGetter: annotation.getFieldOrElse(
+        'themeGetter',
+        decode: (o) =>
+            ThemeGetter.values.byName(o.revive().accessor.split('.').last),
+        orElse: () =>
+            buildYamlConfig.themeGetter ?? ThemeGetter.onBuildContextProps,
+      ),
+      requireStaticConst: annotation.getFieldOrElse(
+        'requireStaticConst',
+        decode: (o) => o.boolValue,
+        orElse: () => buildYamlConfig.requireStaticConst ?? false,
+      ),
+      encoders: _typeToThemeEncoderDataFromAnnotation(annotation),
+    );
+  }
 
-    final themeGetter = _computeThemeGetter(annotation);
-    final requireConstThemes = annotation.read('requireStaticConst').boolValue;
-
-    final classLevelEncoders = _computeEncoders(annotation);
+  @override
+  ThemeClassConfig parseData(
+    ImportsData libraryData,
+    TailorAnnotationData annotationData,
+    ClassElement element,
+  ) {
+    const fmt = StringFormat();
+    final classLevelEncoders = annotationData.encoders;
     final classLevelAnnotations = <String>[];
     final fieldLevelAnnotations = <String, List<String>>{};
 
     final tailorClassVisitor = _TailorClassVisitor(
-      requireConstThemes: requireConstThemes,
+      requireConstThemes: annotationData.requireStaticConst,
     );
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
@@ -72,6 +98,8 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
         .map((f) => f.name);
 
     final typeDefAstVisitor = _TypeDefAstVisitor();
+
+    final library = element.library;
     for (final unit in _getLibrariesCompilationUnits(
         [library, ...library.importedLibraries])) {
       unit.visitChildren(typeDefAstVisitor);
@@ -92,11 +120,12 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
     }
 
     final fieldInitializerVisitor = _TailorFieldInitializerVisitor(
-      themeCount: themes.length,
+      themeCount: annotationData.themes.length,
       fieldsToCheck: tailorClassVisitor.fields.keys.toList(),
-      requireConstThemes: requireConstThemes,
+      requireConstThemes: annotationData.requireStaticConst,
     );
-    if (requireConstThemes || !tailorClassVisitor.hasNonConstantElement) {
+    if (annotationData.requireStaticConst ||
+        !tailorClassVisitor.hasNonConstantElement) {
       classAstNode.visitChildren(fieldInitializerVisitor);
 
       if (fieldInitializerVisitor.hasValuesForAllFields) {
@@ -136,34 +165,15 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       final astAnnotations = <String>[];
 
       entry.value.forEachIndexed((i, isInternal) {
-        late final value = astVisitor.rawFieldsAnnotations[entry.key]![i];
-        if (!isInternal) astAnnotations.add(value);
+        if (!isInternal) {
+          astAnnotations.add(astVisitor.rawFieldsAnnotations[entry.key]![i]);
+        }
       });
+
       fieldLevelAnnotations[entry.key] = astAnnotations;
     }
 
-    final encoderDataManager = ThemeEncoderDataManager(
-      classLevelEncoders,
-      tailorClassVisitor.fieldLevelEncoders,
-    );
-
-    final annotationDataManager = AnnotationDataManager(
-      classAnnotations: classLevelAnnotations,
-      fieldsAnotations: fieldLevelAnnotations,
-      hasJsonSerializable: element.hasJsonSerializableAnnotation,
-    );
-
-    final themeFieldName = getFreeFieldName(
-      fieldNames: fields.keys.toList(),
-      proposedNames: [
-        'themes',
-        'tailorThemes',
-        'tailorThemesList',
-      ],
-      warningPropertyName: 'tailor theme list',
-    );
-
-    final generateConstantThemes = requireConstThemes
+    final generateConstantThemes = annotationData.requireStaticConst
         ? true
         : (!tailorClassVisitor.hasNonConstantElement &&
             fieldInitializerVisitor.hasValuesForAllFields);
@@ -174,58 +184,52 @@ class ThemeTailorGenerator extends GeneratorForAnnotation<Tailor> {
       ),
     );
 
-    final config = ThemeClassConfig(
-      fields: sortedFields,
-      className: stringUtil.themeClassName(className),
-      baseClassName: className,
-      themes: themes,
-      themesFieldName: themeFieldName,
-      encoderManager: encoderDataManager,
-      themeGetter: themeGetter,
-      annotationManager: annotationDataManager,
-      isFlutterDiagnosticable: hasDiagnostics,
-      constantThemes: generateConstantThemes,
+    final themeFieldName = getFreeFieldName(
+      fieldNames: fields.keys.toList(),
+      proposedNames: ['themes', 'tailorThemes', 'tailorThemesList'],
+      warningPropertyName: 'tailor theme list',
     );
 
-    final generatorBuffer = StringBuffer()
-      ..write(ThemeClassTemplate(config, stringUtil))
-      ..write(ThemeExtensionTemplate(config, stringUtil));
-
-    return generatorBuffer.toString();
+    return ThemeClassConfig(
+      fields: sortedFields,
+      className: fmt.themeClassName(element.name),
+      baseClassName: element.name,
+      themes: annotationData.themes,
+      themesFieldName: themeFieldName,
+      encoderManager: ThemeEncoderDataManager(
+        classLevelEncoders,
+        tailorClassVisitor.fieldLevelEncoders,
+      ),
+      themeGetter: annotationData.themeGetter.extensionData,
+      annotationManager: AnnotationDataManager(
+        classAnnotations: classLevelAnnotations,
+        fieldsAnotations: fieldLevelAnnotations,
+      ),
+      isFlutterDiagnosticable: libraryData.hasFlutterDiagnosticable,
+      hasJsonSerializable: libraryData.hasJsonSerializable,
+      constantThemes: generateConstantThemes,
+    );
   }
 
-  List<String> _computeThemes(ConstantReader annotation) {
-    if (!annotation.read('themes').isNull) {
-      return annotation
-          .read('themes')
-          .listValue
-          .map((e) => e.toStringValue())
-          .whereNotNull()
-          .toList();
-    }
-
-    var pubThemes = builderOptions.config['themes'] as List<dynamic>?;
-
-    const defaultThemes = ['light', 'dark'];
-    if (pubThemes == null) return defaultThemes;
-
-    return pubThemes.whereNotNull().map((e) => e.toString()).toList();
+  @override
+  Iterable<String> generateForData(ThemeClassConfig data) sync* {
+    yield ThemeClassTemplate(data, StringFormat()).toString();
+    yield ThemeExtensionTemplate(data, StringFormat()).toString();
   }
 
-  ExtensionData _computeThemeGetter(ConstantReader annotation) {
-    return themeGetterDataFromData(annotation.read('themeGetter'));
-  }
-
-  Map<String, ThemeEncoderData> _computeEncoders(ConstantReader annotation) {
-    final encodersReader = annotation.read('encoders');
-    final encoders = <String, ThemeEncoderData>{};
-    if (encodersReader.isNull) return encoders;
-
-    for (final object in encodersReader.listValue) {
-      final encoderData = extractThemeEncoderData(null, object);
-      if (encoderData != null) encoders[encoderData.type] = encoderData;
-    }
-    return encoders;
+  Map<String, ThemeEncoderData> _typeToThemeEncoderDataFromAnnotation(
+    ConstantReader annotation,
+  ) {
+    return annotation.getFieldOrElse(
+      'encoders',
+      decode: (o) => Map.fromEntries(
+        o.listValue
+            .map((dartObject) => extractThemeEncoderData(null, dartObject))
+            .whereType<ThemeEncoderData>()
+            .map((encoderData) => MapEntry(encoderData.type, encoderData)),
+      ),
+      orElse: () => {},
+    );
   }
 }
 

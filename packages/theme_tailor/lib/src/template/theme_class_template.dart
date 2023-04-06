@@ -142,7 +142,7 @@ class ThemeClassTemplate {
   }
 
   String _fromJsonFactory() {
-    if (!config.annotationManager.hasJsonSerializable) return '';
+    if (!config.hasJsonSerializable) return '';
     return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>
       _\$${config.className}FromJson(json);\n''';
   }
