@@ -23,7 +23,7 @@ class Tailor {
     this.themeGetter,
     this.encoders,
     this.requireStaticConst,
-    this.generateStaticGetters = true,
+    this.generateStaticGetters,
   });
 
   factory Tailor.fromJson(Map json) => _$TailorFromJson(json);
@@ -111,5 +111,5 @@ class Tailor {
   ///   static List<Color> color3 = [lightColor, darkColor];
   /// }
   /// ```
-  final bool generateStaticGetters;
+  final bool? generateStaticGetters;
 }
