@@ -3,7 +3,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'nullable_params.tailor.dart';
 
-@Tailor()
+@tailor
 class _$NullableParams {
   static List<Color?> nullableProperty = [
     Colors.white,
