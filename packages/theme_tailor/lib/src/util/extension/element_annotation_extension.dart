@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_gen_test/source_gen_test.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-import 'package:source_gen_test/annotations.dart';
 
 extension ElementAnnotationExtension on ElementAnnotation {
   bool get isTailorAnnotation {
