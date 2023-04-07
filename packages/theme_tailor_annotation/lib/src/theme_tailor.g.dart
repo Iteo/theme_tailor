@@ -12,6 +12,7 @@ Tailor _$TailorFromJson(Map json) => Tailor(
       themeGetter:
           $enumDecodeNullable(_$ThemeGetterEnumMap, json['theme_getter']),
       requireStaticConst: json['require_static_const'] as bool?,
+      generateStaticGetters: json['generate_static_getters'] as bool?,
     );
 
 const _$ThemeGetterEnumMap = {

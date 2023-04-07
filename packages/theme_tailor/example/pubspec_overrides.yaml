@@ -4,3 +4,5 @@ dependency_overrides:
 
   theme_tailor:
     path: ../
+    
+  test_api: ^0.4.18

@@ -16,6 +16,7 @@ class ThemeClassConfig {
     required this.isFlutterDiagnosticable,
     required this.hasJsonSerializable,
     required this.constantThemes,
+    required this.staticGetters,
   });
 
   final Map<String, Field> fields;
@@ -29,4 +30,5 @@ class ThemeClassConfig {
   final bool isFlutterDiagnosticable;
   final bool hasJsonSerializable;
   final bool constantThemes;
+  final bool staticGetters;
 }

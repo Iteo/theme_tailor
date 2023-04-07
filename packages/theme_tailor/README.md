@@ -47,6 +47,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
     - [Generate constant themes](#generate-constant-themes)
+    - [Hot reload support](#hot-reload-support)
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
@@ -294,6 +295,55 @@ class _$ConstantThemes {
 
 It is possible to force generate constant themes using `Tailor(requireStaticConst: true)` annotation.
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
+
+## Hot reload support
+To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` annotation. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
+
+To use hot reload with Tailor, make sure to follow these requirements:
+- Import `package:flutter/foundation.dart` as the option depends on `kDebugMode` from this package
+- Initialize your theme data in the build method
+- Make sure that properties that should be hot reloadable are either getters or const
+
+Here's an example usage:
+```dart
+import 'package:flutter/foundation.dart';
+
+const lightColor = Color(0xFFA1B2C3);
+const darkColor = Color(0xFF123ABC);
+
+@tailor
+class _$GetterTheme {
+  // This is correct
+  static const color1 = [lightColor, darkColor];
+  static List<Color> get color2 => [lightColor, darkColor];
+
+  // color3 won't be changed by hot reload as it is not a getter or const
+  static List<Color> color3 = [lightColor, darkColor];
+}
+
+class GetterPage extends StatelessWidget {
+  const GetterPage({super.key});
+
+  final _lightThemeData = ThemeData(extensions: [GetterTheme.light]);
+
+  @override
+  Widget build(BuildContext context) {
+    final darkThemeData = ThemeData(extensions: [GetterTheme.dark]);
+
+    return MaterialApp(
+      // This is correct
+      darkTheme: darkThemeData
+      // This is correct
+      //darkTheme: ThemeData(extensions: [GetterTheme.dark]),
+
+      // This is incorrect for hot reload
+      // It will not update as _lightThemeData won't be changed by hot reload
+      // (It is necessary to create ThemeData in the build's scope - the same way as `darkThemeData`)
+      theme: _lightThemeData,
+    );
+  }
+}
+```
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:

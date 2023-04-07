@@ -6,3 +6,4 @@ targets:
           themes: [light, dark]
           theme_getter: on_theme_data
           require_static_const: false
+          generate_static_getters: false

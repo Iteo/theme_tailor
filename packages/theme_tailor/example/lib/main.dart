@@ -28,6 +28,7 @@ part 'main.tailor.dart';
 @Tailor(
   themes: ['light', 'dark'],
   themeGetter: ThemeGetter.onBuildContext,
+  generateStaticGetters: true,
 )
 class $_SimpleTheme {
   /// Only List<> fields are turned into theme properties, h1Style and h2Style
@@ -40,8 +41,12 @@ class $_SimpleTheme {
   /// Declaration of the fields of the theme, list values are default values
   /// for the generated themes ['light', 'dark']
   /// You can configure ammount of generated themes in the @Tailor "themes".
-  static List<Color> background = [AppColors.white, Colors.grey.shade900];
-  static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
+  // static List<Color> background = [AppColors.white, Colors.grey.shade900];
+  // static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
+
+  static const List<Color> background = [AppColors.white, Colors.black];
+  static const List<Color> appBar = [Colors.amber, Colors.deepPurple];
+
   static List<TextStyle> h1 = [
     h1Style.copyWith(color: const Color.fromARGB(221, 25, 25, 25)),
     h1Style.copyWith(color: Colors.grey.shade200),
@@ -68,21 +73,21 @@ class _MyAppState extends State<MyApp> {
   /// replace it with your own state management
   final themeModeNotifier = ValueNotifier(ThemeMode.light);
 
-  /// Theme Tailor generates theme extension and these should be included in the
-  /// 'extensions' list from the ThemeData.
-  /// If you opted out from generating themes by setting Tailor's "themes" to []
-  /// You won't see SimpleTheme.light / SimpleTheme.dark
-  final _lightThemeData = ThemeData(
-    brightness: Brightness.light,
-    extensions: [SimpleTheme.light],
-  );
-  final _darkThemeData = ThemeData(
-    brightness: Brightness.dark,
-    extensions: [SimpleTheme.dark],
-  );
-
   @override
   Widget build(BuildContext context) {
+    /// Theme Tailor generates theme extension and these should be included in the
+    /// 'extensions' list from the ThemeData.
+    /// If you opted out from generating themes by setting Tailor's "themes" to []
+    /// You won't see SimpleTheme.light / SimpleTheme.dark
+    final _lightThemeData = ThemeData(
+      brightness: Brightness.light,
+      extensions: [SimpleTheme.light],
+    );
+    final _darkThemeData = ThemeData(
+      brightness: Brightness.dark,
+      extensions: [SimpleTheme.dark],
+    );
+
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: themeModeNotifier,
       builder: (_, themeMode, __) {

@@ -72,6 +72,11 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         decode: (o) => o.boolValue,
         orElse: () => buildYamlConfig.requireStaticConst ?? false,
       ),
+      generateStaticGetters: annotation.getFieldOrElse(
+        'generateStaticGetters',
+        decode: (o) => o.boolValue,
+        orElse: () => buildYamlConfig.generateStaticGetters ?? false,
+      ),
       encoders: _typeToThemeEncoderDataFromAnnotation(annotation),
     );
   }
@@ -89,6 +94,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
 
     final tailorClassVisitor = _TailorClassVisitor(
       requireConstThemes: annotationData.requireStaticConst,
+      generateStaticGetters: annotationData.generateStaticGetters,
     );
     element.visitChildren(tailorClassVisitor);
     final fields = tailorClassVisitor.fields;
@@ -154,7 +160,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         continue;
       }
 
-      if (!annotation.isTailorAnnotation) {
+      if (!annotation.isTailorAnnotation && !annotation.isSourceGenAnnotation) {
         classLevelAnnotations.add(astVisitor.rawClassAnnotations[i]);
       }
     }
@@ -208,6 +214,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
       isFlutterDiagnosticable: libraryData.hasFlutterDiagnosticable,
       hasJsonSerializable: libraryData.hasJsonSerializable,
       constantThemes: generateConstantThemes,
+      staticGetters: annotationData.generateStaticGetters,
     );
   }
 
@@ -234,9 +241,13 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
 }
 
 class _TailorClassVisitor extends SimpleElementVisitor {
-  _TailorClassVisitor({required this.requireConstThemes});
+  _TailorClassVisitor({
+    required this.requireConstThemes,
+    required this.generateStaticGetters,
+  });
 
   final bool requireConstThemes;
+  final bool generateStaticGetters;
 
   final Map<String, Field> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
@@ -254,6 +265,14 @@ class _TailorClassVisitor extends SimpleElementVisitor {
     if (ignoreAnnotationTypeChecker.hasAnnotationOf(element)) return;
 
     if (element.isStatic && element.type.isDartCoreList) {
+      if (!requireConstThemes && generateStaticGetters) {
+        if (!element.isSynthetic && !element.isConst) {
+          print(
+            'Field "${element.name}" will not be updated on hot reload, since it is neither a getter nor a const.',
+          );
+        }
+      }
+
       if (!element.isConst) {
         hasNonConstantElement = true;
 

@@ -58,6 +58,11 @@ class ThemeClassTemplate {
   String _generateThemes() {
     if (config.themes.isEmpty) return '';
     final buffer = StringBuffer();
+    if (config.staticGetters && !config.constantThemes) {
+      config.themes.forEachIndexed((_, e) {
+        buffer.write(_getterTemplate(e));
+      });
+    }
     config.themes.forEachIndexed((i, e) {
       buffer.write(_themeTemplate(i, e));
     });
@@ -65,6 +70,14 @@ class ThemeClassTemplate {
     buffer.writeln(
         'static ${_themeModifier()} ${config.themesFieldName} = [$themesList];');
     return buffer.toString();
+  }
+
+  /// Template for one static getter
+  String _getterTemplate(String themeName) {
+    final returnType = config.className;
+
+    return '''static $returnType get $themeName => kDebugMode ? _${themeName}Getter : _${themeName}Final;
+    \n''';
   }
 
   /// Template for one static theme
@@ -81,8 +94,19 @@ class ThemeClassTemplate {
             '${field.key}: ${config.baseClassName}.${field.key}[$index],');
       }
     }
-    return '''
+
+    if (config.constantThemes || !config.staticGetters) {
+      return '''
     static ${_themeModifier()} $returnType $themeName = $returnType(
+      ${buffer.toString()}
+    );\n
+    ''';
+    }
+    return '''
+    static $returnType get _${themeName}Getter => $returnType(
+      ${buffer.toString()}
+    );\n    
+    static final $returnType _${themeName}Final = $returnType(
       ${buffer.toString()}
     );\n
     ''';
