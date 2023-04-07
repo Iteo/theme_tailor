@@ -4,7 +4,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'getter_theme.tailor.dart';
 
-@tailor
+@Tailor(generateStaticGetters: true)
 class $_GetterTheme {
   static const h1Style = TextStyle(fontSize: 15, color: Colors.grey);
   static const h2Style = TextStyle(fontSize: 14, color: Colors.black);
