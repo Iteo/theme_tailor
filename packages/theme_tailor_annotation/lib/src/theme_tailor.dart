@@ -15,7 +15,7 @@ class Tailor {
     this.themeGetter = ThemeGetter.onBuildContextProps,
     this.encoders,
     this.requireStaticConst = false,
-    this.generateStaticGetters,
+    this.generateStaticGetters = true,
   });
 
   final List<String>? themes;
@@ -99,5 +99,5 @@ class Tailor {
   ///   static List<Color> color3 = [lightColor, darkColor];
   /// }
   /// ```
-  final bool? generateStaticGetters;
+  final bool generateStaticGetters;
 }
