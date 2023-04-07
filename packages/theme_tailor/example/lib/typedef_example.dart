@@ -8,7 +8,7 @@ typedef AnotherNullableThemeList = List<AnotherTheme?>;
 typedef OtherThemeList = List<OtherThemeExtension>;
 typedef ListOfColors = List<Color>;
 
-@Tailor(generateStaticGetters: false)
+@Tailor()
 class $_SimpleTheme {
   @themeExtension
   static AnotherThemeList anotherTheme = AnotherTheme.themes;
@@ -22,7 +22,7 @@ class $_SimpleTheme {
   static AnotherNullableThemeList anotherNullable = AnotherTheme.themes;
 }
 
-@Tailor(generateStaticGetters: false)
+@Tailor()
 class $_AnotherTheme {
   static List<Color> appBarColor = [Colors.amber, Colors.blueGrey.shade800];
 

@@ -119,7 +119,6 @@ class $_GenerateGetters {
 )
 @Tailor(
   themes: ['light'],
-  generateStaticGetters: false,
 )
 class $_GenerateFinalsOnUnsupportedKeywordIncluded {
   static const s1 = ['blue'];

@@ -16,7 +16,7 @@ class JsonColorConverter implements JsonConverter<Color, int> {
   int toJson(Color color) => color.value;
 }
 
-@Tailor(generateStaticGetters: false)
+@Tailor()
 @JsonSerializable(explicitToJson: true)
 @CustomColorEncoder()
 @JsonColorConverter()

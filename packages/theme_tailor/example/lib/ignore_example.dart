@@ -6,7 +6,7 @@ part 'ignore_example.tailor.dart';
 
 // ignore_for_file: unused_field
 
-@Tailor(generateStaticGetters: false)
+@Tailor()
 class _$IgnoreExample {
   static List<Color> background = [AppColors.white, Colors.grey.shade900];
 

@@ -18,10 +18,7 @@ const themesEnums = [
   SuperThemeEnum.superDark
 ];
 
-@Tailor(
-  themes: themes,
-  generateStaticGetters: false,
-)
+@Tailor(themes: themes)
 class $_ThemeWithEnums {
   static List<SuperThemeEnum> enums1 = [
     SuperThemeEnum.light,
