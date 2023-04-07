@@ -5,22 +5,11 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 Future<void> main() async {
   initializeBuildLogTracking();
-  // const annotatedTests = {
-  //   '\$_ThrowErrorOnFinalIncluded',
-  //   '\$_GenerateConstantTheme',
-  //   '\$_GenerateConstantOverGetters',
-  //   '\$_GenerateGetters',
-  //   '\$_GenerateFinalsOnUnsupportedKeywordIncluded'
-  // };
 
   final reader = await initializeLibraryReaderForDirectory(
     'test/code_gen/inputs',
     'field_keyword_generation_test_input.dart',
   );
 
-  testAnnotatedElements(
-    reader,
-    TailorGenerator(Tailor()),
-    // expectedAnnotatedTests: annotatedTests,
-  );
+  testAnnotatedElements(reader, TailorGenerator(Tailor()));
 }
