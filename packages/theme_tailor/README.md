@@ -297,14 +297,14 @@ It is possible to force generate constant themes using `Tailor(requireStaticCons
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Hot reload support
+To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` annotation. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
 
-Using `generateStaticGetters` property of `@Tailor()` annotation it is possible to generate getters for particular themes.
-They will conditionally return either a getter for the theme itself (if kDebugMode == true) or final theme otherwise.
-Additionally, for hot reload to work properly, following requirements must be satisfied:
-- Any property of the anotated class that you want to be updated on hot reload must either be a getter or const.
-- ThemeData has to be declared in place (most often theme property of the MaterialApp).
-- Annotated class must include `package:flutter/foundation.dart` import for the sake of using `kDebugMode` constant in generated class;
+To use hot reload with Tailor, make sure to follow these requirements:
+- Import `package:flutter/foundation.dart` as the option depends on `kDebugMode` from this package
+- Initialize your theme data in the build method
+- Make sure that properties that should be hot reloadable are either getters or const
 
+Here's an example usage:
 ```dart
 import 'package:flutter/foundation.dart';
 
@@ -317,7 +317,7 @@ class _$GetterTheme {
   static const color1 = [lightColor, darkColor];
   static List<Color> get color2 => [lightColor, darkColor];
 
-  // This is bad
+  // color3 won't be changed by hot reload as it is not a getter or const
   static List<Color> color3 = [lightColor, darkColor];
 }
 
@@ -328,11 +328,18 @@ class GetterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final darkThemeData = ThemeData(extensions: [GetterTheme.dark]);
+
     return MaterialApp(
-      // This is bad
-      theme: _lightThemeData,
       // This is correct
-      darkTheme: ThemeData(extensions: [GetterTheme.dark]),
+      darkTheme: darkThemeData
+      // This is correct
+      //darkTheme: ThemeData(extensions: [GetterTheme.dark]),
+
+      // This is incorrect for hot reload
+      // It will not update as _lightThemeData won't be changed by hot reload
+      // (It is necessary to create ThemeData in the build's scope - the same way as `darkThemeData`)
+      theme: _lightThemeData,
     );
   }
 }
