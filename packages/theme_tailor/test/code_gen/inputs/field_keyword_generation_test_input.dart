@@ -7,6 +7,7 @@ import 'package:source_gen_test/annotations.dart';
 @Tailor(
   themes: ['light'],
   requireStaticConst: true,
+  generateStaticGetters: true,
 )
 class $_ThrowErrorOnFinalIncluded {
   static final s1 = ['blue'];
@@ -74,6 +75,7 @@ class GenerateConstantTheme extends ThemeExtension<GenerateConstantTheme> {
 @Tailor(
   themes: ['light'],
   requireStaticConst: true,
+  generateStaticGetters: true,
   themeGetter: ThemeGetter.none,
 )
 class $_GenerateConstantTheme {
@@ -104,6 +106,7 @@ class $_GenerateConstantOverGetters {
 )
 @Tailor(
   themes: ['light'],
+  generateStaticGetters: true,
 )
 class $_GenerateGetters {
   static const s1 = ['blue'];
