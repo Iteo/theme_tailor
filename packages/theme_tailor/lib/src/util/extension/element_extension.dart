@@ -9,4 +9,8 @@ extension ElementExtension on Element {
       throwOnUnresolved: false,
     );
   }
+
+  bool isFromPackage(String package) {
+    return library?.librarySource.fullName.startsWith('/$package/') ?? false;
+  }
 }

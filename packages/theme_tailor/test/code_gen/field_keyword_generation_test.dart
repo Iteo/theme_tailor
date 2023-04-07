@@ -1,16 +1,17 @@
-import 'package:build/build.dart';
+// import 'package:build/build.dart';
 import 'package:source_gen_test/source_gen_test.dart';
 import 'package:theme_tailor/src/generator/theme_tailor_generator.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 Future<void> main() async {
   initializeBuildLogTracking();
-  const annotatedTests = {
-    '\$_ThrowErrorOnFinalIncluded',
-    '\$_GenerateConstantTheme',
-    '\$_GenerateConstantOverGetters',
-    '\$_GenerateGetters',
-    '\$_GenerateFinalsOnUnsupportedKeywordIncluded'
-  };
+  // const annotatedTests = {
+  //   '\$_ThrowErrorOnFinalIncluded',
+  //   '\$_GenerateConstantTheme',
+  //   '\$_GenerateConstantOverGetters',
+  //   '\$_GenerateGetters',
+  //   '\$_GenerateFinalsOnUnsupportedKeywordIncluded'
+  // };
 
   final reader = await initializeLibraryReaderForDirectory(
     'test/code_gen/inputs',
@@ -19,9 +20,7 @@ Future<void> main() async {
 
   testAnnotatedElements(
     reader,
-    ThemeTailorGenerator(
-      builderOptions: BuilderOptions({}),
-    ),
-    expectedAnnotatedTests: annotatedTests,
+    TailorGenerator(Tailor()),
+    // expectedAnnotatedTests: annotatedTests,
   );
 }

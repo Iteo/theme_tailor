@@ -14,6 +14,7 @@ class ThemeClassConfig {
     required this.themeGetter,
     required this.annotationManager,
     required this.isFlutterDiagnosticable,
+    required this.hasJsonSerializable,
     required this.constantThemes,
     required this.staticGetters,
   });
@@ -27,6 +28,7 @@ class ThemeClassConfig {
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
   final bool isFlutterDiagnosticable;
+  final bool hasJsonSerializable;
   final bool constantThemes;
   final bool staticGetters;
 }

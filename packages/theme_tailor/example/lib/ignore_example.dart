@@ -1,5 +1,6 @@
 import 'package:example/app_colors.dart';
-import 'package:example/diagnosticable_lib.dart';
+import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'ignore_example.tailor.dart';
 

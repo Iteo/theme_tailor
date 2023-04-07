@@ -566,14 +566,14 @@ packages:
       path: "../../theme_tailor"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.1.1-dev"
   theme_tailor_annotation:
     dependency: "direct main"
     description:
       path: "../../theme_tailor_annotation"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.1.1"
   theme_tailor_toolbox:
     dependency: "direct main"
     description:
