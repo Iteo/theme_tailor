@@ -297,7 +297,7 @@ It is possible to force generate constant themes using `Tailor(requireStaticCons
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Hot reload support
-To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` annotation. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
+To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` and `@TailorComponent` annotations. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
 
 To use hot reload with Tailor, make sure to follow these requirements:
 - Import `package:flutter/foundation.dart` as the option depends on `kDebugMode` from this package

@@ -1,6 +1,7 @@
-# 1.2.0-dev
-- Generate static getters, allowing the theme to be updated on hot reload.
+# 1.2.0
+- Added `generateStaticGetters` property to `Tailor` and `TailorComponent` to support hot-reload
 - Build configuration. It is possible to configure `themeGetter`, `requireStaticConst` and `generateStaticGetters` annotation properties within the build.yaml with: theme_getter and require_static_const (all keys and values for enums are snake_case)
+- Required version of theme_tailor_annotation is 1.2.0
 
 # 1.1.2
 - Fix: DiagnosticableTreeMixin not being generated if package:flutter/foundation.dart was proceeded by other Flutter import

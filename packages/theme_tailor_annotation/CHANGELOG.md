@@ -1,4 +1,4 @@
-# 1.2.0-dev
+# 1.2.0
 - Add `generateStaticGetters` property to `@Tailor` and `@TailorComponent` which adds support for hot reload for const fields
 - `requireStaticConst` is now available for `@TailorComponent`
 - Changes how `themeGetter` and `requireStaticConst` are handled internally by the generator, now these properties are nullable
