@@ -2,10 +2,12 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'generator_annotation_matcher.dart';
+
 abstract class GeneratorForAnnotatedClass<TLibraryData, TAnnotationData, TData,
-    TAnnotation> extends GeneratorForAnnotation<TAnnotation> {
+    TAnnotation> extends StringIterableGenerator<TAnnotation> {
   @override
-  String generateForAnnotatedElement(
+  Iterable<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
@@ -17,8 +19,7 @@ abstract class GeneratorForAnnotatedClass<TLibraryData, TAnnotationData, TData,
       classElement,
     );
 
-    final buffer = StringBuffer()..writeAll(generateForData(data));
-    return buffer.toString();
+    return generateForData(data);
   }
 
   TLibraryData parseLibraryData(LibraryElement library, ClassElement element);
