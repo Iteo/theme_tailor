@@ -25,10 +25,10 @@ scripts:
     run: melos run test_dart && melos run test_flutter
 
   test_dart:
-    run: melos exec --dir-exists="test" dart test
+    run: melos exec --no-flutter --dir-exists="test" dart test
 
   test_flutter:
-    run: melos exec --dir-exists="test" flutter test
+    run: melos exec --flutter --dir-exists="test" flutter test
 
   test:coverage:
     run: melos run test_dart:coverage && melos run test_flutter:coverage
