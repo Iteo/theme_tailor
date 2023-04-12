@@ -24,7 +24,7 @@ class ThemeClassConfig {
   final String baseClassName;
   final String className;
   final String themesFieldName;
-  final ThemeEncoderDataManager encoderManager;
+  final ThemeEncoderManager encoderManager;
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
   final bool isFlutterDiagnosticable;

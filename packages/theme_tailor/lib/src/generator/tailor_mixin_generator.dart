@@ -1,5 +1,7 @@
 import 'package:analyzer/dart/element/element.dart';
+import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/library_data.dart';
 import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
@@ -7,9 +9,11 @@ import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/template/tailor_mixin_template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
+import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
 class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     TailorMixinImports, TailorMixinAnnotationData, TailorMixinConfig, Tailor> {
@@ -68,16 +72,46 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     TailorMixinAnnotationData annotationData,
     ClassElement element,
   ) {
-    final className = element.displayName;
-    final fields = element.fields
-        .map((e) => TailorMixinField(
-            name: e.displayName,
-            type: e.type.getDisplayString(withNullability: true)))
-        .toList(growable: false);
+    /// Encoders processing
+    final encodersTypeNameToEncoder = annotationData.encoders;
+    for (final annotation in element.metadata) {
+      extractThemeEncoderData(
+        annotation,
+        annotation.computeConstantValue()!,
+      )?.let((encoder) => encodersTypeNameToEncoder[encoder.type] = encoder);
+    }
+
+    final encodersFieldNameToEncoder = <String, ThemeEncoderData>{};
+    for (final field in element.fields) {
+      for (final annotation in field.metadata) {
+        extractThemeEncoderData(
+          annotation,
+          annotation.computeConstantValue()!,
+        )?.let((encoder) => encodersFieldNameToEncoder[field.name] = encoder);
+      }
+    }
+
+    final encoderManager = ThemeEncoderManager(
+      encodersTypeNameToEncoder,
+      encodersFieldNameToEncoder,
+    );
+
+    /// Fields
+    final fields = element.fields.map((e) {
+      final isThemeExtension =
+          e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
+
+      return TailorMixinField(
+        isThemeExtension: isThemeExtension,
+        name: e.displayName,
+        type: e.type.getDisplayString(withNullability: true),
+      );
+    }).toList(growable: false);
 
     return TailorMixinConfig(
-      className: className,
+      className: element.displayName,
       fields: fields,
+      encoderDataManager: encoderManager,
     );
   }
 

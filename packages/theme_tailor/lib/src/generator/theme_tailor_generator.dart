@@ -202,7 +202,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
       baseClassName: element.name,
       themes: annotationData.themes,
       themesFieldName: themeFieldName,
-      encoderManager: ThemeEncoderDataManager(
+      encoderManager: ThemeEncoderManager(
         classLevelEncoders,
         tailorClassVisitor.fieldLevelEncoders,
       ),

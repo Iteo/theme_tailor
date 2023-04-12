@@ -17,6 +17,11 @@ extension ElementExtension on Element {
     const checker = TypeChecker.fromRuntime(TailorMixin);
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
+
+  bool get hasThemeExtensionAnnotation {
+    final checker = TypeChecker.fromRuntime(themeExtension.runtimeType);
+    return checker.hasAnnotationOf(this, throwOnUnresolved: false);
+  }
 }
 
 extension ClassElementExtensions on ClassElement {

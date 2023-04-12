@@ -8,17 +8,36 @@ part 'tailor_mixin.tailor.dart';
 class MyTheme extends ThemeExtension<MyTheme>
     with DiagnosticableTreeMixin, MyThemeTailorMixin {
   const MyTheme({
-    required this.background,
     required this.foreground,
     required this.textStyle,
+    required this.ok,
+    this.background,
   });
 
   @override
+  @themeExtension
   final Color? background;
   @override
   final Color foreground;
   @override
   final TextStyle textStyle;
+  @override
+  final OkTheme ok;
+}
+
+class OkTheme extends ThemeExtension<OkTheme> {
+  @override
+  ThemeExtension<OkTheme> copyWith() {
+    // TODO: implement copyWith
+    throw UnimplementedError();
+  }
+
+  @override
+  ThemeExtension<OkTheme> lerp(
+      covariant ThemeExtension<OkTheme>? other, double t) {
+    // TODO: implement lerp
+    throw UnimplementedError();
+  }
 }
 
 // mixin MyThemeTailorMixin on ThemeExtension<MyTheme>, DiagnosticableTreeMixin {

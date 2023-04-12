@@ -59,10 +59,10 @@ class _AnyEncoder extends ThemeEncoderData {
   String callLerp(String a, String b, String t) => '$t < 0.5? $a : $b';
 }
 
-class ThemeEncoderDataManager {
-  const ThemeEncoderDataManager._(this.typeToEncoder, this.fieldNameToEncoder);
+class ThemeEncoderManager {
+  const ThemeEncoderManager._(this.typeToEncoder, this.fieldNameToEncoder);
 
-  factory ThemeEncoderDataManager(
+  factory ThemeEncoderManager(
     Map<String, ThemeEncoderData> typeToEncoder,
     Map<String, ThemeEncoderData> fieldNameToEncoder,
   ) {
@@ -70,7 +70,7 @@ class ThemeEncoderDataManager {
       ..._defaultEncoders,
       ...typeToEncoder,
     };
-    return ThemeEncoderDataManager._(encoders, fieldNameToEncoder);
+    return ThemeEncoderManager._(encoders, fieldNameToEncoder);
   }
 
   static const _color = ThemeEncoderData('Color', 'Color', true);
