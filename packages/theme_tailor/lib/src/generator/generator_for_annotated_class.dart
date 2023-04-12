@@ -6,6 +6,8 @@ import 'generator_annotation_matcher.dart';
 
 abstract class GeneratorForAnnotatedClass<TLibraryData, TAnnotationData, TData,
     TAnnotation> extends StringIterableGenerator<TAnnotation> {
+  const GeneratorForAnnotatedClass();
+
   @override
   Iterable<String> generateForAnnotatedElement(
     Element element,

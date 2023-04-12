@@ -18,3 +18,9 @@ extension ElementExtension on Element {
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
 }
+
+extension ClassElementExtensions on ClassElement {
+  bool hasMixinNamed(String mixin) {
+    return mixins.map((e) => e.element.name).contains(mixin);
+  }
+}

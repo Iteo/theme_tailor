@@ -7,3 +7,9 @@ class ImportsData {
   final bool hasJsonSerializable;
   final bool hasFlutterDiagnosticable;
 }
+
+class TailorMixinImports {
+  const TailorMixinImports({required this.hasFlutterDiagnosticable});
+
+  final bool hasFlutterDiagnosticable;
+}
