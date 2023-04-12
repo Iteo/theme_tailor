@@ -25,7 +25,7 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
 
     library.annotatedWith(typeChecker).forEach(
       (e) {
-        matchGeneratorForAnnotation(e)
+        matchGenerator(e.element)
             .generateForAnnotatedElement(e.element, e.annotation, buildStep)
             .forEach(values.writeln);
       },
@@ -36,11 +36,12 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
 
   @override
   Iterable<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) {
+    Element element,
+    ConstantReader annotation,
+    BuildStep buildStep,
+  ) {
     return Iterable.empty();
   }
 
-  StringIterableGenerator<TAnnotation> matchGeneratorForAnnotation(
-    AnnotatedElement annotatedElement,
-  );
+  StringIterableGenerator<TAnnotation> matchGenerator(Element element);
 }
