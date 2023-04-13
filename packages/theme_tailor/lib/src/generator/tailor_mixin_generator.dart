@@ -114,6 +114,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
       className: element.displayName,
       fields: fields,
       encoderDataManager: encoderManager,
+      hasDiagnosticableMixin: libraryData.hasDiagnosticableMixin,
     );
   }
 
@@ -123,6 +124,6 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     ClassElement element,
   ) {
     final isDiagnosticable = element.hasMixinNamed('DiagnosticableTreeMixin');
-    return TailorMixinImports(hasFlutterDiagnosticable: isDiagnosticable);
+    return TailorMixinImports(hasDiagnosticableMixin: isDiagnosticable);
   }
 }

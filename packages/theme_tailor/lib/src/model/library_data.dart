@@ -9,7 +9,7 @@ class ImportsData {
 }
 
 class TailorMixinImports {
-  const TailorMixinImports({required this.hasFlutterDiagnosticable});
+  const TailorMixinImports({required this.hasDiagnosticableMixin});
 
-  final bool hasFlutterDiagnosticable;
+  final bool hasDiagnosticableMixin;
 }

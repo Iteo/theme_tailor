@@ -18,6 +18,7 @@ class TailorMixinTemplate extends BufferedTemplate {
     this.name,
     this.fields,
     this.encoderManager,
+    this.hasDiagnosticableMixin,
   );
 
   factory TailorMixinTemplate.fromConfig(TailorMixinConfig config) {
@@ -25,26 +26,34 @@ class TailorMixinTemplate extends BufferedTemplate {
       config.className,
       config.fields,
       config.encoderDataManager,
+      config.hasDiagnosticableMixin,
     );
   }
 
   final String name;
   final List<TailorMixinField> fields;
   final ThemeEncoderManager encoderManager;
+  final bool hasDiagnosticableMixin;
 
   @override
   void write(StringBuffer buffer) {
     buffer
-      ..writeln(
-          'mixin ${name}TailorMixin on ThemeExtension<$name>, DiagnosticableTreeMixin {')
+      ..writeln('mixin ${name}TailorMixin on ThemeExtension<$name>')
+      ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
       ..template(TailorMixinFieldGetterTemplate(fields))
       ..emptyLine()
       ..template(TailorMixinCopyWithTemplate(name, fields))
       ..emptyLine()
       ..template(TailorMixinLerpTemplate(name, fields, encoderManager))
-      ..emptyLine()
-      ..template(TailorMixinDebugFillPropertiesTemplate(name, fields))
-      ..emptyLine()
+      ..emptyLine();
+
+    if (hasDiagnosticableMixin) {
+      buffer
+        ..template(TailorMixinDebugFillPropertiesTemplate(name, fields))
+        ..emptyLine();
+    }
+
+    buffer
       ..template(TailorMixinEqualTemplate(name, fields))
       ..emptyLine()
       ..template(TailorMixinHashCodeTemplate(fields))

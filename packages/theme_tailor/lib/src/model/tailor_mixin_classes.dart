@@ -5,11 +5,13 @@ class TailorMixinConfig {
     required this.className,
     required this.fields,
     required this.encoderDataManager,
+    required this.hasDiagnosticableMixin,
   });
 
   final String className;
   final List<TailorMixinField> fields;
   final ThemeEncoderManager encoderDataManager;
+  final bool hasDiagnosticableMixin;
 }
 
 class TailorMixinField {
