@@ -19,24 +19,22 @@ class MyTheme extends ThemeExtension<MyTheme>
   final Color? background;
   final Color foreground;
   final TextStyle textStyle;
-  final OkTheme ok;
+  final ButtonTheme ok;
 
   static final some = 'Something ${2 + 2}';
   static const calculations = '4';
 }
 
-class OkTheme extends ThemeExtension<OkTheme> {
-  @override
-  OkTheme copyWith() {
-    // TODO: implement copyWith
-    throw UnimplementedError();
-  }
+@TailorMixin()
+class ButtonTheme extends ThemeExtension<ButtonTheme>
+    with ButtonThemeTailorMixin {
+  const ButtonTheme({
+    required this.foreground,
+    required this.background,
+  });
 
-  @override
-  OkTheme lerp(covariant ThemeExtension<OkTheme>? other, double t) {
-    // TODO: implement lerp
-    throw UnimplementedError();
-  }
+  final Color foreground;
+  final Color background;
 }
 
 // mixin MyThemeTailorMixin on ThemeExtension<MyTheme>, DiagnosticableTreeMixin {

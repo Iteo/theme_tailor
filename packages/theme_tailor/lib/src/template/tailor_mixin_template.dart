@@ -45,6 +45,9 @@ class TailorMixinTemplate extends BufferedTemplate {
       ..emptyLine()
       ..template(TailorMixinDebugFillPropertiesTemplate(name, fields))
       ..emptyLine()
+      ..template(TailorMixinEqualTemplate(name, fields))
+      ..emptyLine()
+      ..template(TailorMixinHashCodeTemplate(fields))
       ..writeln('}');
   }
 }
@@ -140,5 +143,42 @@ class TailorMixinLerpTemplate extends BufferedTemplate {
   String _encoderLerp(String name, String type) {
     final encoder = encoderManager.encoderFromField(name, type);
     return "$name: ${encoder.callLerp(name, 'other.$name', 't')},";
+  }
+}
+
+class TailorMixinEqualTemplate extends BufferedTemplate {
+  const TailorMixinEqualTemplate(this.className, this.fields);
+
+  final String className;
+  final List<TailorMixinField> fields;
+
+  @override
+  void write(StringBuffer buffer) {
+    buffer
+      ..writeln('@override bool operator ==(Object other) {')
+      ..writeln(
+          'return identical(this, other) || ( other.runtimeType == runtimeType && other is $className');
+
+    for (final field in fields) {
+      buffer.writeln(
+          ' && const DeepCollectionEquality().equals(${field.name}, other.${field.name})');
+    }
+
+    buffer.writeln(');}');
+  }
+}
+
+class TailorMixinHashCodeTemplate extends BufferedTemplate {
+  const TailorMixinHashCodeTemplate(this.fields);
+
+  final List<TailorMixinField> fields;
+
+  @override
+  void write(StringBuffer buffer) {
+    buffer.writeln('@override int get hashCode { return Object.hashAll([');
+    for (final field in fields) {
+      buffer.writeln('const DeepCollectionEquality().hash(${field.name}),');
+    }
+    buffer.writeln(']);}');
   }
 }
