@@ -33,8 +33,7 @@ class OkTheme extends ThemeExtension<OkTheme> {
   }
 
   @override
-  ThemeExtension<OkTheme> lerp(
-      covariant ThemeExtension<OkTheme>? other, double t) {
+  OkTheme lerp(covariant ThemeExtension<OkTheme>? other, double t) {
     // TODO: implement lerp
     throw UnimplementedError();
   }

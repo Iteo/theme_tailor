@@ -72,6 +72,8 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     TailorMixinAnnotationData annotationData,
     ClassElement element,
   ) {
+    final nonStaticFields = element.fields.where((e) => !e.isStatic).toList();
+
     /// Encoders processing
     final encodersTypeNameToEncoder = annotationData.encoders;
     for (final annotation in element.metadata) {
@@ -82,7 +84,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     }
 
     final encodersFieldNameToEncoder = <String, ThemeEncoderData>{};
-    for (final field in element.fields) {
+    for (final field in nonStaticFields) {
       for (final annotation in field.metadata) {
         extractThemeEncoderData(
           annotation,
@@ -97,7 +99,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
     );
 
     /// Fields
-    final fields = element.fields.map((e) {
+    final fields = nonStaticFields.map((e) {
       final isThemeExtension =
           e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
 
