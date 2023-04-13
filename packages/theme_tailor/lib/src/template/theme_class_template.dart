@@ -150,7 +150,7 @@ class ThemeClassTemplate {
             '$key: $key${value.isNullable ? '?' : ''}.lerp(other.$key, t),');
       } else {
         classParams.write(
-            '$key: ${config.encoderManager.encoderFromField(value).callLerp(key, 'other.$key', 't')},');
+            '$key: ${config.encoderManager.encoderFromField(value.name, value.typeName).callLerp(key, 'other.$key', 't')},');
       }
     });
 

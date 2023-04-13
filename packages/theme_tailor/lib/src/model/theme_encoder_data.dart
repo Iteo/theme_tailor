@@ -88,9 +88,9 @@ class ThemeEncoderManager {
   final Map<String, ThemeEncoderData> typeToEncoder;
   final Map<String, ThemeEncoderData> fieldNameToEncoder;
 
-  ThemeEncoderData encoderFromField(Field field) {
-    return fieldNameToEncoder[field.name] ??
-        typeToEncoder[field.typeName] ??
+  ThemeEncoderData encoderFromField(String fieldName, String type) {
+    return fieldNameToEncoder[fieldName] ??
+        typeToEncoder[type] ??
         _AnyEncoder.instance;
   }
 }

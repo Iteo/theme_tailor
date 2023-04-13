@@ -22,4 +22,6 @@ class TailorMixinField {
   final String type;
   final String name;
   final bool isThemeExtension;
+
+  bool get isNullable => type.endsWith('?');
 }

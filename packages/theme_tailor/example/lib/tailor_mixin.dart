@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
@@ -14,20 +16,18 @@ class MyTheme extends ThemeExtension<MyTheme>
     this.background,
   });
 
-  @override
-  @themeExtension
   final Color? background;
-  @override
   final Color foreground;
-  @override
   final TextStyle textStyle;
-  @override
   final OkTheme ok;
+
+  static final some = 'Something ${2 + 2}';
+  static const calculations = '4';
 }
 
 class OkTheme extends ThemeExtension<OkTheme> {
   @override
-  ThemeExtension<OkTheme> copyWith() {
+  OkTheme copyWith() {
     // TODO: implement copyWith
     throw UnimplementedError();
   }

@@ -1,4 +1,5 @@
 import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
+import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
 abstract class BufferedTemplate {
@@ -13,14 +14,23 @@ extension StringBufferExtension on StringBuffer {
 }
 
 class TailorMixinTemplate extends BufferedTemplate {
-  const TailorMixinTemplate(this.name, this.fields);
+  const TailorMixinTemplate(
+    this.name,
+    this.fields,
+    this.encoderManager,
+  );
 
   factory TailorMixinTemplate.fromConfig(TailorMixinConfig config) {
-    return TailorMixinTemplate(config.className, config.fields);
+    return TailorMixinTemplate(
+      config.className,
+      config.fields,
+      config.encoderDataManager,
+    );
   }
 
   final String name;
   final List<TailorMixinField> fields;
+  final ThemeEncoderManager encoderManager;
 
   @override
   void write(StringBuffer buffer) {
@@ -31,7 +41,7 @@ class TailorMixinTemplate extends BufferedTemplate {
       ..emptyLine()
       ..template(TailorMixinCopyWithTemplate(name, fields))
       ..emptyLine()
-      ..template(TailorMixinLerpTemplate(name))
+      ..template(TailorMixinLerpTemplate(name, fields, encoderManager))
       ..emptyLine()
       ..template(TailorMixinDebugFillPropertiesTemplate(name, fields))
       ..emptyLine()
@@ -61,7 +71,7 @@ class TailorMixinCopyWithTemplate extends BufferedTemplate {
     final fmt = StringFormat();
 
     buffer
-      ..writeln('@override ThemeExtension<$className> copyWith({')
+      ..writeln('@override $className copyWith({')
       ..writeAll(fields.map((e) => '${fmt.asNullableType(e.type)} ${e.name},'))
       ..writeln('}) {')
       ..writeln('return $className(')
@@ -94,16 +104,41 @@ class TailorMixinDebugFillPropertiesTemplate extends BufferedTemplate {
 }
 
 class TailorMixinLerpTemplate extends BufferedTemplate {
-  const TailorMixinLerpTemplate(this.className);
+  const TailorMixinLerpTemplate(
+    this.className,
+    this.fields,
+    this.encoderManager,
+  );
 
   final String className;
+  final List<TailorMixinField> fields;
+  final ThemeEncoderManager encoderManager;
 
   @override
   void write(StringBuffer buffer) {
     buffer
       ..writeln(
-          '@override ThemeExtension<$className> lerp(covariant ThemeExtension<$className>? other, double t) {')
-      ..writeln('throw UnimplementedError();')
-      ..writeln('}');
+          '@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
+      ..writeln('if (other is! $className) return this as $className;')
+      ..writeln('return $className(');
+
+    for (final prop in fields) {
+      if (prop.isThemeExtension) {
+        buffer.writeln(_extensionLerp(prop.name, prop.type, prop.isNullable));
+      } else {
+        buffer.writeln(_encoderLerp(prop.name, prop.type));
+      }
+    }
+
+    buffer.writeln(');}');
+  }
+
+  String _extensionLerp(String name, String type, bool isNullable) {
+    return "$name: $name${isNullable ? '?' : ''}.lerp(other.$name, t) as $type,";
+  }
+
+  String _encoderLerp(String name, String type) {
+    final encoder = encoderManager.encoderFromField(name, type);
+    return "$name: ${encoder.callLerp(name, 'other.$name', 't')},";
   }
 }
