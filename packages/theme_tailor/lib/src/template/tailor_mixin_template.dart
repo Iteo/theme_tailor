@@ -1,5 +1,8 @@
 import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
+import 'package:theme_tailor/src/model/theme_getter_data.dart';
+import 'package:theme_tailor/src/template/getter_template.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
 abstract class BufferedTemplate {
@@ -20,15 +23,6 @@ class TailorMixinTemplate extends BufferedTemplate {
     this.encoderManager,
     this.hasDiagnosticableMixin,
   );
-
-  factory TailorMixinTemplate.fromConfig(TailorMixinConfig config) {
-    return TailorMixinTemplate(
-      config.className,
-      config.fields,
-      config.encoderDataManager,
-      config.hasDiagnosticableMixin,
-    );
-  }
 
   final String name;
   final List<TailorMixinField> fields;
@@ -189,5 +183,49 @@ class TailorMixinHashCodeTemplate extends BufferedTemplate {
       buffer.writeln('const DeepCollectionEquality().hash(${field.name}),');
     }
     buffer.writeln(']);}');
+  }
+}
+
+class TailorMixinExtensionTemplate extends BufferedTemplate {
+  const TailorMixinExtensionTemplate(
+    this.className,
+    this.extensionData,
+    this.fields,
+  );
+
+  final String className;
+  final ExtensionData extensionData;
+  final List<TailorMixinField> fields;
+
+  @override
+  void write(StringBuffer buffer) {
+    final fmt = StringFormat();
+
+    if (!extensionData.shouldGenerate) return;
+
+    final themeAccessor = fmt.typeAsVariableName(className, 'Theme').also(
+        (it) => extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
+
+    buffer
+      ..writeln('extension $className${extensionData.shortName}')
+      ..write(' on ${extensionData.target.name} {')
+      ..write(GetterTemplate(
+        type: className,
+        name: themeAccessor,
+        accessor: extensionData.target.themeExtensionAccessor(className),
+      ));
+
+    if (extensionData.hasGeneratedProps) {
+      for (final field in fields) {
+        buffer.write(GetterTemplate(
+          type: field.type,
+          name: field.name,
+          accessor: '$themeAccessor.${field.name}',
+          documentationComment: field.documentationComment,
+        ));
+      }
+    }
+
+    buffer.writeln('}');
   }
 }

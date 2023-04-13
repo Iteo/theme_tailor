@@ -5,6 +5,7 @@ import 'package:theme_tailor/src/model/library_data.dart';
 import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
+import 'package:theme_tailor/src/model/theme_getter_data.dart';
 import 'package:theme_tailor/src/template/tailor_mixin_template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
@@ -33,13 +34,25 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
   @override
   Iterable<String> generateForData(TailorMixinConfig data) sync* {
     final buffer = StringBuffer()
-      ..template(TailorMixinTemplate.fromConfig(data));
+      ..template(TailorMixinTemplate(
+        data.className,
+        data.fields,
+        data.encoderDataManager,
+        data.hasDiagnosticableMixin,
+      ))
+      ..template(TailorMixinExtensionTemplate(
+        data.className,
+        data.extensionData,
+        data.fields,
+      ));
 
     yield buffer.toString();
   }
 
   @override
   TailorMixinAnnotationData parseAnnotation(ConstantReader annotation) {
+    print(annotation.toString());
+
     final themeGetter = annotation.getFieldOrElse(
       'themeGetter',
       decode: (o) =>
@@ -47,6 +60,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
       orElse: () =>
           buildYamlConfig.themeGetter ?? ThemeGetter.onBuildContextProps,
     );
+
     final encoders = annotation.getFieldOrElse<Map<String, ThemeEncoderData>>(
       'encoders',
       decode: (o) => Map.fromEntries(
@@ -105,6 +119,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
         isThemeExtension: isThemeExtension,
         name: e.displayName,
         type: e.type.getDisplayString(withNullability: true),
+        documentationComment: e.documentationComment,
       );
     }).toList(growable: false);
 
@@ -113,6 +128,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
       fields: fields,
       encoderDataManager: encoderManager,
       hasDiagnosticableMixin: libraryData.hasDiagnosticableMixin,
+      extensionData: annotationData.themeGetter.extensionData,
     );
   }
 

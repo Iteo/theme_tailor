@@ -22,7 +22,7 @@ class _CustomNullColorEncoder extends ThemeEncoder<Color?> {
 
 const _customNullColorEncoder = _CustomNullColorEncoder();
 
-@TailorMixin()
+@TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
 @_customNullColorEncoder
 class MixedTheme1 extends ThemeExtension<MixedTheme1>
     with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
@@ -38,6 +38,8 @@ class MixedTheme1 extends ThemeExtension<MixedTheme1>
   @_CustomColorEncoder()
   final Color foreground;
   final TextStyle textStyle;
+
+  /// This returns other ThemeExtension
   final MixedTheme2 ok;
 
   static final some = 'Something ${2 + 2}';

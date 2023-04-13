@@ -33,8 +33,8 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
 
     library.topLevelElements.where(typeChecker.hasAnnotationOf).forEach(
       (element) {
-        final annotation = ConstantReader(TypeChecker.fromRuntime(TAnnotation)
-            .firstAnnotationOfExact(element));
+        final annotation = ConstantReader(
+            TypeChecker.fromRuntime(TAnnotation).firstAnnotationOf(element));
 
         matchGenerator(element)
             .generateForAnnotatedElement(element, annotation, buildStep)
