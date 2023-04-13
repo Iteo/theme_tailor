@@ -6,7 +6,24 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'tailor_mixin.tailor.dart';
 
+class _CustomColorEncoder extends ThemeEncoder<Color> {
+  const _CustomColorEncoder();
+
+  @override
+  Color lerp(Color a, Color b, double t) => Color.lerp(a, b, t)!;
+}
+
+class _CustomNullColorEncoder extends ThemeEncoder<Color?> {
+  const _CustomNullColorEncoder();
+
+  @override
+  Color? lerp(Color? a, Color? b, double t) => Color.lerp(a, b, t);
+}
+
+const _customNullColorEncoder = _CustomNullColorEncoder();
+
 @TailorMixin()
+@_customNullColorEncoder
 class MixedTheme1 extends ThemeExtension<MixedTheme1>
     with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
   const MixedTheme1({
@@ -17,6 +34,8 @@ class MixedTheme1 extends ThemeExtension<MixedTheme1>
   });
 
   final Color? background;
+
+  @_CustomColorEncoder()
   final Color foreground;
   final TextStyle textStyle;
   final MixedTheme2 ok;
