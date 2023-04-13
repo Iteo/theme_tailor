@@ -15,6 +15,7 @@
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
+[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/feat/tailor_mixin/resources/after_tailor_mixin.png?raw=true
 
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -69,10 +70,20 @@ To declare theme extension, we need to:
 In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
 Implementing this requires lots of additional lines of code and time. 
 
+# Choosing the generator (@Tailor / @TailorMixin) 
+Currently the package supports 2 types of the generator that serve different purposes:
+- The `@Tailor` annotation generates a ThemeExtension class based on the annotated template class and automatically creates instances of the associated themes. This eliminates the need for manual theme creation and consolidates the theme values and their definitions in a single location. However, refactoring properties names of the generated class may prove difficult, and ensuring hot-reloadability of themes may require static const definitions for all properties. Additionally, some lint warnings may need to be ignored since the template class may not be utilized.
+
+- The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. While it requires more boilerplate code than the @Tailor annotation, it offers a more familiar syntax for vanilla ThemeExtension classes and provides greater customization of the class created. This option is recommended for those who prefer a more hands-on approach to their code and require a greater degree of flexibility in their implementation.
+
+*It's worth noting that choosing either the @Tailor or @TailorMixin generator doesn't restrict you from using the other in the future.
+In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
 
 | Before                | After               |
 | --------------------- | ------------------- |
+| No code generation    | @Tailor             |
 | ![before][img_before] | ![after][img_after] |
+| Same as above         | ![after][img_after_tailor_mixin]
 
 
 # How to use

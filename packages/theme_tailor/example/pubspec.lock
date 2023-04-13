@@ -550,14 +550,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.0.0-dev"
+    version: "2.0.0-dev.0"
   theme_tailor_annotation:
     dependency: "direct main"
     description:
       path: "../../theme_tailor_annotation"
       relative: true
     source: path
-    version: "2.0.0-dev"
+    version: "2.0.0-dev.0"
   timing:
     dependency: transitive
     description:

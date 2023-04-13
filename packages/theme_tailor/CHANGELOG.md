@@ -1,4 +1,4 @@
-# 2.0.0-dev
+# 2.0.0-dev.0
 - Added additional way to generate ThemeExtension classes with `@TailorMixin` annotation
 
 # 1.2.0
