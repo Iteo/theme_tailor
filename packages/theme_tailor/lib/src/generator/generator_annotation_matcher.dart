@@ -20,13 +20,24 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
   const GeneratorAnnotationMatcher();
 
   @override
-  FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
+  // ignore: avoid_renaming_method_parameters
+  Future<String> generate(LibraryReader oldLib, BuildStep buildStep) async {
+    final assetId = await buildStep.resolver.assetIdForElement(oldLib.element);
+    if (await buildStep.resolver.isLibrary(assetId).then((value) => !value)) {
+      return '';
+    }
+
+    final library = await buildStep.resolver.libraryFor(assetId);
+
     final values = StringBuffer();
 
-    library.annotatedWith(typeChecker).forEach(
-      (e) {
-        matchGenerator(e.element)
-            .generateForAnnotatedElement(e.element, e.annotation, buildStep)
+    library.topLevelElements.where(typeChecker.hasAnnotationOf).forEach(
+      (element) {
+        final annotation = ConstantReader(TypeChecker.fromRuntime(TAnnotation)
+            .firstAnnotationOfExact(element));
+
+        matchGenerator(element)
+            .generateForAnnotatedElement(element, annotation, buildStep)
             .forEach(values.writeln);
       },
     );
