@@ -46,7 +46,7 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Change themes' quantity and names](#change-themes-quantity-and-names)
     - [Access generated themes list](#access-generated-themes-list)
     - [Change generated extensions](#change-generated-extensions)
-    - [Nesting generated theme extensions, modulat themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
+    - [Nesting generated theme extensions, modular themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
     - [Generate constant themes](#generate-constant-themes)
     - [Hot reload support](#hot-reload-support)
     - [Custom types encoding](#custom-types-encoding)
@@ -76,7 +76,7 @@ Currently the package supports 2 types of the generator that serve different pur
 
 - The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. While it requires more boilerplate code than the @Tailor annotation, it offers a more familiar syntax for vanilla ThemeExtension classes and provides greater customization of the class created. This option is recommended for those who prefer a more hands-on approach to their code and require a greater degree of flexibility in their implementation.
 
-*It's worth noting that choosing either the @Tailor or @TailorMixin generator doesn't restrict you from using the other in the future.
+*It's worth noting that choosing either the `@Tailor` or `@TailorMixin` generator doesn't restrict you from using the other in the future.
 In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
 
 | Before                | After               |
@@ -121,6 +121,8 @@ flutter run build_runner build --delete-conflicting-outputs
 ```
 
 ## Create Theme class
+
+### @Tailor:
 ThemeTailor will generate ThemeExtension class based on the configuration class you are required to annotate with [theme_tailor_annotation]. Please make sure to name class and theme properties appropriately according to the following rules:
 - class name starts with `_$` or `$_` (Recommendation is to use the former, as it ensures that the configuration class is private). If the class name does not contain the required prefix, then the generated class name will append an additional suffix,
 - class contains static `List<T>` fields (e.g. `static List<Color> surface = []`). If no fields exist in the config class, the generator will create an empty ThemeExtension class.
@@ -152,7 +154,28 @@ Additionally [theme_tailor_annotation] by default generates extension on BuildCo
 - "MyThemeBuildContextProps" extension on "BuildContext" is generated
 - getter on "background" of type "Color" is added directly to "BuildContext"
 
+---
+### @TailorMixin():
+Annotate your class with `@TailorMixin()` and mix it with generated mixin, generated mixin name starts with _$ following your class name and ending with "TailorMixin" suffix.
+
+Example
+###### my_theme.dart
+```dart
+import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+part 'my_theme.tailor.dart';
+
+@TailorMixin()
+class MyTheme extends ThemeExntension<MyTheme> with _$MyThemeTailorMixin {
+  const MyTheme({required this.background});
+  final Color background;
+}
+```
+
 ## Change themes' quantity and names
+*This is only supported by `@Tailor` and `@TailorComponent`*
+
 By default,  "@tailor" will generate two themes: "light" and "dark";
 To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
 You can also change theme names globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info
@@ -163,6 +186,8 @@ class _$MyTheme {}
 ```
 
 ## Access generated themes list
+*This is only supported by `@Tailor` and `@TailorComponent`*
+
 The generator will create a static getter with a list of the generated themes:
 
 ``` dart
@@ -284,6 +309,7 @@ class _$MyTheme {
 To see an example implementation of a nested theme, head out to [example: nested_themes][example:nested_themes]
 
 ## Generate constant themes
+*This is only supported by `@Tailor` and `@TailorComponent` (`@TailorMixin` does not have any limitations regarding creation of constant themes)* 
 
 If the following conditions are met, constant themes will be generated:
 
@@ -308,6 +334,8 @@ It is possible to force generate constant themes using `Tailor(requireStaticCons
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Hot reload support
+*This is only supported by `@Tailor` and `@TailorComponent` (`@TailorMixin` does not have any limitations regarding hot-reload)* 
+
 To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` and `@TailorComponent` annotations. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
 
 To use hot reload with Tailor, make sure to follow these requirements:
@@ -433,6 +461,17 @@ import 'package:flutter/foundation.dart';
 
 To see an example of how to ensure debugFillProperties are generated, head out to [example: debugFillProperties][example:debug_fill_properties]
 
+---
+
+For `@TailorMixin()` you also need to mix your class with `DiagnosticableTreeMixin`
+```dart
+@TailorMixin()
+class MyTheme extends ThemeExtension<MyTheme>
+    with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
+  /// impl
+}
+```
+
 ## Json serialization
 The generator will copy all the annotations on the class and the static fields, including: "@JsonSerializable", "@JsonKey", custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
 
@@ -459,6 +498,8 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```
 
 ## Ignore fields
+*This is only supported by `@Tailor` and `@TailorComponent`*
+
 Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.
 ```dart
 @tailor
