@@ -7,9 +7,9 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'tailor_mixin.tailor.dart';
 
 @TailorMixin()
-class MyTheme extends ThemeExtension<MyTheme>
-    with DiagnosticableTreeMixin, MyThemeTailorMixin {
-  const MyTheme({
+class MixedTheme1 extends ThemeExtension<MixedTheme1>
+    with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
+  const MixedTheme1({
     required this.foreground,
     required this.textStyle,
     required this.ok,
@@ -19,20 +19,18 @@ class MyTheme extends ThemeExtension<MyTheme>
   final Color? background;
   final Color foreground;
   final TextStyle textStyle;
-  final ButtonTheme ok;
+  final MixedTheme2 ok;
 
   static final some = 'Something ${2 + 2}';
   static const calculations = '4';
 }
 
 @TailorMixin()
-class ButtonTheme extends ThemeExtension<ButtonTheme>
-    with ButtonThemeTailorMixin {
-  const ButtonTheme({
+class MixedTheme2 extends ThemeExtension<MixedTheme2>
+    with _$MixedTheme2TailorMixin {
+  const MixedTheme2({
     required this.foreground,
-    required this.background,
   });
 
   final Color foreground;
-  final Color background;
 }

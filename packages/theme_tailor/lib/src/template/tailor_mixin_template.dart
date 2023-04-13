@@ -38,7 +38,7 @@ class TailorMixinTemplate extends BufferedTemplate {
   @override
   void write(StringBuffer buffer) {
     buffer
-      ..writeln('mixin ${name}TailorMixin on ThemeExtension<$name>')
+      ..writeln('mixin _\$${name}TailorMixin on ThemeExtension<$name>')
       ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
       ..template(TailorMixinFieldGetterTemplate(fields))
       ..emptyLine()
