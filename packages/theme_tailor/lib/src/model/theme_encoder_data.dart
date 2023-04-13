@@ -1,5 +1,3 @@
-import 'package:theme_tailor/src/model/field.dart';
-
 class ThemeEncoderData {
   const ThemeEncoderData(
     this.accessString,

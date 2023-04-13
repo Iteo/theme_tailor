@@ -1,7 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:source_helper/source_helper.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/library_data.dart';
 import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
