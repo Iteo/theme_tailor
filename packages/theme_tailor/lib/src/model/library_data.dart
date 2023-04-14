@@ -1,15 +1,10 @@
 class ImportsData {
   const ImportsData({
-    required this.hasJsonSerializable,
-    required this.hasFlutterDiagnosticable,
-  });
+    bool? hasJsonSerializable,
+    bool? hasDiagnosticableMixin,
+  })  : hasJsonSerializable = hasJsonSerializable ?? false,
+        hasDiagnosticableMixin = hasDiagnosticableMixin ?? false;
 
   final bool hasJsonSerializable;
-  final bool hasFlutterDiagnosticable;
-}
-
-class TailorMixinImports {
-  const TailorMixinImports({required this.hasDiagnosticableMixin});
-
   final bool hasDiagnosticableMixin;
 }

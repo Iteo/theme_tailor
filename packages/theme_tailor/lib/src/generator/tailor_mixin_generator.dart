@@ -14,8 +14,8 @@ import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
-class TailorMixinGenerator extends GeneratorForAnnotatedClass<
-    TailorMixinImports, TailorMixinAnnotationData, TailorMixinConfig, Tailor> {
+class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
+    TailorMixinAnnotationData, TailorMixinConfig, Tailor> {
   const TailorMixinGenerator(this.buildYamlConfig);
 
   final Tailor buildYamlConfig;
@@ -80,7 +80,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
 
   @override
   TailorMixinConfig parseData(
-    TailorMixinImports libraryData,
+    ImportsData libraryData,
     TailorMixinAnnotationData annotationData,
     ClassElement element,
   ) {
@@ -133,11 +133,11 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<
   }
 
   @override
-  TailorMixinImports parseLibraryData(
+  ImportsData parseLibraryData(
     LibraryElement library,
     ClassElement element,
   ) {
     final isDiagnosticable = element.hasMixinNamed('DiagnosticableTreeMixin');
-    return TailorMixinImports(hasDiagnosticableMixin: isDiagnosticable);
+    return ImportsData(hasDiagnosticableMixin: isDiagnosticable);
   }
 }

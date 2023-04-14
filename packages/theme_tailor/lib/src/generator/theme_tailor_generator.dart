@@ -48,7 +48,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
   ImportsData parseLibraryData(LibraryElement library, ClassElement element) {
     return ImportsData(
       hasJsonSerializable: element.hasJsonSerializableAnnotation,
-      hasFlutterDiagnosticable: library.hasFlutterDiagnosticableImport,
+      hasDiagnosticableMixin: library.hasFlutterDiagnosticableImport,
     );
   }
 
@@ -211,7 +211,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         classAnnotations: classLevelAnnotations,
         fieldsAnotations: fieldLevelAnnotations,
       ),
-      isFlutterDiagnosticable: libraryData.hasFlutterDiagnosticable,
+      isFlutterDiagnosticable: libraryData.hasDiagnosticableMixin,
       hasJsonSerializable: libraryData.hasJsonSerializable,
       constantThemes: generateConstantThemes,
       staticGetters: annotationData.generateStaticGetters,
