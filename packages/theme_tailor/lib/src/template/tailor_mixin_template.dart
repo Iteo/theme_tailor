@@ -25,7 +25,7 @@ class TailorMixinTemplate extends Template {
       ..writeln('mixin _\$${name}TailorMixin on ThemeExtension<$name>')
       ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
       ..template(_TailorMixinFieldGettersTemplate(fields))
-      ..template(TailorMixinCopyWithTemplate(name, fields))
+      ..template(CopyWithTemplate(name, fields))
       ..template(LerpTemplate(name, fields, encoderManager))
       ..template(EqualityTemplate(name, fields));
 

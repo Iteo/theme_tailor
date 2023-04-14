@@ -1,10 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
+import 'package:theme_tailor/src/template/theme_extension/copy_with_template.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
-class ThemeClassTemplate {
-  const ThemeClassTemplate(this.config, this.fmt);
+class ThemeTailorTemplate {
+  const ThemeTailorTemplate(this.config, this.fmt);
 
   final ThemeClassConfig config;
   final StringFormat fmt;
@@ -110,35 +111,6 @@ class ThemeClassTemplate {
     ''';
   }
 
-  String _copyWithMethod() {
-    final returnType = config.className;
-    if (config.fields.isEmpty) {
-      return '''
-      @override
-      ThemeExtension<$returnType> copyWith() => $returnType();
-      ''';
-    }
-
-    final methodParams = StringBuffer();
-    final classParams = StringBuffer();
-
-    config.fields.forEach((key, value) {
-      methodParams.write('${fmt.asNullableType(value.type)} $key,');
-      classParams.write('$key: $key ?? this.$key,');
-    });
-
-    return '''
-    @override
-    $returnType copyWith({
-      ${methodParams.toString()}
-    }) {
-      return $returnType(
-        ${classParams.toString()}
-      );
-    }
-    ''';
-  }
-
   String _lerpMethod() {
     final returnType = config.className;
     final classParams = StringBuffer();
@@ -237,7 +209,7 @@ class ThemeClassTemplate {
       ${_constructorAndParams()}
       ${_fromJsonFactory()}
       ${_generateThemes()}
-      ${_copyWithMethod()}
+      ${CopyWithTemplate(config.className, config.fields.values.toList())}
       ${_lerpMethod()}
       ${_debugFillPropertiesMethod()}
       ${_equalOperator()}

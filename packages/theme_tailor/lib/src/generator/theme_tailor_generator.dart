@@ -212,7 +212,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
 
   @override
   Iterable<String> generateForData(ThemeClassConfig data) sync* {
-    yield ThemeClassTemplate(data, StringFormat()).toString();
+    yield ThemeTailorTemplate(data, StringFormat()).toString();
     yield ContextExtensionTemplate(
       data.className,
       data.themeGetter,
