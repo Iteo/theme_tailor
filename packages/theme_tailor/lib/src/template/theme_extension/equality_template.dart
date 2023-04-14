@@ -44,10 +44,40 @@ class _HashCodeTemplate extends Template {
 
   @override
   void write(StringBuffer buffer) {
-    buffer.writeln('@override int get hashCode { return Object.hashAll([');
-    for (final field in fields) {
-      buffer.writeln('const DeepCollectionEquality().hash(${field.name}),');
+    buffer.writeln('@override int get hashCode {');
+    if (fields.isEmpty) {
+      _hash0(buffer);
+    } else if (fields.length < 20) {
+      _hash19(buffer, fields.map((e) => e.name));
+    } else {
+      _hashAll(buffer, fields.map((e) => e.name));
     }
-    buffer.writeln(']);}');
+    buffer.writeln('}');
+  }
+
+  String _hash(String fieldName) {
+    return 'const DeepCollectionEquality().hash($fieldName),';
+  }
+
+  String get _runtimeHashCode => 'runtimeType.hashCode';
+
+  void _hash0(StringBuffer buffer) {
+    buffer.write('return $_runtimeHashCode;');
+  }
+
+  void _hash19(StringBuffer buffer, Iterable<String> props) {
+    buffer
+      ..write('return Object.hash(')
+      ..write('$_runtimeHashCode,')
+      ..writeAll(props.map(_hash))
+      ..write(');');
+  }
+
+  void _hashAll(StringBuffer buffer, Iterable<String> props) {
+    buffer
+      ..write('return Object.hashAll([')
+      ..write('$_runtimeHashCode,')
+      ..writeAll(props.map(_hash))
+      ..write(']);');
   }
 }

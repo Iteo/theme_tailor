@@ -47,8 +47,8 @@ class GenerateConstantTheme extends ThemeExtension<GenerateConstantTheme> {
 
   @override
   GenerateConstantTheme lerp(
-      ThemeExtension<GenerateConstantTheme>? other, double t) {
-    if (other is! GenerateConstantTheme) return this;
+      covariant ThemeExtension<GenerateConstantTheme>? other, double t) {
+    if (other is! GenerateConstantTheme) return this as GenerateConstantTheme;
     return GenerateConstantTheme(
       s1: t < 0.5 ? s1 : other.s1,
       s2: t < 0.5 ? s2 : other.s2,
@@ -66,8 +66,11 @@ class GenerateConstantTheme extends ThemeExtension<GenerateConstantTheme> {
 
   @override
   int get hashCode {
-    return Object.hash(runtimeType, const DeepCollectionEquality().hash(s1),
-        const DeepCollectionEquality().hash(s2));
+    return Object.hash(
+      runtimeType.hashCode,
+      const DeepCollectionEquality().hash(s1),
+      const DeepCollectionEquality().hash(s2),
+    );
   }
 }
 ''',
