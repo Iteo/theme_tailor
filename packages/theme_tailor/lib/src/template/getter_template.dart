@@ -1,4 +1,7 @@
-class GetterTemplate {
+import 'package:theme_tailor/src/template/template.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
+
+class GetterTemplate extends Template {
   const GetterTemplate({
     required this.type,
     required this.name,
@@ -12,7 +15,11 @@ class GetterTemplate {
   final String? documentationComment;
 
   @override
-  String toString() => documentationComment != null
-      ? '$documentationComment\n$type get $name => $accessor;'
-      : '$type get $name => $accessor;';
+  void write(StringBuffer buffer) {
+    buffer.write('$_docComment$type get $name => $accessor;');
+  }
+
+  String get _docComment {
+    return documentationComment?.let((it) => '$it\n') ?? '';
+  }
 }

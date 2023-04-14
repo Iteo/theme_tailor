@@ -1,7 +1,10 @@
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/template/template.dart';
-import 'package:theme_tailor/src/util/string_format.dart';
+import 'package:theme_tailor/src/template/theme_extension/copy_with_template.dart';
+import 'package:theme_tailor/src/template/theme_extension/debug_fill_properties_template.dart';
+import 'package:theme_tailor/src/template/theme_extension/equality_template.dart';
+import 'package:theme_tailor/src/template/theme_extension/lerp_template.dart';
 
 class TailorMixinTemplate extends Template {
   const TailorMixinTemplate(
@@ -21,154 +24,26 @@ class TailorMixinTemplate extends Template {
     buffer
       ..writeln('mixin _\$${name}TailorMixin on ThemeExtension<$name>')
       ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
-      ..template(TailorMixinFieldGetterTemplate(fields))
-      ..emptyLine()
+      ..template(_TailorMixinFieldGettersTemplate(fields))
       ..template(TailorMixinCopyWithTemplate(name, fields))
-      ..emptyLine()
-      ..template(TailorMixinLerpTemplate(name, fields, encoderManager))
-      ..emptyLine();
+      ..template(LerpTemplate(name, fields, encoderManager))
+      ..template(EqualityTemplate(name, fields));
 
     if (hasDiagnosticableMixin) {
-      buffer
-        ..template(TailorMixinDebugFillPropertiesTemplate(name, fields))
-        ..emptyLine();
+      buffer.template(DebugFillPropertiesTemplate(name, fields));
     }
 
-    buffer
-      ..template(TailorMixinEqualTemplate(name, fields))
-      ..emptyLine()
-      ..template(TailorMixinHashCodeTemplate(fields))
-      ..writeln('}');
+    buffer.writeln('}');
   }
 }
 
-class TailorMixinFieldGetterTemplate extends Template {
-  const TailorMixinFieldGetterTemplate(this.fields);
+class _TailorMixinFieldGettersTemplate extends Template {
+  const _TailorMixinFieldGettersTemplate(this.fields);
 
   final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
     buffer.writeAll(fields.map((e) => '${e.type} get ${e.name};'));
-  }
-}
-
-class TailorMixinCopyWithTemplate extends Template {
-  const TailorMixinCopyWithTemplate(this.className, this.fields);
-
-  final String className;
-  final List<Field> fields;
-
-  @override
-  void write(StringBuffer buffer) {
-    final fmt = StringFormat();
-
-    buffer
-      ..writeln('@override $className copyWith({')
-      ..writeAll(fields.map((e) => '${fmt.asNullableType(e.type)} ${e.name},'))
-      ..writeln('}) {')
-      ..writeln('return $className(')
-      ..writeAll(fields.map((e) => '${e.name}: ${e.name} ?? this.${e.name},'))
-      ..writeln(');}');
-  }
-}
-
-class TailorMixinDebugFillPropertiesTemplate extends Template {
-  const TailorMixinDebugFillPropertiesTemplate(this.className, this.fields);
-
-  final String className;
-  final List<Field> fields;
-
-  @override
-  void write(StringBuffer buffer) {
-    String prop(String name, String value) {
-      return "..add(DiagnosticsProperty($name, $value))";
-    }
-
-    buffer
-      ..writeln(
-          '@override void debugFillProperties(DiagnosticPropertiesBuilder properties) {')
-      ..writeln('super.debugFillProperties(properties);')
-      ..writeln('properties')
-      ..writeln(prop("'type'", "'$className'"))
-      ..writeAll(fields.map((e) => prop("'${e.name}'", e.name)))
-      ..write(';}');
-  }
-}
-
-class TailorMixinLerpTemplate extends Template {
-  const TailorMixinLerpTemplate(
-    this.className,
-    this.fields,
-    this.encoderManager,
-  );
-
-  final String className;
-  final List<Field> fields;
-  final ThemeEncoderManager encoderManager;
-
-  @override
-  void write(StringBuffer buffer) {
-    buffer
-      ..writeln(
-          '@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
-      ..writeln('if (other is! $className) return this as $className;')
-      ..writeln('return $className(');
-
-    for (final prop in fields) {
-      if (prop.isThemeExtension) {
-        buffer.writeln(_extensionLerp(prop.name, prop.type, prop.isNullable));
-      } else {
-        buffer.writeln(_encoderLerp(prop.name, prop.type));
-      }
-    }
-
-    buffer.writeln(');}');
-  }
-
-  String _extensionLerp(String name, String type, bool isNullable) {
-    return "$name: $name${isNullable ? '?' : ''}.lerp(other.$name, t) as $type,";
-  }
-
-  String _encoderLerp(String name, String type) {
-    final encoder = encoderManager.encoderFromField(name, type);
-    return "$name: ${encoder.callLerp(name, 'other.$name', 't')},";
-  }
-}
-
-class TailorMixinEqualTemplate extends Template {
-  const TailorMixinEqualTemplate(this.className, this.fields);
-
-  final String className;
-  final List<Field> fields;
-
-  @override
-  void write(StringBuffer buffer) {
-    buffer
-      ..writeln('@override bool operator ==(Object other) {')
-      ..writeln(
-          'return identical(this, other) || ( other.runtimeType == runtimeType && other is $className');
-
-    for (final field in fields) {
-      buffer.writeln(
-          ' && const DeepCollectionEquality().equals(${field.name}, other.${field.name})');
-    }
-
-    buffer.writeln(');}');
-  }
-}
-
-class TailorMixinHashCodeTemplate extends Template {
-  const TailorMixinHashCodeTemplate(this.fields);
-
-  final List<Field> fields;
-
-  @override
-  void write(StringBuffer buffer) {
-    buffer.writeln('@override int get hashCode { return Object.hashAll([');
-    for (final field in fields) {
-      buffer.writeln('const DeepCollectionEquality().hash(${field.name}),');
-    }
-    buffer.writeln(']);}');
   }
 }
