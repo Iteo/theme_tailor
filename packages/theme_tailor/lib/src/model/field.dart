@@ -1,4 +1,4 @@
-class Field implements Comparable {
+class Field implements Comparable<Field> {
   const Field({
     required this.name,
     required this.typeName,
@@ -38,17 +38,8 @@ class Field implements Comparable {
   }
 
   @override
-  int compareTo(other) {
-    if (other is Field) {
-      if (isNullable && !other.isNullable) {
-        return 1;
-      } else if (!isNullable && other.isNullable) {
-        return -1;
-      }
-
-      return name.compareTo(other.name);
-    } else {
-      return 0;
-    }
+  int compareTo(Field other) {
+    if (isNullable == other.isNullable) return name.compareTo(other.name);
+    return isNullable ? 1 : -1;
   }
 }
