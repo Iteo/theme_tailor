@@ -1,22 +1,9 @@
-import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
+import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
-import 'package:theme_tailor/src/model/theme_getter_data.dart';
-import 'package:theme_tailor/src/template/getter_template.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
+import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
-abstract class BufferedTemplate {
-  const BufferedTemplate();
-
-  void write(StringBuffer buffer);
-}
-
-extension StringBufferExtension on StringBuffer {
-  void template(BufferedTemplate template) => template.write(this);
-  void emptyLine() => writeln('\n');
-}
-
-class TailorMixinTemplate extends BufferedTemplate {
+class TailorMixinTemplate extends Template {
   const TailorMixinTemplate(
     this.name,
     this.fields,
@@ -25,7 +12,7 @@ class TailorMixinTemplate extends BufferedTemplate {
   );
 
   final String name;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
   final ThemeEncoderManager encoderManager;
   final bool hasDiagnosticableMixin;
 
@@ -55,10 +42,10 @@ class TailorMixinTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinFieldGetterTemplate extends BufferedTemplate {
+class TailorMixinFieldGetterTemplate extends Template {
   const TailorMixinFieldGetterTemplate(this.fields);
 
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
@@ -66,11 +53,11 @@ class TailorMixinFieldGetterTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinCopyWithTemplate extends BufferedTemplate {
+class TailorMixinCopyWithTemplate extends Template {
   const TailorMixinCopyWithTemplate(this.className, this.fields);
 
   final String className;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
@@ -86,11 +73,11 @@ class TailorMixinCopyWithTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinDebugFillPropertiesTemplate extends BufferedTemplate {
+class TailorMixinDebugFillPropertiesTemplate extends Template {
   const TailorMixinDebugFillPropertiesTemplate(this.className, this.fields);
 
   final String className;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
@@ -109,7 +96,7 @@ class TailorMixinDebugFillPropertiesTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinLerpTemplate extends BufferedTemplate {
+class TailorMixinLerpTemplate extends Template {
   const TailorMixinLerpTemplate(
     this.className,
     this.fields,
@@ -117,7 +104,7 @@ class TailorMixinLerpTemplate extends BufferedTemplate {
   );
 
   final String className;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
   final ThemeEncoderManager encoderManager;
 
   @override
@@ -149,11 +136,11 @@ class TailorMixinLerpTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinEqualTemplate extends BufferedTemplate {
+class TailorMixinEqualTemplate extends Template {
   const TailorMixinEqualTemplate(this.className, this.fields);
 
   final String className;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
@@ -171,10 +158,10 @@ class TailorMixinEqualTemplate extends BufferedTemplate {
   }
 }
 
-class TailorMixinHashCodeTemplate extends BufferedTemplate {
+class TailorMixinHashCodeTemplate extends Template {
   const TailorMixinHashCodeTemplate(this.fields);
 
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
 
   @override
   void write(StringBuffer buffer) {
@@ -183,49 +170,5 @@ class TailorMixinHashCodeTemplate extends BufferedTemplate {
       buffer.writeln('const DeepCollectionEquality().hash(${field.name}),');
     }
     buffer.writeln(']);}');
-  }
-}
-
-class TailorMixinExtensionTemplate extends BufferedTemplate {
-  const TailorMixinExtensionTemplate(
-    this.className,
-    this.extensionData,
-    this.fields,
-  );
-
-  final String className;
-  final ExtensionData extensionData;
-  final List<TailorMixinField> fields;
-
-  @override
-  void write(StringBuffer buffer) {
-    final fmt = StringFormat();
-
-    if (!extensionData.shouldGenerate) return;
-
-    final themeAccessor = fmt.typeAsVariableName(className, 'Theme').also(
-        (it) => extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
-
-    buffer
-      ..writeln('extension $className${extensionData.shortName}')
-      ..write(' on ${extensionData.target.name} {')
-      ..write(GetterTemplate(
-        type: className,
-        name: themeAccessor,
-        accessor: extensionData.target.themeExtensionAccessor(className),
-      ));
-
-    if (extensionData.hasGeneratedProps) {
-      for (final field in fields) {
-        buffer.write(GetterTemplate(
-          type: field.type,
-          name: field.name,
-          accessor: '$themeAccessor.${field.name}',
-          documentationComment: field.documentationComment,
-        ));
-      }
-    }
-
-    buffer.writeln('}');
   }
 }

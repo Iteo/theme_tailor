@@ -11,7 +11,7 @@ class ThemeClassTemplate {
 
   String _classTypesDeclaration() {
     final mixins = [
-      if (config.isFlutterDiagnosticable) 'DiagnosticableTreeMixin'
+      if (config.hasDiagnosticableMixin) 'DiagnosticableTreeMixin'
     ];
     final mixinsString = mixins.isEmpty ? '' : ' with ${mixins.join(',')}';
 
@@ -30,11 +30,9 @@ class ThemeClassTemplate {
       fieldsBuffer
         ..write(config.annotationManager.expandFieldAnnotations(key))
         ..write(
-          value.documentationComment != null
-              ? '${value.documentationComment}\n'
-              : '',
+          value.documentation != null ? '${value.documentation}\n' : '',
         )
-        ..write('final ${value.typeName} $key;');
+        ..write('final ${value.type} $key;');
     });
 
     if (config.fields.isEmpty) {
@@ -125,7 +123,7 @@ class ThemeClassTemplate {
     final classParams = StringBuffer();
 
     config.fields.forEach((key, value) {
-      methodParams.write('${fmt.asNullableType(value.typeName)} $key,');
+      methodParams.write('${fmt.asNullableType(value.type)} $key,');
       classParams.write('$key: $key ?? this.$key,');
     });
 
@@ -145,12 +143,12 @@ class ThemeClassTemplate {
     final returnType = config.className;
     final classParams = StringBuffer();
     config.fields.forEach((key, value) {
-      if (value.implementsThemeExtension) {
+      if (value.isThemeExtension) {
         classParams.write(
             '$key: $key${value.isNullable ? '?' : ''}.lerp(other.$key, t),');
       } else {
         classParams.write(
-            '$key: ${config.encoderManager.encoderFromField(value.name, value.typeName).callLerp(key, 'other.$key', 't')},');
+            '$key: ${config.encoderManager.encoderFromField(value.name, value.type).callLerp(key, 'other.$key', 't')},');
       }
     });
 
@@ -172,7 +170,7 @@ class ThemeClassTemplate {
   }
 
   String _debugFillPropertiesMethod() {
-    if (!config.isFlutterDiagnosticable) return '';
+    if (!config.hasDiagnosticableMixin) return '';
 
     final diagnostics = [
       for (final e in config.fields.entries)
@@ -191,7 +189,7 @@ class ThemeClassTemplate {
   }
 
   String _equalOperator() {
-    String equality(Field field) {
+    String equality(TailorField field) {
       final name = field.name;
       return 'const DeepCollectionEquality().equals($name, other.$name)';
     }
@@ -210,7 +208,7 @@ class ThemeClassTemplate {
 
   String _hashCodeMethod() {
     String hashMethod(String val) => '@override int get hashCode{return $val;}';
-    String hash(Field field) =>
+    String hash(TailorField field) =>
         'const DeepCollectionEquality().hash(${field.name})';
 
     final hashedProps = [

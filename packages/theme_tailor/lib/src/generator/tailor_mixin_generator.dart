@@ -1,12 +1,15 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
+import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/library_data.dart';
 import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
+import 'package:theme_tailor/src/template/context_extension_template.dart';
 import 'package:theme_tailor/src/template/tailor_mixin_template.dart';
+import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
@@ -40,7 +43,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
         data.encoderDataManager,
         data.hasDiagnosticableMixin,
       ))
-      ..template(TailorMixinExtensionTemplate(
+      ..template(ContextExtensionTemplate(
         data.className,
         data.extensionData,
         data.fields,
@@ -115,11 +118,11 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
       final isThemeExtension =
           e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
 
-      return TailorMixinField(
+      return Field(
         isThemeExtension: isThemeExtension,
         name: e.displayName,
         type: e.type.getDisplayString(withNullability: true),
-        documentationComment: e.documentationComment,
+        documentation: e.documentationComment,
       );
     }).toList(growable: false);
 

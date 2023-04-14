@@ -1,3 +1,4 @@
+import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
 
@@ -11,24 +12,8 @@ class TailorMixinConfig {
   });
 
   final String className;
-  final List<TailorMixinField> fields;
+  final List<Field> fields;
   final ThemeEncoderManager encoderDataManager;
   final bool hasDiagnosticableMixin;
   final ExtensionData extensionData;
-}
-
-class TailorMixinField {
-  TailorMixinField({
-    required this.type,
-    required this.name,
-    required this.isThemeExtension,
-    this.documentationComment,
-  });
-
-  final String type;
-  final String name;
-  final bool isThemeExtension;
-  final String? documentationComment;
-
-  bool get isNullable => type.endsWith('?');
 }

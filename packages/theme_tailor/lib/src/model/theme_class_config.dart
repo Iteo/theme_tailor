@@ -13,13 +13,13 @@ class ThemeClassConfig {
     required this.encoderManager,
     required this.themeGetter,
     required this.annotationManager,
-    required this.isFlutterDiagnosticable,
+    required this.hasDiagnosticableMixin,
     required this.hasJsonSerializable,
     required this.constantThemes,
     required this.staticGetters,
   });
 
-  final Map<String, Field> fields;
+  final Map<String, TailorField> fields;
   final List<String> themes;
   final String baseClassName;
   final String className;
@@ -27,7 +27,7 @@ class ThemeClassConfig {
   final ThemeEncoderManager encoderManager;
   final ExtensionData themeGetter;
   final AnnotationDataManager annotationManager;
-  final bool isFlutterDiagnosticable;
+  final bool hasDiagnosticableMixin;
   final bool hasJsonSerializable;
   final bool constantThemes;
   final bool staticGetters;
