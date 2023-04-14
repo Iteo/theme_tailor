@@ -35,27 +35,21 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
   }
 
   @override
-  Iterable<String> generateForData(TailorMixinConfig data) sync* {
-    final buffer = StringBuffer()
-      ..template(TailorMixinTemplate(
-        data.className,
-        data.fields,
-        data.encoderDataManager,
-        data.hasDiagnosticableMixin,
-      ))
-      ..template(ContextExtensionTemplate(
-        data.className,
-        data.extensionData,
-        data.fields,
-      ));
-
-    yield buffer.toString();
-  }
+  void generateForData(StringBuffer buffer, TailorMixinConfig data) => buffer
+    ..template(TailorMixinTemplate(
+      data.className,
+      data.fields,
+      data.encoderDataManager,
+      data.hasDiagnosticableMixin,
+    ))
+    ..template(ContextExtensionTemplate(
+      data.className,
+      data.extensionData,
+      data.fields,
+    ));
 
   @override
   TailorMixinAnnotationData parseAnnotation(ConstantReader annotation) {
-    print(annotation.toString());
-
     final themeGetter = annotation.getFieldOrElse(
       'themeGetter',
       decode: (o) =>

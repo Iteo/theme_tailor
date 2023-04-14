@@ -3,20 +3,26 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-abstract class StringIterableGenerator<TAnnotation>
+abstract class GeneratorToBuffer<TAnnotation>
     extends GeneratorForAnnotation<TAnnotation> {
-  const StringIterableGenerator();
+  const GeneratorToBuffer();
 
   @override
-  Iterable<String> generateForAnnotatedElement(
+  String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   );
+
+  void generateToBuffer(
+    StringBuffer buffer,
+    Element element,
+    ConstantReader annotation,
+  );
 }
 
 abstract class GeneratorAnnotationMatcher<TAnnotation>
-    extends StringIterableGenerator<TAnnotation> {
+    extends GeneratorForAnnotation<TAnnotation> {
   const GeneratorAnnotationMatcher();
 
   @override
@@ -29,30 +35,29 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
 
     final library = await buildStep.resolver.libraryFor(assetId);
 
-    final values = StringBuffer();
+    final buffer = StringBuffer();
+    final tailorAnnotatedElements =
+        library.topLevelElements.where(typeChecker.hasAnnotationOf);
 
-    library.topLevelElements.where(typeChecker.hasAnnotationOf).forEach(
-      (element) {
-        final annotation = ConstantReader(
-            TypeChecker.fromRuntime(TAnnotation).firstAnnotationOf(element));
+    for (final element in tailorAnnotatedElements) {
+      getGeneratorFrom(element).generateToBuffer(
+        buffer,
+        element,
+        ConstantReader(typeChecker.firstAnnotationOf(element)),
+      );
+    }
 
-        matchGenerator(element)
-            .generateForAnnotatedElement(element, annotation, buildStep)
-            .forEach(values.writeln);
-      },
-    );
-
-    return values.toString();
+    return buffer.toString();
   }
 
   @override
-  Iterable<String> generateForAnnotatedElement(
+  String generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    return Iterable.empty();
+    return '';
   }
 
-  StringIterableGenerator<TAnnotation> matchGenerator(Element element);
+  GeneratorToBuffer<TAnnotation> getGeneratorFrom(Element element);
 }

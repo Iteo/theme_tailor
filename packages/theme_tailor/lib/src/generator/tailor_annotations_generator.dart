@@ -11,7 +11,7 @@ class TailorAnnotationsGenerator extends GeneratorAnnotationMatcher<Tailor> {
   final Tailor buildYamlConfig;
 
   @override
-  StringIterableGenerator<Tailor> matchGenerator(Element element) {
+  GeneratorToBuffer<Tailor> getGeneratorFrom(Element element) {
     if (element.hasTailorMixinAnnotation) {
       return TailorMixinGenerator(buildYamlConfig);
     }

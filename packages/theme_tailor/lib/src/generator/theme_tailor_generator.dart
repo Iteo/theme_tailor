@@ -14,6 +14,7 @@ import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
+import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
 import 'package:theme_tailor/src/template/context_extension_template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
@@ -211,14 +212,13 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
   }
 
   @override
-  Iterable<String> generateForData(ThemeClassConfig data) sync* {
-    yield ThemeTailorTemplate(data, StringFormat()).toString();
-    yield ContextExtensionTemplate(
+  void generateForData(StringBuffer buffer, ThemeClassConfig data) => buffer
+    ..template(ThemeTailorTemplate(data, StringFormat()))
+    ..template(ContextExtensionTemplate(
       data.className,
       data.themeGetter,
       data.fields.values.toList(),
-    ).toString();
-  }
+    ));
 
   Map<String, ThemeEncoderData> _typeToThemeEncoderDataFromAnnotation(
     ConstantReader annotation,
