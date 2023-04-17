@@ -1,5 +1,5 @@
 import 'package:source_gen_test/source_gen_test.dart';
-import 'package:theme_tailor/src/generator/theme_tailor_generator.dart';
+import 'package:theme_tailor/src/generator/tailor_mixin_generator.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 Future<void> main() async {
@@ -7,8 +7,8 @@ Future<void> main() async {
 
   final reader = await initializeLibraryReaderForDirectory(
     'test/code_gen/inputs',
-    'field_keyword_generation_test_input.dart',
+    'tailor_mixin_test_input.dart',
   );
 
-  testAnnotatedElements(reader, TailorGenerator(Tailor()));
+  testAnnotatedElements(reader, TailorMixinGenerator(Tailor()));
 }
