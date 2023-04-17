@@ -29,7 +29,7 @@ class TailorMixinTemplate extends Template {
       ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
       ..template(_TailorMixinFieldGettersTemplate(fields))
       ..template(CopyWithTemplate(name, fields, constructorData))
-      ..template(LerpTemplate(name, fields, encoderManager))
+      ..template(LerpTemplate(name, fields, encoderManager, constructorData))
       ..template(EqualityTemplate(name, fields));
 
     if (hasDiagnosticableMixin) {

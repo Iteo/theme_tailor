@@ -22,21 +22,16 @@ class CopyWithTemplate extends Template {
         ..write('}');
     }
 
-    buffer.write(') {');
-
-    if (constructorData != null) {
-      buffer.writeln('return ');
-      buffer.template(
-        ConstructorTemplate(constructorData!, Map.fromEntries(fields.map((e) {
+    buffer
+      ..write(') {')
+      ..writeln('return ')
+      ..template(ConstructorTemplate(
+        constructorName: constructorData?.constructorName ?? className,
+        fieldNameToParamType: constructorData?.parameterNameToType,
+        fieldNameToValue: fields.map((e) {
           return MapEntry(e.name, '${e.name} ?? this.${e.name}');
-        }))),
-      );
-      buffer.write(';}');
-    } else {
-      buffer
-        ..writeln('return $className(')
-        ..writeAll(fields.map((e) => '${e.name}: ${e.name} ?? this.${e.name},'))
-        ..writeln(');}');
-    }
+        }),
+      ))
+      ..write(';}');
   }
 }

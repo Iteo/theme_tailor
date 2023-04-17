@@ -5,10 +5,10 @@ class ConstructorData {
   });
 
   final String constructorName;
-  final Map<String, ParameterType> parameterNameToType;
+  final Map<String, CtorParamType> parameterNameToType;
 }
 
-enum ParameterType {
+enum CtorParamType {
   required,
   named,
   optional;
@@ -19,11 +19,11 @@ enum ParameterType {
     T Function() onOptional,
   ) {
     switch (this) {
-      case ParameterType.required:
+      case CtorParamType.required:
         return onRequired();
-      case ParameterType.named:
+      case CtorParamType.named:
         return onNamed();
-      case ParameterType.optional:
+      case CtorParamType.optional:
         return onOptional();
     }
   }

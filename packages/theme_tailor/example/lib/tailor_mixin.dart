@@ -10,66 +10,75 @@ part 'tailor_mixin.tailor.dart';
 class OK extends ThemeExtension<OK> with _$OKTailorMixin {
   const OK(this.appBar, {required this.background, required this.foreground});
 
-  final Color background;
-  final Color foreground;
+  final dynamic background;
+  final dynamic foreground;
   final Color? appBar;
 }
 
 @tailorMixin
 class OK2 extends ThemeExtension<OK2> with _$OK2TailorMixin {
-  const OK2(this.appBar, [this.background, this.foreground = Colors.black]);
+  const OK2.something(this.appBar, [this.background, this.foreground]);
+
+  final Color appBar;
+  final Color? background;
+  final dynamic foreground;
+}
+
+@tailorMixin
+class OK3 extends ThemeExtension<OK3> with _$OK3TailorMixin {
+  const OK3(this.appBar, this.background, this.foreground);
 
   final Color appBar;
   final Color? background;
   final Color foreground;
 }
 
-// class _CustomColorEncoder extends ThemeEncoder<Color> {
-//   const _CustomColorEncoder();
+class _CustomColorEncoder extends ThemeEncoder<Color> {
+  const _CustomColorEncoder();
 
-//   @override
-//   Color lerp(Color a, Color b, double t) => Color.lerp(a, b, t)!;
-// }
+  @override
+  Color lerp(Color a, Color b, double t) => Color.lerp(a, b, t)!;
+}
 
-// class _CustomNullColorEncoder extends ThemeEncoder<Color?> {
-//   const _CustomNullColorEncoder();
+class _CustomNullColorEncoder extends ThemeEncoder<Color?> {
+  const _CustomNullColorEncoder();
 
-//   @override
-//   Color? lerp(Color? a, Color? b, double t) => Color.lerp(a, b, t);
-// }
+  @override
+  Color? lerp(Color? a, Color? b, double t) => Color.lerp(a, b, t);
+}
 
-// const _customNullColorEncoder = _CustomNullColorEncoder();
+const _customNullColorEncoder = _CustomNullColorEncoder();
 
-// @TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
-// @_customNullColorEncoder
-// class MixedTheme1 extends ThemeExtension<MixedTheme1>
-//     with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
-//   const MixedTheme1({
-//     required this.foreground,
-//     required this.textStyle,
-//     required this.ok,
-//     this.background,
-//   });
+@TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
+@_customNullColorEncoder
+class MixedTheme1 extends ThemeExtension<MixedTheme1>
+    with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
+  const MixedTheme1({
+    required this.foreground,
+    required this.textStyle,
+    required this.ok,
+    this.background,
+  });
 
-//   final Color? background;
+  final Color? background;
 
-//   @_CustomColorEncoder()
-//   final Color foreground;
-//   final TextStyle textStyle;
+  @_CustomColorEncoder()
+  final Color foreground;
+  final TextStyle textStyle;
 
-//   /// This returns other ThemeExtension
-//   final MixedTheme2 ok;
+  /// This returns other ThemeExtension
+  final MixedTheme2 ok;
 
-//   static final some = 'Something ${2 + 2}';
-//   static const calculations = '4';
-// }
+  static final some = 'Something ${2 + 2}';
+  static const calculations = '4';
+}
 
-// @TailorMixinComponent()
-// class MixedTheme2 extends ThemeExtension<MixedTheme2>
-//     with _$MixedTheme2TailorMixin {
-//   const MixedTheme2({
-//     required this.foreground,
-//   });
+@TailorMixinComponent()
+class MixedTheme2 extends ThemeExtension<MixedTheme2>
+    with _$MixedTheme2TailorMixin {
+  const MixedTheme2({
+    required this.foreground,
+  });
 
-//   final Color foreground;
-// }
+  final Color foreground;
+}

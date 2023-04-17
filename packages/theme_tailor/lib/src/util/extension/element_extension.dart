@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/model/constructor_parameters.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 extension ElementExtension on Element {
@@ -52,13 +51,14 @@ extension ClassElementExtensions on ClassElement {
   }
 
   ConstructorData? constructorData() {
-    final parameters =
-        (preferedConstructor() ?? firstConstructorWithFieldNames())?.parameters;
+    final ctor = (preferedConstructor() ?? firstConstructorWithFieldNames());
+
+    final parameters = ctor?.parameters;
 
     if (parameters == null || parameters.isEmpty) return null;
 
     return ConstructorData(
-      constructorName: name,
+      constructorName: ctor!.displayName,
       parameterNameToType: Map.fromEntries(
         parameters.map((e) => MapEntry(e.name, e.parameterType)),
       ),
@@ -67,11 +67,11 @@ extension ClassElementExtensions on ClassElement {
 }
 
 extension on ParameterElement {
-  ParameterType get parameterType {
+  CtorParamType get parameterType {
     return isNamed
-        ? ParameterType.named
+        ? CtorParamType.named
         : isRequired
-            ? ParameterType.required
-            : ParameterType.optional;
+            ? CtorParamType.required
+            : CtorParamType.optional;
   }
 }
