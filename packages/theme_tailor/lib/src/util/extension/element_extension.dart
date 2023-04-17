@@ -39,20 +39,8 @@ extension ClassElementExtensions on ClassElement {
     return constructors.firstWhereOrNull((cstr) => cstr.name.isEmpty);
   }
 
-  ConstructorElement? firstConstructorWithFieldNames() {
-    return constructors.firstWhereOrNull(
-      (cstr) {
-        return cstr.parameters
-            .map((e) => e.name)
-            .toSet()
-            .containsAll(fieldNames());
-      },
-    );
-  }
-
   ConstructorData? constructorData() {
-    final ctor = (preferedConstructor() ?? firstConstructorWithFieldNames());
-
+    final ctor = preferedConstructor();
     final parameters = ctor?.parameters;
 
     if (parameters == null || parameters.isEmpty) return null;

@@ -17,7 +17,7 @@ class OK extends ThemeExtension<OK> with _$OKTailorMixin {
 
 @tailorMixin
 class OK2 extends ThemeExtension<OK2> with _$OK2TailorMixin {
-  const OK2.something(this.appBar, [this.background, this.foreground]);
+  const OK2(this.appBar, [this.background, this.foreground]);
 
   final Color appBar;
   final Color? background;
