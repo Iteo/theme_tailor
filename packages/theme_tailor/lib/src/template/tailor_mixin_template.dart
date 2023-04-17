@@ -1,3 +1,4 @@
+import 'package:theme_tailor/src/model/constructor_parameters.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/template/template.dart';
@@ -12,12 +13,14 @@ class TailorMixinTemplate extends Template {
     this.fields,
     this.encoderManager,
     this.hasDiagnosticableMixin,
+    this.constructorData,
   );
 
   final String name;
   final List<Field> fields;
   final ThemeEncoderManager encoderManager;
   final bool hasDiagnosticableMixin;
+  final ConstructorData? constructorData;
 
   @override
   void write(StringBuffer buffer) {
@@ -25,7 +28,7 @@ class TailorMixinTemplate extends Template {
       ..writeln('mixin _\$${name}TailorMixin on ThemeExtension<$name>')
       ..write(hasDiagnosticableMixin ? ',DiagnosticableTreeMixin {' : '{')
       ..template(_TailorMixinFieldGettersTemplate(fields))
-      ..template(CopyWithTemplate(name, fields))
+      ..template(CopyWithTemplate(name, fields, constructorData))
       ..template(LerpTemplate(name, fields, encoderManager))
       ..template(EqualityTemplate(name, fields));
 

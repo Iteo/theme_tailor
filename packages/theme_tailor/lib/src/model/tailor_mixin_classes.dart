@@ -1,3 +1,4 @@
+import 'package:theme_tailor/src/model/constructor_parameters.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
@@ -9,6 +10,7 @@ class TailorMixinConfig {
     required this.encoderDataManager,
     required this.hasDiagnosticableMixin,
     required this.extensionData,
+    this.constructorData,
   });
 
   final String className;
@@ -16,4 +18,5 @@ class TailorMixinConfig {
   final ThemeEncoderManager encoderDataManager;
   final bool hasDiagnosticableMixin;
   final ExtensionData extensionData;
+  final ConstructorData? constructorData;
 }

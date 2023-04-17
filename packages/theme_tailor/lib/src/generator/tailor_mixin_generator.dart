@@ -41,6 +41,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
       data.fields,
       data.encoderDataManager,
       data.hasDiagnosticableMixin,
+      data.constructorData,
     ))
     ..template(ContextExtensionTemplate(
       data.className,
@@ -126,6 +127,7 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
       encoderDataManager: encoderManager,
       hasDiagnosticableMixin: libraryData.hasDiagnosticableMixin,
       extensionData: annotationData.themeGetter.extensionData,
+      constructorData: element.constructorData(),
     );
   }
 
