@@ -1,5 +1,5 @@
-# 2.0.0-dev.0
-- Added additional way to generate ThemeExtension classes with `@TailorMixin` annotation
+# 2.0.0
+- Added additional way to generate ThemeExtension classes with `@TailorMixin` / `@TailorMixinComponent` annotation
 
 # 1.2.0
 - Added `generateStaticGetters` property to `Tailor` and `TailorComponent` to support hot-reload

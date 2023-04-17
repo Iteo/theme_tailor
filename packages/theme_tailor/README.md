@@ -201,8 +201,9 @@ By default, "@tailor" will generate an extension on "BuildContext" and expand th
 
 ```dart
 @Tailor(themeGetter: ThemeGetter.none)
-// OR
-@TailorComponent()
+@TailorComponent() // This automatically sets ThemeGetter.none
+@TailorMixin(themeGetter: ThemeGetter.none)
+@TailorMixinComponent() // This automatically sets ThemeGetter.none
 ```
 
 "ThemeGetter" has several variants for generating common extensions to ease access to the declared themes.
@@ -224,10 +225,11 @@ ThemeDataExtensions:
     - MsgList: [foo, bar, baz]
 ```
 
-Use "@tailor" and "@Tailor" annotations if you may need additional extensions on ThemeData or ThemeContext.
+Use "@tailor" / "@Tailor" or "@tailorMixin" / "@TailorMixin" annotations if you may need additional extensions on ThemeData or ThemeContext.
 
-Use "@tailorComponent" or "@TailorComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
+Use "@tailorComponent"/ "@TailorComponent" or "@tailorMixinComponent" / "@TailorMixinComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
 
+Example for @Tailor annotation:
 ```dart
 /// Use generated "ChatComponentsTheme" in ThemeData
 @tailor
@@ -280,7 +282,31 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-*Good and bad practices for modular or nested themes:*
+Example for @TailorMixin annotation:
+```dart
+@tailorMixin
+class ChatComponentsTheme extends ThemeExtension<ChatComponentsTheme> with _$ChatComponentsTheme {
+  /// TODO: Impl constructor
+
+  final MsgBubble msgBubble;
+  final MsgList msgList;
+  final NotGeneratedExtension notGeneratedExtension;
+}
+
+@tailorMixinComponent
+class MsgBubble extends ThemeExtension<MsgBubble> with _$MsgBubble {
+  /// TODO: Impl constructor
+
+  final Bubble myBubble;
+  final Bubble friendsBubble;
+}
+
+/// The rest of the classes as in the previous example but following @TailorMixin pattern
+/// [...]
+```
+
+
+*Good and bad practices for modular or nested themes when using `@Tailor`:*
 ```dart
 /// Good:
 @tailorComponent
