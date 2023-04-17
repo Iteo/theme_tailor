@@ -1,5 +1,3 @@
-import 'package:theme_tailor/src/model/field.dart';
-
 class ThemeEncoderData {
   const ThemeEncoderData(
     this.accessString,
@@ -59,10 +57,10 @@ class _AnyEncoder extends ThemeEncoderData {
   String callLerp(String a, String b, String t) => '$t < 0.5? $a : $b';
 }
 
-class ThemeEncoderDataManager {
-  const ThemeEncoderDataManager._(this.typeToEncoder, this.fieldNameToEncoder);
+class ThemeEncoderManager {
+  const ThemeEncoderManager._(this.typeToEncoder, this.fieldNameToEncoder);
 
-  factory ThemeEncoderDataManager(
+  factory ThemeEncoderManager(
     Map<String, ThemeEncoderData> typeToEncoder,
     Map<String, ThemeEncoderData> fieldNameToEncoder,
   ) {
@@ -70,7 +68,7 @@ class ThemeEncoderDataManager {
       ..._defaultEncoders,
       ...typeToEncoder,
     };
-    return ThemeEncoderDataManager._(encoders, fieldNameToEncoder);
+    return ThemeEncoderManager._(encoders, fieldNameToEncoder);
   }
 
   static const _color = ThemeEncoderData('Color', 'Color', true);
@@ -88,9 +86,9 @@ class ThemeEncoderDataManager {
   final Map<String, ThemeEncoderData> typeToEncoder;
   final Map<String, ThemeEncoderData> fieldNameToEncoder;
 
-  ThemeEncoderData encoderFromField(Field field) {
-    return fieldNameToEncoder[field.name] ??
-        typeToEncoder[field.typeName] ??
+  ThemeEncoderData encoderFromField(String fieldName, String type) {
+    return fieldNameToEncoder[fieldName] ??
+        typeToEncoder[type] ??
         _AnyEncoder.instance;
   }
 }

@@ -1,3 +1,6 @@
+# 2.0.0
+- Added additional way to generate ThemeExtension classes with `@TailorMixin` / `@TailorMixinComponent` annotation
+
 # 1.2.0
 - Added `generateStaticGetters` property to `Tailor` and `TailorComponent` to support hot-reload
 - Build configuration. It is possible to configure `themeGetter`, `requireStaticConst` and `generateStaticGetters` annotation properties within the build.yaml with: theme_getter and require_static_const (all keys and values for enums are snake_case)

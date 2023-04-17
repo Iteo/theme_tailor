@@ -16,3 +16,13 @@ class TailorAnnotationData {
   final bool generateStaticGetters;
   final ThemeGetter themeGetter;
 }
+
+class TailorMixinAnnotationData {
+  const TailorMixinAnnotationData({
+    required this.encoders,
+    required this.themeGetter,
+  });
+
+  final Map<String, ThemeEncoderData> encoders;
+  final ThemeGetter themeGetter;
+}

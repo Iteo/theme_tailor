@@ -12,7 +12,7 @@ void main() {
   const materialAColor1 = Colors.orangeAccent;
   const materialAColor2 = Colors.blueAccent;
 
-  const theme1 = toolbox.Theme(
+  const theme1 = toolbox.CustomTheme(
     color: color1,
     colorNoLerp: color1,
     materialColor: materialColor1,
@@ -21,7 +21,7 @@ void main() {
     materialAccentColorNoLerp: materialAColor1,
   );
 
-  const theme2 = toolbox.Theme(
+  const theme2 = toolbox.CustomTheme(
     color: color2,
     colorNoLerp: color2,
     materialColor: materialColor2,
@@ -33,7 +33,7 @@ void main() {
   test('Proper encoder is called per field / class', () {
     const t = 0.6;
 
-    final themeExpectedLerp = toolbox.Theme(
+    final themeExpectedLerp = toolbox.CustomTheme(
       color: Color.lerp(theme1.color, theme2.color, t)!,
       colorNoLerp: theme2.colorNoLerp,
       materialColor:

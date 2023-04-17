@@ -14,8 +14,9 @@ import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
+import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
-import 'package:theme_tailor/src/template/theme_extension_template.dart';
+import 'package:theme_tailor/src/template/context_extension_template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
@@ -29,7 +30,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
     TailorAnnotationData, ThemeClassConfig, Tailor> {
-  TailorGenerator(this.buildYamlConfig);
+  const TailorGenerator(this.buildYamlConfig);
 
   final Tailor buildYamlConfig;
 
@@ -48,7 +49,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
   ImportsData parseLibraryData(LibraryElement library, ClassElement element) {
     return ImportsData(
       hasJsonSerializable: element.hasJsonSerializableAnnotation,
-      hasFlutterDiagnosticable: library.hasFlutterDiagnosticableImport,
+      hasDiagnosticableMixin: library.hasFlutterDiagnosticableImport,
     );
   }
 
@@ -100,7 +101,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
     final fields = tailorClassVisitor.fields;
 
     final fieldsToCheck = fields.values
-        .where((f) => f.isTailorThemeExtension || f.typeName == 'dynamic')
+        .where((f) => f.isTailorThemeExtension || f.type == 'dynamic')
         .map((f) => f.name);
 
     final typeDefAstVisitor = _TypeDefAstVisitor();
@@ -119,10 +120,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
     classAstNode.visitChildren(astVisitor);
 
     for (final typeEntry in astVisitor.fieldTypes.entries) {
-      final fieldValue = fields[typeEntry.key];
-      if (fieldValue != null) {
-        fields[typeEntry.key] = fieldValue.copyWith(typeName: typeEntry.value);
-      }
+      fields[typeEntry.key]?.type = typeEntry.value;
     }
 
     final fieldInitializerVisitor = _TailorFieldInitializerVisitor(
@@ -135,14 +133,9 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
       classAstNode.visitChildren(fieldInitializerVisitor);
 
       if (fieldInitializerVisitor.hasValuesForAllFields) {
-        for (final fieldValueEntry
-            in fieldInitializerVisitor.fieldValues.entries) {
-          final fieldValue = fields[fieldValueEntry.key];
-          if (fieldValue != null) {
-            fields[fieldValueEntry.key] = fieldValue.copyWith(
-                values:
-                    fieldInitializerVisitor.fieldValues[fieldValueEntry.key]);
-          }
+        for (final fieldName in fieldInitializerVisitor.fieldValues.keys) {
+          final values = fieldInitializerVisitor.fieldValues[fieldName];
+          fields[fieldName]?.values = values;
         }
       }
     }
@@ -202,7 +195,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
       baseClassName: element.name,
       themes: annotationData.themes,
       themesFieldName: themeFieldName,
-      encoderManager: ThemeEncoderDataManager(
+      encoderManager: ThemeEncoderManager(
         classLevelEncoders,
         tailorClassVisitor.fieldLevelEncoders,
       ),
@@ -211,7 +204,7 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         classAnnotations: classLevelAnnotations,
         fieldsAnotations: fieldLevelAnnotations,
       ),
-      isFlutterDiagnosticable: libraryData.hasFlutterDiagnosticable,
+      hasDiagnosticableMixin: libraryData.hasDiagnosticableMixin,
       hasJsonSerializable: libraryData.hasJsonSerializable,
       constantThemes: generateConstantThemes,
       staticGetters: annotationData.generateStaticGetters,
@@ -219,10 +212,13 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
   }
 
   @override
-  Iterable<String> generateForData(ThemeClassConfig data) sync* {
-    yield ThemeClassTemplate(data, StringFormat()).toString();
-    yield ThemeExtensionTemplate(data, StringFormat()).toString();
-  }
+  void generateForData(StringBuffer buffer, ThemeClassConfig data) => buffer
+    ..template(ThemeTailorTemplate(data, StringFormat()))
+    ..template(ContextExtensionTemplate(
+      data.className,
+      data.themeGetter,
+      data.fields.values.toList(),
+    ));
 
   Map<String, ThemeEncoderData> _typeToThemeEncoderDataFromAnnotation(
     ConstantReader annotation,
@@ -249,7 +245,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final bool requireConstThemes;
   final bool generateStaticGetters;
 
-  final Map<String, Field> fields = {};
+  final Map<String, TailorField> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final Map<String, List<bool>> hasInternalAnnotations = {};
   var hasNonConstantElement = false;
@@ -317,12 +313,12 @@ class _TailorClassVisitor extends SimpleElementVisitor {
 
       hasInternalAnnotations[propName] = isInternalAnnotation;
 
-      fields[propName] = Field(
+      fields[propName] = TailorField(
         name: propName,
-        typeName: coreType.getDisplayString(withNullability: true),
-        implementsThemeExtension: implementsThemeExtension,
+        type: coreType.getDisplayString(withNullability: true),
+        isThemeExtension: implementsThemeExtension,
         isTailorThemeExtension: hasThemeExtensionAnnotation,
-        documentationComment: element.documentationComment,
+        documentation: element.documentationComment,
       );
     }
   }

@@ -1,0 +1,15 @@
+@TailorMixin()
+class MyTheme extends ThemeExtension<MyTheme>
+    with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
+  const MyTheme({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
+
+  final Color background;
+  final Color iconColor;
+  final TextStyle h1;
+  final TextStyle h2;
+}

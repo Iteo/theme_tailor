@@ -10,8 +10,17 @@ void main() {
     });
 
     test('also', () {
+      var calledFun = false;
+
+      String fun(String val) {
+        calledFun = true;
+        return '$val.ok';
+      }
+
       const test = 'also';
-      expect(test.also((it) => '$it.ok'), 'also.ok');
+
+      expect(test.also((it) => fun(it)), test);
+      expect(calledFun, isTrue);
     });
   });
 }

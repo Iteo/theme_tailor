@@ -1,3 +1,7 @@
+# 2.0.0
+- Add `@TailorMixin` annotation
+- Add `@TailorMixinComponent` annotation
+
 # 1.2.0
 - Add `generateStaticGetters` property to `@Tailor` and `@TailorComponent` which adds support for hot reload for const fields
 - `requireStaticConst` is now available for `@TailorComponent`

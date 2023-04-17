@@ -31,6 +31,12 @@ class StringFormat {
 }
 
 extension StringExtension on String {
+  String get asNullableType {
+    if (this == 'dynamic') return 'dynamic';
+    if (endsWith('?')) return this;
+    return '$this?';
+  }
+
   String trimFirst() => isEmpty ? this : substring(1);
 
   String firstToUpper() => _safeSubstring(toUpper: true);

@@ -1,54 +1,38 @@
-class Field implements Comparable {
-  const Field({
-    required this.name,
-    required this.typeName,
-    required this.implementsThemeExtension,
+class TailorField extends Field {
+  TailorField({
+    required super.name,
+    required super.type,
+    required super.isThemeExtension,
+    super.documentation,
     required this.isTailorThemeExtension,
     this.values,
-    this.documentationComment,
   });
 
-  final String name;
-  final String typeName;
-  final bool implementsThemeExtension;
-  final bool isTailorThemeExtension;
-  final List<String>? values;
-  final String? documentationComment;
+  bool isTailorThemeExtension;
+  List<String>? values;
+}
 
-  bool get isNullable => typeName.contains('?');
+class Field implements Comparable<Field> {
+  Field({
+    required this.name,
+    required this.type,
+    required this.documentation,
+    required this.isThemeExtension,
+  });
 
-  Field copyWith({
-    String? name,
-    String? typeName,
-    bool? implementsThemeExtension,
-    bool? isTailorThemeExtension,
-    List<String>? values,
-    String? documentationComment,
-  }) {
-    return Field(
-      name: name ?? this.name,
-      typeName: typeName ?? this.typeName,
-      implementsThemeExtension:
-          implementsThemeExtension ?? this.implementsThemeExtension,
-      isTailorThemeExtension:
-          isTailorThemeExtension ?? this.isTailorThemeExtension,
-      values: values ?? this.values,
-      documentationComment: documentationComment ?? this.documentationComment,
-    );
-  }
+  String name;
+  String type;
+  bool isThemeExtension;
+  String? documentation;
+
+  bool get isNullable => type.contains('?');
+  bool get isDynamic => type == 'dynamic';
+
+  String get typeAsNullable => (isNullable || isDynamic) ? type : '$type?';
 
   @override
-  int compareTo(other) {
-    if (other is Field) {
-      if (isNullable && !other.isNullable) {
-        return 1;
-      } else if (!isNullable && other.isNullable) {
-        return -1;
-      }
-
-      return name.compareTo(other.name);
-    } else {
-      return 0;
-    }
+  int compareTo(Field other) {
+    if (isNullable == other.isNullable) return name.compareTo(other.name);
+    return isNullable ? 1 : -1;
   }
 }

@@ -8,3 +8,5 @@ export 'src/theme_getter.dart';
 export 'src/theme_ignore.dart';
 export 'src/theme_tailor.dart';
 export 'src/theme_tailor_component.dart';
+export 'src/tailor_mixin.dart';
+export 'src/tailor_mixin_component.dart';
