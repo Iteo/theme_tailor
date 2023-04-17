@@ -15,7 +15,7 @@
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
-[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/feat/tailor_mixin/resources/after_tailor_mixin.png?raw=true
+[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/develop/resources/after_tailor_mixin.png
 
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -79,12 +79,9 @@ Currently the package supports 2 types of the generator that serve different pur
 *It's worth noting that choosing either the `@Tailor` or `@TailorMixin` generator doesn't restrict you from using the other in the future.
 In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
 
-| Before                | After               |
-| --------------------- | ------------------- |
-| No code generation    | @Tailor             |
-| ![before][img_before] | ![after][img_after] |
-| Same as above         | ![after][img_after_tailor_mixin]
-
+| No code generation      | @TailorMixin                     | @Tailor             |
+| ----------------------- | -------------------------------- | ------------------- |
+| ![before][img_before]   | ![after][img_after_tailor_mixin] | ![after][img_after] |
 
 # How to use
 ## Install
