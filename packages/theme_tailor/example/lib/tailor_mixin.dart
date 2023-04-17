@@ -46,7 +46,7 @@ class MixedTheme1 extends ThemeExtension<MixedTheme1>
   static const calculations = '4';
 }
 
-@TailorMixin()
+@TailorMixinComponent()
 class MixedTheme2 extends ThemeExtension<MixedTheme2>
     with _$MixedTheme2TailorMixin {
   const MixedTheme2({
