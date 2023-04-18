@@ -22,9 +22,9 @@ class ConstructorTemplate extends Template {
 
     for (final field in fieldNameToValue) {
       fieldNameToParamType![field.key]?.when(
-        () => inRequired.add('${field.value},'),
-        () => inNamed.add('${field.key}: ${field.value},'),
-        () => inOptional.add('${field.value},'),
+        onRequired: () => inRequired.add('${field.value},'),
+        onNamed: () => inNamed.add('${field.key}: ${field.value},'),
+        onOptional: () => inOptional.add('${field.value},'),
       );
     }
 

@@ -3,11 +3,11 @@ enum CtorParamType {
   named,
   optional;
 
-  T when<T>(
-    T Function() onRequired,
-    T Function() onNamed,
-    T Function() onOptional,
-  ) {
+  T when<T>({
+    required T Function() onRequired,
+    required T Function() onNamed,
+    required T Function() onOptional,
+  }) {
     switch (this) {
       case CtorParamType.required:
         return onRequired();
