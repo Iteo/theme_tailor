@@ -1,4 +1,4 @@
-import 'package:theme_tailor/src/model/constructor_parameters.dart';
+import 'package:theme_tailor/src/model/constructor_parameter_type.dart';
 import 'package:theme_tailor/src/template/template.dart';
 
 class ConstructorTemplate extends Template {

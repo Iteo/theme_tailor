@@ -6,33 +6,6 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'tailor_mixin.tailor.dart';
 
-@tailorMixin
-class OK extends ThemeExtension<OK> with _$OKTailorMixin {
-  const OK(this.appBar, {required this.background, required this.foreground});
-
-  final dynamic background;
-  final dynamic foreground;
-  final Color? appBar;
-}
-
-@tailorMixin
-class OK2 extends ThemeExtension<OK2> with _$OK2TailorMixin {
-  const OK2(this.appBar, [this.background, this.foreground]);
-
-  final Color appBar;
-  final Color? background;
-  final dynamic foreground;
-}
-
-@tailorMixin
-class OK3 extends ThemeExtension<OK3> with _$OK3TailorMixin {
-  const OK3(this.appBar, this.background, this.foreground);
-
-  final Color appBar;
-  final Color? background;
-  final Color foreground;
-}
-
 class _CustomColorEncoder extends ThemeEncoder<Color> {
   const _CustomColorEncoder();
 

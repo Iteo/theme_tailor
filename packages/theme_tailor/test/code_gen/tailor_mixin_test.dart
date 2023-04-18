@@ -7,7 +7,7 @@ Future<void> main() async {
 
   final reader = await initializeLibraryReaderForDirectory(
     'test/code_gen/inputs',
-    'tailor_mixin_test_input.dart',
+    'tailor_mixin_src.dart',
   );
 
   testAnnotatedElements(reader, TailorMixinGenerator(Tailor()));

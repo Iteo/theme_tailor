@@ -2,7 +2,8 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:source_gen/source_gen.dart';
-import 'package:theme_tailor/src/model/constructor_parameters.dart';
+import 'package:theme_tailor/src/model/constructor_data.dart';
+import 'package:theme_tailor/src/util/extension/parameter_element_extension.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 extension ElementExtension on Element {
@@ -31,16 +32,12 @@ extension ClassElementExtensions on ClassElement {
     return mixins.map((e) => e.element.name).contains(mixin);
   }
 
-  Set<String> fieldNames() {
-    return fields.where((e) => !e.isStatic).map((e) => e.name).toSet();
-  }
-
-  ConstructorElement? preferedConstructor() {
-    return constructors.firstWhereOrNull((cstr) => cstr.name.isEmpty);
+  ConstructorElement? get _defaultCtor {
+    return constructors.firstWhereOrNull((ctor) => ctor.name.isEmpty);
   }
 
   ConstructorData? constructorData() {
-    final ctor = preferedConstructor();
+    final ctor = _defaultCtor;
     final parameters = ctor?.parameters;
 
     if (parameters == null || parameters.isEmpty) return null;
@@ -51,15 +48,5 @@ extension ClassElementExtensions on ClassElement {
         parameters.map((e) => MapEntry(e.name, e.parameterType)),
       ),
     );
-  }
-}
-
-extension on ParameterElement {
-  CtorParamType get parameterType {
-    return isNamed
-        ? CtorParamType.named
-        : isRequired
-            ? CtorParamType.required
-            : CtorParamType.optional;
   }
 }

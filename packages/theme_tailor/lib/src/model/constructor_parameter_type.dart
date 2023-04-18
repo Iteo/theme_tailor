@@ -1,13 +1,3 @@
-class ConstructorData {
-  const ConstructorData({
-    required this.constructorName,
-    required this.parameterNameToType,
-  });
-
-  final String constructorName;
-  final Map<String, CtorParamType> parameterNameToType;
-}
-
 enum CtorParamType {
   required,
   named,
