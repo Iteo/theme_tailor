@@ -1,8 +1,8 @@
 import 'package:theme_tailor/src/model/constructor_parameter_type.dart';
 import 'package:theme_tailor/src/template/template.dart';
 
-class ConstructorTemplate extends Template {
-  ConstructorTemplate({
+class ClassInstanceTemplate extends Template {
+  ClassInstanceTemplate({
     required this.constructorName,
     required this.fieldNameToValue,
     this.fieldNameToParamType,

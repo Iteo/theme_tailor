@@ -1,7 +1,7 @@
 import 'package:theme_tailor/src/model/constructor_data.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
-import 'package:theme_tailor/src/template/constructor_template.dart';
+import 'package:theme_tailor/src/template/class_instance_template.dart';
 import 'package:theme_tailor/src/template/template.dart';
 
 class LerpTemplate extends Template {
@@ -24,7 +24,7 @@ class LerpTemplate extends Template {
           '@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
       ..writeln('if (other is! $className) return this as $className;')
       ..writeln('return ')
-      ..writeln(ConstructorTemplate(
+      ..writeln(ClassInstanceTemplate(
         constructorName: constructorData?.constructorName ?? className,
         fieldNameToParamType: constructorData?.parameterNameToType,
         fieldNameToValue: fields.map((e) => MapEntry(

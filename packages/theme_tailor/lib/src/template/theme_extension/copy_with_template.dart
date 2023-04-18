@@ -1,6 +1,6 @@
 import 'package:theme_tailor/src/model/constructor_data.dart';
 import 'package:theme_tailor/src/model/field.dart';
-import 'package:theme_tailor/src/template/constructor_template.dart';
+import 'package:theme_tailor/src/template/class_instance_template.dart';
 import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/string_format.dart';
 
@@ -25,7 +25,7 @@ class CopyWithTemplate extends Template {
     buffer
       ..write(') {')
       ..writeln('return ')
-      ..template(ConstructorTemplate(
+      ..template(ClassInstanceTemplate(
         constructorName: constructorData?.constructorName ?? className,
         fieldNameToParamType: constructorData?.parameterNameToType,
         fieldNameToValue: fields.map((e) {
