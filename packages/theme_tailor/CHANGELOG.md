@@ -1,6 +1,7 @@
 # 2.0.0
 - Add additional way to generate ThemeExtension classes with `@TailorMixin` / `@TailorMixinComponent` annotation
 - Add support for required and optional constructor parameters for classes annotated with `@TailorMixin` or `@TailorComponent`
+- Required version of theme_tailor_annotation is 2.0.0
 
 # 1.2.0
 - Added `generateStaticGetters` property to `Tailor` and `TailorComponent` to support hot-reload
