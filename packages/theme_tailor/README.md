@@ -56,32 +56,21 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Build configuration](#build-configuration)
 
 # Motivation
-Flutter 3.0 provides a new way of theming applications via ThemeData's theme extensions.
-To declare theme extension, we need to:
-- define a class that extends ThemeData,
-- define a constructor and fields,
-- implement "copyWith",
-- implement "lerp",
-- (optionally) override "hashCode",
-- (optionally) override "==" operator
-- (optionally) implement "debugFillProperties" method
-- (optionally) add serialization code
+Flutter 3.0 introduces a new way of theming applications using theme extensions in ThemeData. To declare a theme extension, you need to create a class that extends ThemeData, define its constructor and fields, implement the "copyWith" and "lerp" methods, and optionally override the "hashCode," "==" operator, and implement the "debugFillProperties" method. Additionally you may want to create extensions on BuildContext or ThemeData to access newly created themes. 
 
-In addition to generating themes, we may want to declare utility extensions to access theme properties via an extension on BuildContext or ThemeData that requires additional work.
-Implementing this requires lots of additional lines of code and time. 
-
-# Choosing the generator (@Tailor / @TailorMixin) 
-Currently the package supports 2 types of the generator that serve different purposes:
-- The `@Tailor` annotation generates a ThemeExtension class based on the annotated template class and automatically creates instances of the associated themes. This eliminates the need for manual theme creation and consolidates the theme values and their definitions in a single location. However, refactoring properties names of the generated class may prove difficult, and ensuring hot-reloadability of themes may require static const definitions for all properties. Additionally, some lint warnings may need to be ignored since the template class may not be utilized.
-
-- The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. While it requires more boilerplate code than the @Tailor annotation, it offers a more familiar syntax for vanilla ThemeExtension classes and provides greater customization of the class created. This option is recommended for those who prefer a more hands-on approach to their code and require a greater degree of flexibility in their implementation.
-
-*It's worth noting that choosing either the `@Tailor` or `@TailorMixin` generator doesn't restrict you from using the other in the future.
-In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
+All of that involves extra coding work that is time-consuming and error-prone, which is why it is advisable to use a generator.
 
 | No code generation      | @TailorMixin                     | @Tailor             |
 | ----------------------- | -------------------------------- | ------------------- |
 | ![before][img_before]   | ![after][img_after_tailor_mixin] | ![after][img_after] |
+
+Currently the package supports 2 types of the generator:
+- The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. While it requires more boilerplate code than the @Tailor annotation, it offers a more familiar syntax for vanilla ThemeExtension classes and provides greater customization of the created class. This option is recommended for those who prefer a more hands-on approach to their code and require a greater degree of flexibility in their implementation.
+
+- The `@Tailor` annotation generates a ThemeExtension class based on the annotated template class and automatically creates instances of the associated themes. This eliminates the need for manual theme creation and consolidates the theme values and their definitions in a single location. However, refactoring properties names of the generated class may prove difficult, and ensuring hot-reloadability of themes may require static const definitions for all properties. Additionally, some lint warnings may need to be ignored since the template class may not be utilized.
+
+*It's worth noting that choosing either the `@Tailor` or `@TailorMixin` generator doesn't restrict you from using the other in the future.
+In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
 
 # How to use
 ## Install
