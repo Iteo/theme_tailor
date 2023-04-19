@@ -9,6 +9,48 @@ enum WrongAnnotationTarget {
 }
 
 @ShouldGenerate('''
+    return CtorRequiredParametes(
+      propA ?? this.propA,
+      propB ?? this.propB,
+    );
+''', contains: true)
+@TailorMixin(themeGetter: ThemeGetter.none)
+class CtorRequiredParametes {
+  const CtorRequiredParametes(this.propA, this.propB);
+
+  final int propA;
+  final int propB;
+}
+
+@ShouldGenerate('''
+    return CtorPositionalParameters(
+      propA ?? this.propA,
+      propB ?? this.propB,
+    );
+''', contains: true)
+@TailorMixin(themeGetter: ThemeGetter.none)
+class CtorPositionalParameters {
+  const CtorPositionalParameters(this.propA, [this.propB = 0]);
+
+  final int propA;
+  final int propB;
+}
+
+@ShouldGenerate('''
+    return CtorNamedParameters(
+      propA ?? this.propA,
+      propB: propB ?? this.propB,
+    );
+''', contains: true)
+@TailorMixin(themeGetter: ThemeGetter.none)
+class CtorNamedParameters {
+  const CtorNamedParameters(this.propA, {required this.propB});
+
+  final int propA;
+  final int propB;
+}
+
+@ShouldGenerate('''
 extension OnBuildContextBuildContext on BuildContext {
   OnBuildContext get onBuildContext =>
       Theme.of(this).extension<OnBuildContext>()!;
@@ -16,23 +58,23 @@ extension OnBuildContextBuildContext on BuildContext {
 ''', contains: true)
 @TailorMixin(themeGetter: ThemeGetter.onBuildContext)
 class OnBuildContext {
-  OnBuildContext(this.prop1);
+  OnBuildContext({required this.prop});
 
-  final int prop1;
+  final int prop;
 }
 
 @ShouldGenerate('''
 extension OnBuildContextPropsBuildContextProps on BuildContext {
   OnBuildContextProps get onBuildContextProps =>
       Theme.of(this).extension<OnBuildContextProps>()!;
-  int get prop1 => onBuildContextProps.prop1;
+  int get prop => onBuildContextProps.prop;
 }
 ''', contains: true)
 @TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
 class OnBuildContextProps {
-  OnBuildContextProps(this.prop1);
+  OnBuildContextProps({required this.prop});
 
-  final int prop1;
+  final int prop;
 }
 
 @ShouldGenerate('''
@@ -42,34 +84,34 @@ extension OnThemeDataThemeData on ThemeData {
 ''', contains: true)
 @TailorMixin(themeGetter: ThemeGetter.onThemeData)
 class OnThemeData {
-  OnThemeData(this.prop1);
+  OnThemeData({required this.prop});
 
-  final int prop1;
+  final int prop;
 }
 
 @ShouldGenerate('''
 extension OnThemeDataPropsThemeDataProps on ThemeData {
   OnThemeDataProps get onThemeDataProps => extension<OnThemeDataProps>()!;
-  int get prop1 => onThemeDataProps.prop1;
+  int get prop => onThemeDataProps.prop;
 }
 ''', contains: true)
 @TailorMixin(themeGetter: ThemeGetter.onThemeDataProps)
 class OnThemeDataProps {
-  OnThemeDataProps(this.prop1);
+  OnThemeDataProps(this.prop);
 
-  final int prop1;
+  final int prop;
 }
 
 @ShouldGenerate(r'''
 mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
-  int get prop1;
+  int get prop;
 
   @override
   SomeClass copyWith({
-    int? prop1,
+    int? prop,
   }) {
     return SomeClass(
-      prop1: prop1 ?? this.prop1,
+      prop: prop ?? this.prop,
     );
   }
 
@@ -77,7 +119,7 @@ mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
   SomeClass lerp(covariant ThemeExtension<SomeClass>? other, double t) {
     if (other is! SomeClass) return this as SomeClass;
     return SomeClass(
-      prop1: t < 0.5 ? prop1 : other.prop1,
+      prop: t < 0.5 ? prop : other.prop,
     );
   }
 
@@ -86,21 +128,21 @@ mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is SomeClass &&
-            const DeepCollectionEquality().equals(prop1, other.prop1));
+            const DeepCollectionEquality().equals(prop, other.prop));
   }
 
   @override
   int get hashCode {
     return Object.hash(
       runtimeType.hashCode,
-      const DeepCollectionEquality().hash(prop1),
+      const DeepCollectionEquality().hash(prop),
     );
   }
 }
 ''')
 @TailorMixin(themeGetter: ThemeGetter.none)
 class SomeClass {
-  const SomeClass({required this.prop1});
+  const SomeClass({required this.prop});
 
-  final int prop1;
+  final int prop;
 }

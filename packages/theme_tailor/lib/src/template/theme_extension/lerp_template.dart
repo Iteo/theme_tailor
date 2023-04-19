@@ -1,17 +1,21 @@
+import 'package:theme_tailor/src/model/constructor_data.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
+import 'package:theme_tailor/src/template/class_instance_template.dart';
 import 'package:theme_tailor/src/template/template.dart';
 
 class LerpTemplate extends Template {
   const LerpTemplate(
     this.className,
     this.fields,
-    this.encoderManager,
-  );
+    this.encoderManager, [
+    this.constructorData,
+  ]);
 
   final String className;
   final List<Field> fields;
   final ThemeEncoderManager encoderManager;
+  final ConstructorData? constructorData;
 
   @override
   void write(StringBuffer buffer) {
@@ -19,25 +23,26 @@ class LerpTemplate extends Template {
       ..writeln(
           '@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
       ..writeln('if (other is! $className) return this as $className;')
-      ..writeln('return $className(');
-
-    for (final prop in fields) {
-      if (prop.isThemeExtension) {
-        buffer.writeln(_extensionLerp(prop.name, prop.type, prop.isNullable));
-      } else {
-        buffer.writeln(_encoderLerp(prop.name, prop.type));
-      }
-    }
-
-    buffer.writeln(');}');
+      ..writeln('return ')
+      ..writeln(ClassInstanceTemplate(
+        constructorName: constructorData?.constructorName ?? className,
+        fieldNameToParamType: constructorData?.parameterNameToType,
+        fieldNameToValue: fields.map((e) => MapEntry(
+              e.name,
+              e.isThemeExtension
+                  ? _themeExtensionLerp(e.name, e.type, e.isNullable)
+                  : _typeOrEncoderLerp(e.name, e.type),
+            )),
+      ))
+      ..writeln(';}');
   }
 
-  String _extensionLerp(String name, String type, bool isNullable) {
-    return "$name: $name${isNullable ? '?' : ''}.lerp(other.$name, t) as $type,";
+  String _themeExtensionLerp(String name, String type, bool isNullable) {
+    return "$name${isNullable ? '?' : ''}.lerp(other.$name, t) as $type";
   }
 
-  String _encoderLerp(String name, String type) {
+  String _typeOrEncoderLerp(String name, String type) {
     final encoder = encoderManager.encoderFromField(name, type);
-    return "$name: ${encoder.callLerp(name, 'other.$name', 't')},";
+    return encoder.callLerp(name, 'other.$name', 't');
   }
 }

@@ -119,6 +119,28 @@ flutter run build_runner build --delete-conflicting-outputs
 
 ## Create Theme class
 
+### @TailorMixin:
+Annotate your class with `@TailorMixin()` and mix it with generated mixin, generated mixin name starts with _$ following your class name and ending with "TailorMixin" suffix.
+
+Example
+###### my_theme.dart
+```dart
+import 'package:flutter/material.dart';
+import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+
+part 'my_theme.tailor.dart';
+
+@TailorMixin()
+class MyTheme extends ThemeExntension<MyTheme> with _$MyThemeTailorMixin {
+  /// You can use required / named / optional parameters in the constructor
+  // const MyTheme(this.background);
+  // const MyTheme([this.background = Colors.blue])
+  const MyTheme({required this.background});
+  final Color background;
+}
+```
+---
+
 ### @Tailor:
 ThemeTailor will generate ThemeExtension class based on the configuration class you are required to annotate with [theme_tailor_annotation]. Please make sure to name class and theme properties appropriately according to the following rules:
 - class name starts with `_$` or `$_` (Recommendation is to use the former, as it ensures that the configuration class is private). If the class name does not contain the required prefix, then the generated class name will append an additional suffix,
@@ -140,38 +162,21 @@ class _$MyTheme {
 
 The following code snippet defines the "MyTheme" theme extension class.
 - "MyTheme" extends `ThemeExtension<MyTheme>`
-- defined class is immutable with final fields with const constructor
-- there is one field "background" of type Color
-- "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
-- "copyWith" method is created (override of ThemeExtension) with a nullable argument "background" of type "Color"
-- "lerp" method is created (override of ThemeExtension) with the default lerping method for the "Color" type.
-- "hashCode" method && "==" operator are created
+- The class is immutable with final fields with const constructor
+- There is one field "background" of type Color
+- There are "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
+- Implements "copyWith" from ThemeExtension, with a nullable argument "background" of type "Color"
+- Implements "lerp" from ThemeExtension, with the default lerping method for the "Color" type
+- Overrites "hashCode" and "==" operator
 
-Additionally [theme_tailor_annotation] by default generates extension on BuildContext
+Additionally [theme_tailor_annotation] by default generates extension on BuildContext (to change that set themeGetter to ThemeGetter.none or use `@TailorComponent` annotation)
 - "MyThemeBuildContextProps" extension on "BuildContext" is generated
 - getter on "background" of type "Color" is added directly to "BuildContext"
 
----
-### @TailorMixin():
-Annotate your class with `@TailorMixin()` and mix it with generated mixin, generated mixin name starts with _$ following your class name and ending with "TailorMixin" suffix.
 
-Example
-###### my_theme.dart
-```dart
-import 'package:flutter/material.dart';
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-part 'my_theme.tailor.dart';
-
-@TailorMixin()
-class MyTheme extends ThemeExntension<MyTheme> with _$MyThemeTailorMixin {
-  const MyTheme({required this.background});
-  final Color background;
-}
-```
 
 ## Change themes' quantity and names
-*This is only supported by `@Tailor` and `@TailorComponent`*
+*`@Tailor` / `@TailorComponent` only*
 
 By default,  "@tailor" will generate two themes: "light" and "dark";
 To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
@@ -183,7 +188,7 @@ class _$MyTheme {}
 ```
 
 ## Access generated themes list
-*This is only supported by `@Tailor` and `@TailorComponent`*
+*`@Tailor` / `@TailorComponent` only*
 
 The generator will create a static getter with a list of the generated themes:
 
@@ -226,7 +231,7 @@ Use "@tailor" / "@Tailor" or "@tailorMixin" / "@TailorMixin" annotations if you 
 
 Use "@tailorComponent"/ "@TailorComponent" or "@tailorMixinComponent" / "@TailorMixinComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
 
-Example for @Tailor annotation:
+### Example for @Tailor annotation:
 ```dart
 /// Use generated "ChatComponentsTheme" in ThemeData
 @tailor
@@ -279,29 +284,6 @@ class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
 }
 ```
 
-Example for @TailorMixin annotation:
-```dart
-@tailorMixin
-class ChatComponentsTheme extends ThemeExtension<ChatComponentsTheme> with _$ChatComponentsTheme {
-  /// TODO: Impl constructor
-
-  final MsgBubble msgBubble;
-  final MsgList msgList;
-  final NotGeneratedExtension notGeneratedExtension;
-}
-
-@tailorMixinComponent
-class MsgBubble extends ThemeExtension<MsgBubble> with _$MsgBubble {
-  /// TODO: Impl constructor
-
-  final Bubble myBubble;
-  final Bubble friendsBubble;
-}
-
-/// The rest of the classes as in the previous example but following @TailorMixin pattern
-/// [...]
-```
-
 
 *Good and bad practices for modular or nested themes when using `@Tailor`:*
 ```dart
@@ -309,7 +291,6 @@ class MsgBubble extends ThemeExtension<MsgBubble> with _$MsgBubble {
 @tailorComponent
 class _$AppBarTheme {
   static List<Color> foreground = [Colors.white, Colors.white];
-  static List<Color> background = [Colors.blue, Colors.black];
 }
 
 @tailor
@@ -329,10 +310,35 @@ class _$MyTheme {
 } 
 ```
 
+### Example for @TailorMixin annotation:
+```dart
+@tailorMixin
+class ChatComponentsTheme extends ThemeExtension<ChatComponentsTheme> with _$ChatComponentsTheme {
+  /// TODO: Implement constructor
+
+  final MsgBubble msgBubble;
+  final MsgList msgList;
+  final NotGeneratedExtension notGeneratedExtension;
+}
+
+@tailorMixinComponent
+class MsgBubble extends ThemeExtension<MsgBubble> with _$MsgBubble {
+  /// TODO: Implement constructor
+
+  final Bubble myBubble;
+  final Bubble friendsBubble;
+}
+
+/// The rest of the classes as in the previous example but following @TailorMixin pattern
+/// [...]
+```
+
+
+
 To see an example implementation of a nested theme, head out to [example: nested_themes][example:nested_themes]
 
 ## Generate constant themes
-*This is only supported by `@Tailor` and `@TailorComponent` (`@TailorMixin` does not have any limitations regarding creation of constant themes)* 
+*`@Tailor` and `@TailorComponent` only, `@TailorMixin` does not have any limitations regarding creation of constant themes* 
 
 If the following conditions are met, constant themes will be generated:
 
@@ -357,7 +363,7 @@ It is possible to force generate constant themes using `Tailor(requireStaticCons
 In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
 
 ## Hot reload support
-*This is only supported by `@Tailor` and `@TailorComponent` (`@TailorMixin` does not have any limitations regarding hot-reload)* 
+*`@Tailor` and `@TailorComponent` only, `@TailorMixin` does not have any limitations regarding hot-reload* 
 
 To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` and `@TailorComponent` annotations. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
 
@@ -491,7 +497,7 @@ For `@TailorMixin()` you also need to mix your class with `DiagnosticableTreeMix
 @TailorMixin()
 class MyTheme extends ThemeExtension<MyTheme>
     with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
-  /// impl
+  /// Todo: implement the class
 }
 ```
 
@@ -521,7 +527,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 ```
 
 ## Ignore fields
-*This is only supported by `@Tailor` and `@TailorComponent`*
+*`@Tailor` and `@TailorComponent` only*
 
 Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.
 ```dart
