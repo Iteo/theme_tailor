@@ -1,3 +1,4 @@
+# melos_managed_dependency_overrides: theme_tailor_toolbox
 dependency_overrides:
   theme_tailor_annotation:
     path: ../../theme_tailor_annotation
@@ -6,4 +7,6 @@ dependency_overrides:
     path: ../../theme_tailor
 
   analyzer: ^5.2.0
+  theme_tailor_toolbox:
+    path: ..
   
