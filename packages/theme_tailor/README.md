@@ -15,7 +15,7 @@
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
-[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/develop/resources/after_tailor_mixin.png
+[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/raw/main/resources/after_tailor_mixin.png
 
 <!-- 
 This README describes the package. If you publish this package to pub.dev,

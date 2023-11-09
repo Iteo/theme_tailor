@@ -2,14 +2,15 @@ name: theme_tailor_annotation
 description: >
   Annotations for the Theme Tailor code-generator.
   This package does nothing without Theme Tailor.
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/Iteo/theme_tailor
 issue_tracker: https://github.com/Iteo/theme_tailor/issues
 homepage: https://github.com/Iteo/theme_tailor
 documentation: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/README.md
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   collection: ^1.15.0

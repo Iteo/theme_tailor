@@ -1,9 +1,0 @@
-dependency_overrides:
-  theme_tailor_annotation:
-    path: ../../theme_tailor_annotation
-
-  theme_tailor:
-    path: ../../theme_tailor
-
-  analyzer: ^5.2.0
-  

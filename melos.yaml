@@ -7,7 +7,7 @@ scripts:
     run: melos run get_dart && melos run get_flutter
 
   get_dart:
-    run: melos exec --no-flutter dart pub get
+    run: melos exec --no-flutter flutter pub get
 
   get_flutter:
     run: melos exec --flutter flutter pub get

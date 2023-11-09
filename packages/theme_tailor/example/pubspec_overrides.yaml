@@ -1,8 +1,0 @@
-dependency_overrides:
-  theme_tailor_annotation:
-    path: ../../theme_tailor_annotation
-
-  theme_tailor:
-    path: ../
-    
-  test_api: ^0.4.18

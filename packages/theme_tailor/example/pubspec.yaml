@@ -4,16 +4,16 @@ version: 0.0.1
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
-  analyzer: ^5.7.1
   collection: ^1.16.0
   flutter:
     sdk: flutter
-
   json_annotation: ^4.7.0
-  theme_tailor_annotation: ^1.2.0
+  theme_tailor_annotation:
+    path: ../../theme_tailor_annotation
 
 dev_dependencies:
   flutter_test:
@@ -21,6 +21,12 @@ dev_dependencies:
   build_runner: ^2.1.11
   json_serializable: ^6.3.2
   theme_tailor: ^1.2.0
+
+dependency_overrides:
+  theme_tailor:
+    path: ../
+  theme_tailor_annotation:
+    path: ../../theme_tailor_annotation
 
 flutter:
   uses-material-design: true
