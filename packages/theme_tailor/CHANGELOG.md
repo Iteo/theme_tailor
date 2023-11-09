@@ -2,6 +2,7 @@
 - Support analyzer version from 5.13.0 to ^6.0.0 (thanks @Maatteogekko)
 - Bump sdk version
 - Fix image links
+- Update documentation
 
 # 2.0.0
 - Add additional way to generate ThemeExtension classes with `@TailorMixin` / `@TailorMixinComponent` annotation

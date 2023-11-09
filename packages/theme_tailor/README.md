@@ -60,7 +60,7 @@ Flutter 3.0 introduces a new way of theming applications using theme extensions 
 
 All of that involves extra coding work that is time-consuming and error-prone, which is why it is advisable to use a generator.
 
-| No code generation      | @TailorMixin                     | @Tailor             |
+| No code generation      | @TailorMixin (Recommended)       | @Tailor             |
 | ----------------------- | -------------------------------- | ------------------- |
 | ![before][img_before]   | ![after][img_after_tailor_mixin] | ![after][img_after] |
 
