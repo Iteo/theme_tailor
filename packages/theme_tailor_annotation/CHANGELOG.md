@@ -1,3 +1,6 @@
+# 2.0.1
+- Bump sdk version
+
 # 2.0.0
 - Add `@TailorMixin` annotation
 - Add `@TailorMixinComponent` annotation

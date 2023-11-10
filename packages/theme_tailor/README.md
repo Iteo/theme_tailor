@@ -15,7 +15,7 @@
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
-[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/develop/resources/after_tailor_mixin.png
+[img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/raw/main/resources/after_tailor_mixin.png
 
 <!-- 
 This README describes the package. If you publish this package to pub.dev,
@@ -60,7 +60,7 @@ Flutter 3.0 introduces a new way of theming applications using theme extensions 
 
 All of that involves extra coding work that is time-consuming and error-prone, which is why it is advisable to use a generator.
 
-| No code generation      | @TailorMixin                     | @Tailor             |
+| No code generation      | @TailorMixin (Recommended)       | @Tailor             |
 | ----------------------- | -------------------------------- | ------------------- |
 | ![before][img_before]   | ![after][img_after_tailor_mixin] | ![after][img_after] |
 

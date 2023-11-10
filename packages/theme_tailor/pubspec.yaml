@@ -3,17 +3,18 @@ description: >
   Code generator for Flutter's 3.0 ThemeExtension classes. 
   The generator can create themes and extensions on BuildContext 
   or ThemeData based on the lists of the theme properties
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/Iteo/theme_tailor
 issue_tracker: https://github.com/Iteo/theme_tailor/issues
 homepage: https://github.com/Iteo/theme_tailor
 documentation: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/README.md
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: ">=2.17.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
-  analyzer: ^5.2.0
+  analyzer: ">=5.13.0 <7.0.0"
   build_config: ^1.1.0
   build: ^2.3.1
   collection: ^1.15.0

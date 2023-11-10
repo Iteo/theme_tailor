@@ -6,14 +6,15 @@ publish_to: "none"
 version: 0.0.1
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
+  sdk: ">=2.18.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   benchmark_harness: ^2.1.0
   flutter:
     sdk: flutter
 
-  theme_tailor_annotation: ^1.0.3
+  theme_tailor_annotation: ^2.0.0
   theme_tailor_toolbox:
     path: ../.
 
@@ -23,6 +24,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   theme_tailor: ^1.0.3
+
+dependency_overrides:
+  theme_tailor_annotation:
+    path: ../../theme_tailor_annotation
+
+  theme_tailor:
+    path: ../../theme_tailor
 
 flutter:
   uses-material-design: true
