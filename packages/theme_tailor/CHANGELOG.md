@@ -1,3 +1,6 @@
+# 2.0.2
+- Fix dependencies (Remove pubdev unknown platforms error)
+
 # 2.0.1
 - Support analyzer version from 5.13.0 to ^6.0.0 (thanks @Maatteogekko)
 - Bump sdk version
