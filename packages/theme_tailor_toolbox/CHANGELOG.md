@@ -1,3 +1,6 @@
+# 1.0.2
+- Fix dependencies (Remove pubdev unknown platforms error)
+
 # 1.0.1
 - Bump sdk version
 
