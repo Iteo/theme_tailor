@@ -1,0 +1,48 @@
+name: Feature Request Report
+description: File a feature request report
+title: "[Feature]: "
+labels: []
+projects: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for taking the time to fill out this feature request report!
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: Problem
+      description: "A clear and concise description of what the problem is."
+      placeholder: "I was trying to..."
+    validations:
+      required: true
+  - type: textarea
+    id: desired_solution
+    attributes:
+      label: Desired Solution
+      description: "A clear and concise description of what you want to happen."
+      placeholder: "I want to be able to..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives_considered
+    attributes:
+      label: Alternatives Considered
+      description: "A clear and concise description of any alternative possible approaches."
+      placeholder: "I tried..."
+  - type: dropdown
+    id: platform
+    attributes:
+      label: On which platorm do you expect this solution?
+      multiple: true
+      options:
+        - iOS
+        - Android
+        - Web
+        - Windows
+        - macOS
+        - Linux
+        - All
+    validations:
+      required: true
