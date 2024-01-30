@@ -41,7 +41,7 @@ body:
     attributes:
       label: Dart version
       description: What version of dart are you using?
-      placeholder: ">=3.1.0 <4.0.0"
+      placeholder: "2.19.0, 3.0.0, 3.1.0, etc."
     validations:
       required: true
   - type: dropdown
