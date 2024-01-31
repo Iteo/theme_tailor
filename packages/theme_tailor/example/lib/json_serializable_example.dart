@@ -1,3 +1,5 @@
+// ignore_for_file: annotate_overrides
+
 import 'package:example/encoder_example.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -16,33 +18,25 @@ class JsonColorConverter implements JsonConverter<Color, int> {
   int toJson(Color color) => color.value;
 }
 
-@tailor
+@tailorMixin
 @JsonSerializable(explicitToJson: true)
 @CustomColorEncoder()
 @JsonColorConverter()
-class _$SerializableTheme {
-  @JsonKey(name: 'foo_number')
-  static List<int> fooNumber = [10, 20];
+class SerializableTheme extends ThemeExtension<SerializableTheme>
+    with _$SerializableThemeTailorMixin {
+  SerializableTheme({
+    required this.fooNumber,
+    this.barColor = Colors.black,
+  });
+
+  factory SerializableTheme.fromJson(Map<String, dynamic> json) =>
+      _$SerializableThemeFromJson(json);
+
+  @JsonKey(name: 'foo_number', defaultValue: 10)
+  final int fooNumber;
 
   @JsonKey(name: 'bar_color')
-  static List<Color> barColor = [Colors.orange, Colors.pink];
+  final Color barColor;
 
-  @themeExtension
-  static List<NestedSerializableTheme> nested = NestedSerializableTheme.themes;
-}
-
-extension SerializableThemeExt on SerializableTheme {
   Map<String, dynamic> toJson() => _$SerializableThemeToJson(this);
-}
-
-@tailorComponent
-@JsonSerializable()
-@JsonColorConverter()
-@CustomColorEncoder()
-class _$NestedSerializableTheme {
-  static List<Color> nestedBar = [Colors.orange, Colors.pink];
-}
-
-extension NestedSerializableThemeExt on NestedSerializableTheme {
-  Map<String, dynamic> toJson() => _$NestedSerializableThemeToJson(this);
 }

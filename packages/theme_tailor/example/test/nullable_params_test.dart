@@ -6,8 +6,8 @@ void main() {
   test(
     'Nullable params are not required',
     () {
-      const NullableParams(
-        anotherProperty: Colors.green,
+      NullableParams(
+        background: Colors.green,
       );
     },
   );

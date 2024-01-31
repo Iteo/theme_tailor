@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:source_gen_test/source_gen_test.dart';
 import 'package:theme_tailor/src/generator/tailor_mixin_generator.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';

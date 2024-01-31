@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
@@ -77,6 +79,16 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         'generateStaticGetters',
         decode: (o) => o.boolValue,
         orElse: () => buildYamlConfig.generateStaticGetters ?? false,
+      ),
+      themeClassName: annotation.getFieldOrElse(
+        'themeClassName',
+        decode: (o) => o.stringValue,
+        orElse: () => buildYamlConfig.themeClassName ?? 'Theme',
+      ),
+      themeDataClassName: annotation.getFieldOrElse(
+        'themeDataClassName',
+        decode: (o) => o.stringValue,
+        orElse: () => buildYamlConfig.themeDataClassName,
       ),
       encoders: _typeToThemeEncoderDataFromAnnotation(annotation),
     );
@@ -200,6 +212,8 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
         tailorClassVisitor.fieldLevelEncoders,
       ),
       themeGetter: annotationData.themeGetter.extensionData,
+      themeClassName: annotationData.themeClassName,
+      themeDataClassName: annotationData.themeDataClassName,
       annotationManager: AnnotationDataManager(
         classAnnotations: classLevelAnnotations,
         fieldsAnotations: fieldLevelAnnotations,
@@ -218,6 +232,8 @@ class TailorGenerator extends GeneratorForAnnotatedClass<ImportsData,
       data.className,
       data.themeGetter,
       data.fields.values.toList(),
+      data.themeClassName,
+      data.themeDataClassName,
     ));
 
   Map<String, ThemeEncoderData> _typeToThemeEncoderDataFromAnnotation(

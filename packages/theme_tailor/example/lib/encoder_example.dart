@@ -1,4 +1,5 @@
-import 'package:example/app_colors.dart';
+// ignore_for_file: annotate_overrides
+
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
@@ -29,62 +30,81 @@ class CustomColorEncoder extends ThemeEncoder<Color> {
 
 /// Use @Tailor annotation to declare custom themes or different
 /// quantity of themes than the default 2 (light and dark)
-@Tailor(themes: ['superLight', 'amoledDark'])
-class $_Theme1 {
+@TailorMixin()
+class Theme1 extends ThemeExtension<Theme1> with _$Theme1TailorMixin {
+  Theme1({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
+
   @CustomColorEncoder()
-  static List<Color> background = [AppColors.white, AppColors.black];
-  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
+  final Color background;
+  final Color iconColor;
 
   @TextStyleEncoder()
-  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
+  final TextStyle h1;
 
   @TextStyleNullableEncoder()
-  static List<TextStyle?> h2 = const [TextStyle(), TextStyle()];
+  final TextStyle? h2;
 }
 
-const customColorEncoder = CustomColorEncoder();
-const textStyleEncoder = TextStyleEncoder();
-const textStyleNullableEncoder = TextStyleNullableEncoder();
-
-@Tailor(themes: ['superLight', 'amoledDark'])
-class $_Theme2 {
-  @customColorEncoder
-  static List<Color> background = [AppColors.white, AppColors.black];
-  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
-
-  @textStyleEncoder
-  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
-
-  @textStyleNullableEncoder
-  static List<TextStyle?> h2 = const [TextStyle(), TextStyle()];
-}
-
-@Tailor(
-  themes: ['superLight', 'amoledDark'],
+@TailorMixin(
   encoders: [
     CustomColorEncoder(),
     TextStyleEncoder(),
     TextStyleNullableEncoder(),
   ],
 )
-class $_Theme3 {
-  static List<Color> background = [AppColors.white, AppColors.black];
-  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
+class Theme2 extends ThemeExtension<Theme2> with _$Theme2TailorMixin {
+  Theme2({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
 
-  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
-  static List<TextStyle?> h2 = const [TextStyle(), TextStyle()];
+  final Color background;
+  final Color iconColor;
+  final TextStyle h1;
+  final TextStyle? h2;
 }
 
-const tailorWithEncoders = Tailor(
-  themes: ['superLight', 'amoledDark'],
-  encoders: [customColorEncoder, textStyleEncoder, textStyleNullableEncoder],
-);
+@TailorMixin()
+@CustomColorEncoder()
+@TextStyleEncoder()
+@TextStyleNullableEncoder()
+class Theme3 extends ThemeExtension<Theme3> with _$Theme3TailorMixin {
+  Theme3({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
 
-@tailorWithEncoders
-class $_Theme4 {
-  static List<Color> background = [AppColors.white, AppColors.black];
-  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
+  final Color background;
+  final Color iconColor;
+  final TextStyle h1;
+  final TextStyle? h2;
+}
 
-  static List<TextStyle> h1 = const [TextStyle(), TextStyle()];
-  static List<TextStyle?> h2 = const [TextStyle(), TextStyle()];
+const appTailorMixin = TailorMixin(themeGetter: ThemeGetter.onBuildContext);
+
+@appTailorMixin
+@CustomColorEncoder()
+@TextStyleEncoder()
+@TextStyleNullableEncoder()
+class Theme4 extends ThemeExtension<Theme4> with _$Theme4TailorMixin {
+  Theme4({
+    required this.background,
+    required this.iconColor,
+    required this.h1,
+    required this.h2,
+  });
+
+  final Color background;
+  final Color iconColor;
+  final TextStyle h1;
+  final TextStyle? h2;
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:meta/meta_meta.dart';
 import 'package:theme_tailor_annotation/src/theme_tailor.dart';
 
@@ -13,9 +15,12 @@ const tailorMixin = TailorMixin();
 /// {@macro theme_tailor.tailor_mixin}
 class TailorMixin extends Tailor {
   /// {@macro theme_tailor.tailor_mixin}
-  const TailorMixin({super.themeGetter})
-      : super(
-          encoders: const [],
+  const TailorMixin({
+    super.encoders,
+    super.themeGetter,
+    super.themeClassName,
+    super.themeDataClassName,
+  }) : super(
           generateStaticGetters: false,
           requireStaticConst: false,
           themes: const [],

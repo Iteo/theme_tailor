@@ -1,35 +1,54 @@
+// ignore_for_file: annotate_overrides
+
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'typedef_example.tailor.dart';
 
-typedef AnotherThemeList = List<AnotherTheme>;
-typedef AnotherNullableThemeList = List<AnotherTheme?>;
-typedef OtherThemeList = List<OtherThemeExtension>;
-typedef ListOfColors = List<Color>;
+typedef AnotherThemeType = List<AnotherTheme>;
+typedef AnotherNullableThemeType = List<AnotherTheme?>;
+typedef OtherThemeListType = List<OtherThemeExtension>;
+typedef ListOfColorsType = List<Color>;
 
-@tailor
-class $_SimpleTheme {
+@tailorMixin
+class SimpleTheme extends ThemeExtension<SimpleTheme>
+    with _$SimpleThemeTailorMixin {
   @themeExtension
-  static AnotherThemeList anotherTheme = AnotherTheme.themes;
+  static AnotherThemeType anotherTheme = [
+    AnotherTheme(
+      appBarColor: Colors.white,
+      floatingActionButtonColor: [
+        Colors.white,
+        Colors.green,
+      ],
+    ),
+  ];
 
-  static OtherThemeList otherThemeList = [
+  static OtherThemeListType otherThemeList = [
     OtherThemeExtension(),
     OtherThemeExtension(),
   ];
 
   @themeExtension
-  static AnotherNullableThemeList anotherNullable = AnotherTheme.themes;
+  static AnotherNullableThemeType anotherNullable = [
+    null,
+    null,
+  ];
 }
 
-@tailor
-class $_AnotherTheme {
-  static List<Color> appBarColor = [Colors.amber, Colors.blueGrey.shade800];
+@tailorMixin
+class AnotherTheme extends ThemeExtension<AnotherTheme>
+    with _$AnotherThemeTailorMixin {
+  AnotherTheme({
+    required this.appBarColor,
+    required this.floatingActionButtonColor,
+  });
 
-  static ListOfColors floatingActionButtonColor = [Colors.white, Colors.green];
+  final Color appBarColor;
+  final ListOfColorsType floatingActionButtonColor;
 }
 
-@tailorComponent
+@tailorMixinComponent
 class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {
   OtherThemeExtension({
     this.floatingActionButtonColor = Colors.white,

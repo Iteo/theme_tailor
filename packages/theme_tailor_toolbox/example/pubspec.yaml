@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  theme_tailor_annotation: ^2.0.0
+  theme_tailor_annotation: ^2.0.2
   theme_tailor_toolbox:
     path: ../.
 

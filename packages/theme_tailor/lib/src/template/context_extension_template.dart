@@ -10,11 +10,17 @@ class ContextExtensionTemplate extends Template {
     this.className,
     this.extensionData,
     this.fields,
+    this.themeClassName,
+    this.themeDataClassName,
   );
 
   final String className;
+  final String themeClassName;
+  final String? themeDataClassName;
   final ExtensionData extensionData;
   final List<Field> fields;
+
+  String get extensionTarget => themeDataClassName ?? extensionData.target.name;
 
   @override
   void write(StringBuffer buffer) {
@@ -22,16 +28,21 @@ class ContextExtensionTemplate extends Template {
 
     if (!extensionData.shouldGenerate) return;
 
-    final themeAccessor = fmt.typeAsVariableName(className, 'Theme').also(
-        (it) => extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
+    final themeAccessor = fmt
+        .typeAsVariableName(className, themeClassName)
+        .also((it) =>
+            extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
 
     buffer
       ..writeln('extension $className${extensionData.shortName}')
-      ..write(' on ${extensionData.target.name} {')
+      ..write(' on $extensionTarget {')
       ..write(GetterTemplate(
         type: className,
         name: themeAccessor,
-        accessor: extensionData.target.themeExtensionAccessor(className),
+        accessor: extensionData.target.themeExtensionAccessor(
+          type: className,
+          themeClassName: themeClassName,
+        ),
       ));
 
     if (extensionData.hasGeneratedProps) {

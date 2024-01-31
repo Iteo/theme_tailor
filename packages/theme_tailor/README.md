@@ -11,10 +11,11 @@
 [example:theme_encoders]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/json_serializable_example.dart
 [example:nested_themes]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/theme_extension_in_field.dart
 [example:debug_fill_properties]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/diagnosticable.dart
+[example:custom_theme_getter]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/custom_theme_getter.dart
+[example:migration_from_tailor_to_tailor_mixin]: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/example/lib/migration_from_tailor_to_tailor_mixin.dart
 
 <!-- IMAGES -->
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
-[img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
 [img_after_tailor_mixin]: https://github.com/Iteo/theme_tailor/raw/main/resources/after_tailor_mixin.png
 
 <!-- 
@@ -43,31 +44,25 @@ Welcome to Theme Tailor, a code generator and theming utility for supercharging 
     - [Add imports and part directive](#add-imports-and-part-directive)
     - [Run the code generator](#run-the-code-generator)
     - [Create Theme class](#create-theme-class)
-    - [Change themes' quantity and names](#change-themes-quantity-and-names)
-    - [Access generated themes list](#access-generated-themes-list)
     - [Change generated extensions](#change-generated-extensions)
     - [Nesting generated theme extensions, modular themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
-    - [Generate constant themes](#generate-constant-themes)
-    - [Hot reload support](#hot-reload-support)
     - [Custom types encoding](#custom-types-encoding)
     - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
     - [Json serialization](#json-serialization)
-    - [Ignore fields](#ignore-fields)
     - [Build configuration](#build-configuration)
+    - [Custom theme getter](#custom-theme-getter)
+    - [Migration from Tailor to TailorMixin](#migration-from-tailor-to-tailormixin)
 
 # Motivation
 Flutter 3.0 introduces a new way of theming applications using theme extensions in ThemeData. To declare a theme extension, you need to create a class that extends ThemeData, define its constructor and fields, implement the "copyWith" and "lerp" methods, and optionally override the "hashCode," "==" operator, and implement the "debugFillProperties" method. Additionally you may want to create extensions on BuildContext or ThemeData to access newly created themes. 
 
 All of that involves extra coding work that is time-consuming and error-prone, which is why it is advisable to use a generator.
 
-| No code generation      | @TailorMixin (Recommended)       | @Tailor             |
-| ----------------------- | -------------------------------- | ------------------- |
-| ![before][img_before]   | ![after][img_after_tailor_mixin] | ![after][img_after] |
+| No code generation    | @TailorMixin                     |
+|-----------------------|----------------------------------|
+| ![before][img_before] | ![after][img_after_tailor_mixin] |
 
-Currently the package supports 2 types of the generator:
-- The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. While it requires more boilerplate code than the @Tailor annotation, it offers a more familiar syntax for vanilla ThemeExtension classes and provides greater customization of the created class. This option is recommended for those who prefer a more hands-on approach to their code and require a greater degree of flexibility in their implementation.
-
-- The `@Tailor` annotation generates a ThemeExtension class based on the annotated template class and automatically creates instances of the associated themes. This eliminates the need for manual theme creation and consolidates the theme values and their definitions in a single location. However, refactoring properties names of the generated class may prove difficult, and ensuring hot-reloadability of themes may require static const definitions for all properties. Additionally, some lint warnings may need to be ignored since the template class may not be utilized.
+The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. It adopts a syntax familiar to standard ThemeExtension classes, allowing for enhanced customization of the resulting class.
 
 *It's worth noting that choosing either the `@Tailor` or `@TailorMixin` generator doesn't restrict you from using the other in the future.
 In fact, the two generators can be used together to provide even more flexibility in managing your themes. Ultimately, both generators offer strong solutions for managing themes and can be used interchangeably to provide the level of customization that best suits your project.*
@@ -120,7 +115,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'my_theme.tailor.dart';
 
 @TailorMixin()
-class MyTheme extends ThemeExntension<MyTheme> with _$MyThemeTailorMixin {
+class MyTheme extends ThemeExtension<MyTheme> with _$MyThemeTailorMixin {
   /// You can use required / named / optional parameters in the constructor
   // const MyTheme(this.background);
   // const MyTheme([this.background = Colors.blue])
@@ -128,71 +123,22 @@ class MyTheme extends ThemeExntension<MyTheme> with _$MyThemeTailorMixin {
   final Color background;
 }
 ```
----
 
-### @Tailor:
-ThemeTailor will generate ThemeExtension class based on the configuration class you are required to annotate with [theme_tailor_annotation]. Please make sure to name class and theme properties appropriately according to the following rules:
-- class name starts with `_$` or `$_` (Recommendation is to use the former, as it ensures that the configuration class is private). If the class name does not contain the required prefix, then the generated class name will append an additional suffix,
-- class contains static `List<T>` fields (e.g. `static List<Color> surface = []`). If no fields exist in the config class, the generator will create an empty ThemeExtension class.
-
-Example
-###### my_theme.dart
-```dart
-import 'package:flutter/material.dart';
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-
-part 'my_theme.tailor.dart';
-
-@tailor
-class _$MyTheme {
-  static List<Color> background = [Colors.white, Colors.black];
-}
-```
-
-The following code snippet defines the "MyTheme" theme extension class.
-- "MyTheme" extends `ThemeExtension<MyTheme>`
-- The class is immutable with final fields with const constructor
-- There is one field "background" of type Color
-- There are "light" and  "dark" static fields matching the default theme names supplied by [theme_tailor_annotation]
+The following code snippet defines the "_$MyThemeTailorMixin" theme extension mixin.
+- mixin "_$MyThemeTailorMixin" on `ThemeExtension<MyTheme>`
+- There is getter "background" field of Color type
 - Implements "copyWith" from ThemeExtension, with a nullable argument "background" of type "Color"
 - Implements "lerp" from ThemeExtension, with the default lerping method for the "Color" type
 - Overrites "hashCode" and "==" operator
 
-Additionally [theme_tailor_annotation] by default generates extension on BuildContext (to change that set themeGetter to ThemeGetter.none or use `@TailorComponent` annotation)
-- "MyThemeBuildContextProps" extension on "BuildContext" is generated
-- getter on "background" of type "Color" is added directly to "BuildContext"
-
-
-
-## Change themes' quantity and names
-*`@Tailor` / `@TailorComponent` only*
-
-By default,  "@tailor" will generate two themes: "light" and "dark";
-To control the names and quantity of the themes, edit the "themes" property on the "@Tailor" annotation.\
-You can also change theme names globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info
-
-```dart
-@Tailor(themes: ['baseTheme'])
-class _$MyTheme {}
-```
-
-## Access generated themes list
-*`@Tailor` / `@TailorComponent` only*
-
-The generator will create a static getter with a list of the generated themes:
-
-``` dart
-final allThemes = MyTailorGeneratedTheme.themes;
-```
-
-If the `themes` property is already used in the Tailor class, the generator will use another name and print a warning.
+Additionally [theme_tailor_annotation] by default generates extension on ThemeData (to change that set themeGetter to ThemeGetter.none or use `@TailorMixinComponent` annotation)
+- "MyThemeThemeDataProps" extension on "ThemeData" is generated
+- getter on "background" of type "Color" is added directly to "ThemeData"
 
 ## Change generated extensions
-By default, "@tailor" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@Tailor" or using the "@TailorComponent" annotation.
+By default, "@tailorMixin" will generate an extension on "ThemeData" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@TailorMixin" or using the "@TailorMixinComponent" annotation.
 
 ```dart
-@Tailor(themeGetter: ThemeGetter.none)
-@TailorComponent() // This automatically sets ThemeGetter.none
 @TailorMixin(themeGetter: ThemeGetter.none)
 @TailorMixinComponent() // This automatically sets ThemeGetter.none
 ```
@@ -216,88 +162,9 @@ ThemeDataExtensions:
     - MsgList: [foo, bar, baz]
 ```
 
-Use "@tailor" / "@Tailor" or "@tailorMixin" / "@TailorMixin" annotations if you may need additional extensions on ThemeData or ThemeContext.
+Use "@tailorMixin" / "@TailorMixin" annotations if you may need additional extensions on ThemeData or ThemeContext.
 
-Use "@tailorComponent"/ "@TailorComponent" or "@tailorMixinComponent" / "@TailorMixinComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
-
-### Example for @Tailor annotation:
-```dart
-/// Use generated "ChatComponentsTheme" in ThemeData
-@tailor
-class _$ChatComponentsTheme {
-  @themeExtension
-  static List<MsgBubble> msgBubble = MsgBubble.themes;
-
-  @themeExtension
-  static List<MsgList> msgList = MsgList.themes;
-
-  /// "NotGeneratedExtension" is a theme extension that is not created using the code generator. It is not necessary to mark it with "@themeExtension" annotation
-  static List<NotGeneratedExtension> notGeneratedExtension = [/*custom themes*/];
-}
-
-@tailorComponent
-class _$MsgBubble {
-  // Keep in mind that Bubble type used here may be another Tailor component, and its generated themes can be selectively 
-  // assigned to proper fields. (By default tailor will generate two themes: "light" and "dark")
-
-  /// Let's say that my message bubble in 
-  /// light mode is darkBlue
-  /// dark mode is lightBlue
-  @themeExtension
-  static List<Bubble> myBubble = [Bubble.darkBlue, Bubble.lightBlue];
-
-  /// Lets say that my message bubble in 
-  /// light mode is darkOrange
-  /// dark mode is lightOrange
-  @themeExtension
-  static List<Bubble> friendsBubble = [Bubble.darkOrange, Bubble.lightOrange];
-}
-
-@TailorComponent(themes: ['darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'])
-class _$Bubble {
-  static List<Color> background = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/];
-  static List<Color> textStyle = [/*Corresponding 'default' values for 'darkBlue', 'lightBlue', 'darkOrange', 'lightOrange'*/];
-}
-
-/// You can also nest classes marked with @tailor (not recommended)
-@tailor
-class _$MsgList {
-  /// implementation
-  /// foo
-  /// bar 
-  /// baz
-}
-
-class NotGeneratedExtension extends ThemeExtension<NotGeneratedExtension> {
-  /// implementation
-}
-```
-
-
-*Good and bad practices for modular or nested themes when using `@Tailor`:*
-```dart
-/// Good:
-@tailorComponent
-class _$AppBarTheme {
-  static List<Color> foreground = [Colors.white, Colors.white];
-}
-
-@tailor
-class _$MyTheme {
-  @themeExtension
-  static List<AppBarTheme> appBarTheme = [AppBarTheme.light, AppBarTheme.dark];
-}
-
-/// Bad:
-@tailor
-class _$MyTheme {
-  // This will not be animated and generated theme may result in List<dynamic> property instead of expected List<Color>
-  static List<List<Color>> appBarTheme = [
-    [Colors.white, Colors.blue],
-    [Colors.white, Colors.black]
-  ];
-} 
-```
+Use "@tailorMixinComponent" / "@TailorMixinComponent" if you intend to nest the theme extension class and do not need additional extensions. Use this annotation for generated themes to allow the generator to recognize the type correctly. 
 
 ### Example for @TailorMixin annotation:
 ```dart
@@ -322,85 +189,7 @@ class MsgBubble extends ThemeExtension<MsgBubble> with _$MsgBubble {
 /// [...]
 ```
 
-
-
 To see an example implementation of a nested theme, head out to [example: nested_themes][example:nested_themes]
-
-## Generate constant themes
-*`@Tailor` and `@TailorComponent` only, `@TailorMixin` does not have any limitations regarding creation of constant themes* 
-
-If the following conditions are met, constant themes will be generated:
-
-- All `List<T>` fields are `const`
-- List length matches theme count
-- List initializers are declared in place, for example:
-
-```dart
-const someOtherList = ['a','b'];
-
-@Tailor(requireStaticConst: true)
-class _$ConstantThemes {
-  // This is correct
-  static const someNumberList = [1, 2];
-  
-  // This is bad
-  static const otherList = someOtherList;
-}
-```
-
-It is possible to force generate constant themes using `Tailor(requireStaticConst: true)` annotation.
-In this case fields that do not meet conditions will be excluded from the theme and a warning will be printed.
-
-## Hot reload support
-*`@Tailor` and `@TailorComponent` only, `@TailorMixin` does not have any limitations regarding hot-reload* 
-
-To enable hot reload support, use the `generateStaticGetters` property of the `@Tailor()` and `@TailorComponent` annotations. This will generate static getters that allow updating theme properties on hot reload. The getters will conditionally return either the theme itself (if kDebugMode == true) or the final theme otherwise.
-
-To use hot reload with Tailor, make sure to follow these requirements:
-- Import `package:flutter/foundation.dart` as the option depends on `kDebugMode` from this package
-- Initialize your theme data in the build method
-- Make sure that properties that should be hot reloadable are either getters or const
-
-Here's an example usage:
-```dart
-import 'package:flutter/foundation.dart';
-
-const lightColor = Color(0xFFA1B2C3);
-const darkColor = Color(0xFF123ABC);
-
-@tailor
-class _$GetterTheme {
-  // This is correct
-  static const color1 = [lightColor, darkColor];
-  static List<Color> get color2 => [lightColor, darkColor];
-
-  // color3 won't be changed by hot reload as it is not a getter or const
-  static List<Color> color3 = [lightColor, darkColor];
-}
-
-class GetterPage extends StatelessWidget {
-  const GetterPage({super.key});
-
-  final _lightThemeData = ThemeData(extensions: [GetterTheme.light]);
-
-  @override
-  Widget build(BuildContext context) {
-    final darkThemeData = ThemeData(extensions: [GetterTheme.dark]);
-
-    return MaterialApp(
-      // This is correct
-      darkTheme: darkThemeData
-      // This is correct
-      //darkTheme: ThemeData(extensions: [GetterTheme.dark]),
-
-      // This is incorrect for hot reload
-      // It will not update as _lightThemeData won't be changed by hot reload
-      // (It is necessary to create ThemeData in the build's scope - the same way as `darkThemeData`)
-      theme: _lightThemeData,
-    );
-  }
-}
-```
 
 ## Custom types encoding
 ThemeTailor will attempt to provide lerp method for types like:
@@ -430,42 +219,43 @@ class IntEncoder extends ThemeEncoder<int> {
 Use it in different ways:
 
 ```dart
-/// 1 Add it to the encoders list in the @Tailor() annotation
-@Tailor(encoders: [IntEncoder()])
-class _$Theme1 {}
+/// 1 Add it to the encoders list in the @TailorMixin() annotation
+@TailorMixin(encoders: [IntEncoder()])
+class Theme1 extends ThemeExtension<Theme1> with _$Theme1TailorMixin {}
 
-/// 2 Add it as a separate annotation below @Tailor() or @tailor annotation
-@tailor
+/// 2 Add it as a separate annotation below @TailorMixin() or @tailorMixin annotation
+@tailorMixin
 @IntEncoder()
-class _$Theme2 {}
+class Theme2 extends ThemeExtension<Theme2> with _$Theme2TailorMixin {}
 
 /// 3 Add it below your custom tailor annotation
-const appTailor = Tailor(themes: ['superLight']);
+const appTailorMixin = TailorMixin(themeGetter: ThemeGetter.onBuildContext);
 
-@appTailor
+@appTailorMixin
 @IntEncoder()
-class _$Theme3 {}
+class Theme3 extends ThemeExtension<Theme3> with _$Theme3TailorMixin {}
 
 /// 4 Add it on the property
-@tailor
-class _$Theme4 {
+@tailorMixin
+class Theme4 extends ThemeExtension<Theme4> with _$Theme4TailorMixin {
+  // TODO constructor required
     @IntEncoder()
-    static const List<int> someValues = [1,2];
+    final Color background;
 }
 
 /// 5 IntEncoder() can be assigned to a variable and used as an annotation
 /// It works for any of the previous examples
 const intEncoder = IntEncoder();
 
-@tailor
+@tailorMixin
 @intEncoder
-class _$Theme5 {}
+class Theme5 extends ThemeExtension<Theme5> with _$Theme5TailorMixin {}
 ```
 
 The generator chooses the proper lerp function for the given field based on the order:
 - annotation on the field
 - annotation on top of the class
-- property from encoders list in the "@Tailor" annotation.
+- property from encoders list in the "@TailorMixin" annotation.
 
 Custom-supplied encoders override default ones provided by the code generator. Unrecognized or unsupported types will use the default lerp function.
 
@@ -494,17 +284,36 @@ class MyTheme extends ThemeExtension<MyTheme>
 The generator will copy all the annotations on the class and the static fields, including: "@JsonSerializable", "@JsonKey", custom JsonConverter(s), and generate the "fromJson" factory. If you wish to add support for the "toJson" method, you can add it in the class extension: 
 
 ```dart
-@tailor
-@JsonSerializable()
-class _$SerializableTheme {
+class JsonColorConverter implements JsonConverter<Color, int> {
+  const JsonColorConverter();
+  
+  @override
+  Color fromJson(int json) => Color(json);
 
-  /// This is a custom converter (it will be copied to the generated class)
-  @JsonColorConverter()
-  static List<Color> foo = [Colors.red, Colors.pink];
+  @override
+  int toJson(Color color) => color.value;
 }
+```
 
-/// Extension for generated class to support toJson (JsonSerializable does not have to generate this method)
-extension SerializableThemeExtension on SerializableTheme {
+```dart
+@tailorMixin
+@JsonSerializable()
+@JsonColorConverter()
+class SerializableTheme extends ThemeExtension<SerializableTheme> with _$SerializableThemeTailorMixin {
+  SerializableTheme({
+    required this.fooNumber,
+    required this.barColor,
+  });
+  
+  factory SerializableTheme.fromJson(Map<String, dynamic> json) =>
+          _$SerializableThemeFromJson(json);
+  
+  @JsonKey(defaultValue: 10)
+  final int fooNumber;
+
+  @JsonKey()
+  final Color barColor;
+
   Map<String, dynamic> toJson() => _$SerializableThemeToJson(this);
 }
 ```
@@ -515,29 +324,27 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 @JsonSerializable(explicitToJson: true)
 ```
 
-## Ignore fields
-*`@Tailor` and `@TailorComponent` only*
+## Build configuration
+The generator will use properties from build.yaml or default values for null properties in the @TailorMixin annotation.
 
-Fields other than `static List<T>` are ignored by default by the generator, but if you still want to ignore these, you can use `@ignore` annotation.
-```dart
-@tailor
-class _$IgnoreExample {
-  static List<Color> background = [AppColors.white, Colors.grey.shade900];
-  @ignore
-  static List<Color> iconColor = [AppColors.orange, AppColors.blue];
-  @ignore
-  static List<int> numbers = [1, 2, 3];
-}
+| Build option          | Annotation property | Default                | Info                                                                                                                            |
+|-----------------------|---------------------|------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| theme_getter          | themeGetter         | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \ on_theme_data \ on_theme_data_props \ on_build_context \ on_build_context_props |
+| theme_class_name      | themeClassName      | null                   | <b>String</b> For custom Theme if you don't want<br>use Material's Theme. Example: FluentTheme                                  |
+| theme_data_class_name | themeDataClassName  | null                   | <b>String</b> For custom ThemeData if you don't want<br>use Material's ThemeData FluentThemeData                                |
+
+### Material's theme_getter
+```yaml
+targets:
+  $default:
+    builders:
+      theme_tailor:
+        options:
+          theme_getter: on_build_context_props
 ```
 
-## Build configuration
-The generator will use properties from build.yaml or default values for null properties in the @Tailor annotation.
-
-| Build option | Annotation property | Default | Info |
-| --- | --- | --- | --- |
-| themes | themes | [light, dark] | <b>List<String></b> ([] empty array -> no themes generated) |
-| theme_getter | themeGetter | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \| on_theme_data \| on_theme_data_props \| on_build_context \| on_build_context_props |
-| require_static_const | requireStaticConst | false | <b>bool</b> |
+### Custom theme_getter
+If you're not using Material, feel free to modify the theme_getter extension to another option. For instance, you can use it with a different theme, like FluentTheme.
 
 ```yaml
 targets:
@@ -545,8 +352,88 @@ targets:
     builders:
       theme_tailor:
         options:
-          themes: [light, dark, amoled]
           theme_getter: on_build_context_props
-          require_static_const: false
+          theme_class_name: FluentTheme
+          theme_data_class_name: FluentThemeData
 ```
 
+## Custom theme getter
+You can configure `theme_getter` to generate custom theme extension using 2 properties `themeClassName` and `themeDataClassName`.
+
+Remember import your theme class.
+
+```dart
+import 'package:your_theme/your_theme.dart';
+``` 
+
+- For `ThemeGetter.onBuildContext` and `ThemeGetter.onBuildContextProps` use `themeClassName`
+
+```dart
+@TailorMixin(
+  themeGetter: ThemeGetter.onBuildContext,
+  themeClassName: 'YourTheme'
+)
+class MyTheme extends ThemeExtension<MyTheme> with _$MyThemeTailorMixin {}
+
+/// The generator will generate an extension:
+/// 
+/// extension MyThemeBuildContext on BuildContext {
+///   MyTheme get myTheme => YourTheme.of(this).extension<MyTheme>()!;
+/// }
+```
+
+- For `ThemeGetter.onThemeData` and `ThemeGetter.onThemeDataProps` use `themeDataClassName`
+
+```dart
+@TailorMixin(
+  themeGetter: ThemeGetter.onThemeData,
+  themeClassName: 'YourThemeData'
+)
+class MyTheme extends ThemeExtension<MyTheme> with _$MyThemeTailorMixin {}
+
+/// The generator will generate an extension:
+/// 
+/// extension MyThemeBuildContext on YourThemeData {
+///   MyTheme get myTheme => extension<MyTheme>()!;
+/// }
+```
+
+You can also change properties globally by adjusting `build.yaml`. Check out [Build configuration](#build-configuration) for more info.
+
+To see an example, head out to [example: custom theme getter][example:custom_theme_getter]
+
+## Migration from Tailor to TailorMixin
+Starting from version 2.1.0, the theme_tailor library marks the @Tailor and @TailorComponent annotations as deprecated.
+
+The old theme extension class looked like this:
+
+```dart
+part 'my_theme.tailor.dart';
+
+@Tailor(
+  themes: ['light', 'dark'],
+)
+class $_MyTheme {
+  static const List<Color> background = [AppColors.white, Colors.black];
+}
+
+final light = SimpleTheme.light;
+final dark = SimpleTheme.dark;
+```
+
+After migration, your new theme extension class will look like:
+
+```dart
+part 'my_theme.tailor.dart';
+
+@TailorMixin()
+class MyTheme extends ThemeExtension<MyTheme> with _$MyThemeTailorMixin {
+  MigratedSimpleTheme({required this.background});
+  final Color background;
+}
+/// Create themes manually
+final lightMyTheme = MyTheme(background: AppColors.white);
+final darkMyTheme = MyTheme(background: AppColors.black);
+```
+
+To see an example of how to migrate, head out to [example: migration_example][example:migration_from_tailor_to_tailor_mixin]

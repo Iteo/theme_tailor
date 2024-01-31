@@ -10,6 +10,8 @@ class TailorMixinConfig {
     required this.encoderDataManager,
     required this.hasDiagnosticableMixin,
     required this.extensionData,
+    required this.themeClassName,
+    this.themeDataClassName,
     this.constructorData,
   });
 
@@ -18,5 +20,7 @@ class TailorMixinConfig {
   final ThemeEncoderManager encoderDataManager;
   final bool hasDiagnosticableMixin;
   final ExtensionData extensionData;
+  final String themeClassName;
+  final String? themeDataClassName;
   final ConstructorData? constructorData;
 }

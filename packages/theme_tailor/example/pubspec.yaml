@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^4.7.0
+  fluent_ui: ^4.8.5
   theme_tailor_annotation:
     path: ../../theme_tailor_annotation
 

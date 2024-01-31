@@ -4,12 +4,14 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'theme_tailor.g.dart';
 
+@Deprecated('Use TailorMixin instead')
 const tailor = Tailor();
 
 /// {@template theme_tailor.theme_tailor}
 /// ### Tailor
 ///
 /// {@endtemplate}
+@Deprecated('Use TailorMixin instead')
 @Target({TargetKind.classType})
 @JsonSerializable(
   fieldRename: FieldRename.snake,
@@ -18,10 +20,13 @@ const tailor = Tailor();
 )
 class Tailor {
   /// {@macro theme_tailor.theme_tailor}
+  @Deprecated('Use TailorMixin instead')
   const Tailor({
     this.themes,
     this.themeGetter,
     this.encoders,
+    this.themeClassName,
+    this.themeDataClassName,
     this.requireStaticConst,
     this.generateStaticGetters,
   });
@@ -86,6 +91,7 @@ class Tailor {
   ///   static const otherList = someOtherList;
   /// }
   /// ```
+  @deprecated
   final bool? requireStaticConst;
 
   /// When set to true, this option generates static getters that allow updating
@@ -117,5 +123,64 @@ class Tailor {
   ///
   /// However, color3 is a non-const variable, so it won't be updated on hot
   /// reload even if generateStaticGetters is set to true.
+  @deprecated
   final bool? generateStaticGetters;
+
+  /// String value of class name, If a theme other than Material is used,
+  /// you can specify the theme class name, and the [themeGetter] will generate the getter
+  /// of the class type.
+  ///
+  /// This option generate for themeGetter = ThemeGetter.onBuildContext / ThemeGetter.onBuildContextProps
+  ///
+  /// To use this option, make sure to import `package:your_theme/your_theme.dart`
+  ///
+  /// Here's an example usage:
+  /// ```dart
+  /// @Tailor(
+  ///   themeGetter: ThemeGetter.onBuildContext,
+  ///   themeClassName: 'YourTheme',
+  /// )
+  /// class _$MyThemes {
+  ///   static List<Color> background = [Colors.white, Colors.black];
+  /// }
+  /// ```
+  ///
+  /// The generator will generate an extension:
+  ///
+  /// ```dart
+  /// extension MyThemesBuildContext on BuildContext {
+  ///   MyThemes get simpleTheme => YourTheme.of(this).extension<MyThemes>()!;
+  /// }
+  /// ```
+  ///
+  final String? themeClassName;
+
+  /// String value of class name for themeData, If a theme other than Material is used,
+  /// you can specify the themeData class name, and the [themeGetter] will generate the getter
+  /// of the class type.
+  ///
+  /// This option generate for themeGetter = ThemeGetter.onThemeData / ThemeGetter.onThemeDataProps
+  ///
+  /// To use this option, make sure to import `package:your_theme/your_theme.dart`
+  ///
+  /// Here's an example usage:
+  /// ```dart
+  /// @Tailor(
+  ///   themeGetter: ThemeGetter.onThemeData,
+  ///   themeDataClassName: 'YourThemeData',
+  /// )
+  /// class _$MyThemes {
+  ///   static List<Color> background = [Colors.white, Colors.black];
+  /// }
+  /// ```
+  ///
+  /// The generator will generate an extension:
+  ///
+  /// ```dart
+  /// extension MyThemesThemeData on YourThemeData {
+  ///   MyThemes get myThemes => extension<MyThemes>()!;
+  /// }
+  /// ```
+  ///
+  final String? themeDataClassName;
 }

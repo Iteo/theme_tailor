@@ -17,6 +17,8 @@ class ThemeClassConfig {
     required this.hasJsonSerializable,
     required this.constantThemes,
     required this.staticGetters,
+    required this.themeClassName,
+    this.themeDataClassName,
   });
 
   final Map<String, TailorField> fields;
@@ -31,4 +33,6 @@ class ThemeClassConfig {
   final bool hasJsonSerializable;
   final bool constantThemes;
   final bool staticGetters;
+  final String themeClassName;
+  final String? themeDataClassName;
 }

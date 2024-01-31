@@ -4,7 +4,6 @@ import 'package:example/diagnosticable.dart' as diagnosticable;
 import 'package:example/diagnosticable_barrel_import.dart'
     as diagnosticable_barrel;
 import 'package:example/diagnosticable_lib.dart';
-import 'package:example/empty_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -62,7 +61,7 @@ void main() {
   });
 
   test('no debugFillProperties if not importing flutter#foundation', () {
-    const theme = EmptyTheme();
+    final theme = diagnosticable.EmptyTheme();
 
     expect(theme, isNot(isA<DiagnosticableTree>()));
   });

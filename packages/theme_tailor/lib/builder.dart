@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/tailor_annotations_generator.dart';
