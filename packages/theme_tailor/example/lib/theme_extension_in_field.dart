@@ -1,21 +1,21 @@
-import 'package:example/app_colors.dart';
+// ignore_for_file: annotate_overrides
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'theme_extension_in_field.tailor.dart';
 
-@tailor
-class $_SomeTheme {
-  static List<Color> appBackground = [AppColors.white, AppColors.black];
-  @themeExtension
-  static List<AnotherThemePart> anotherThemePart = [
-    AnotherThemePart.light,
-    AnotherThemePart.dark,
-  ];
+@tailorMixin
+class SomeTheme extends ThemeExtension<SomeTheme>
+    with DiagnosticableTreeMixin, _$SomeThemeTailorMixin {
+  SomeTheme(this.appBackground);
+
+  final Color appBackground;
 
   @themeExtension
-  static List<AnotherThemePart> anotherThemePartGeneratedConstructor =
-      AnotherThemePart.themes;
+  static AnotherThemePart anotherThemePartGeneratedConstructor =
+      AnotherThemePart(Colors.green);
 
   static List<OtherThemeExtension> otherThemeExtension = [
     OtherThemeExtension(),
@@ -23,16 +23,17 @@ class $_SomeTheme {
   ];
 
   @themeExtension
-  static List<AnotherThemePart?> nullablePart =
-      List.filled(SomeTheme.themes.length, null);
+  static List<AnotherThemePart?> nullablePart = List.filled(2, null);
 
-  static List<OtherThemeExtension?> nullableOtherTheme =
-      List.filled(SomeTheme.themes.length, null);
+  static List<OtherThemeExtension?> nullableOtherTheme = List.filled(3, null);
 }
 
-@tailorComponent
-class $_AnotherThemePart {
-  static List<Color> navBarBackground = [AppColors.white, AppColors.black];
+@tailorMixinComponent
+class AnotherThemePart extends ThemeExtension<AnotherThemePart>
+    with _$AnotherThemePartTailorMixin {
+  AnotherThemePart(this.navBarBackground);
+
+  final Color navBarBackground;
 }
 
 class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {

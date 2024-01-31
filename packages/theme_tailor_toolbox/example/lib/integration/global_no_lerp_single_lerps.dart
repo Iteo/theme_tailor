@@ -1,4 +1,4 @@
-// ignore_for_file: unused_field, unused_element
+// ignore_for_file: unused_field, unused_element, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';

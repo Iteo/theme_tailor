@@ -17,10 +17,13 @@ enum ExtensionTarget {
 
   String _extensionOfType(String type) => 'extension<$type>()!';
 
-  String themeExtensionAccessor(String type) {
+  String themeExtensionAccessor({
+    required String type,
+    required String themeClassName,
+  }) {
     switch (this) {
       case ExtensionTarget.buildContext:
-        return 'Theme.of(this).${_extensionOfType(type)}';
+        return '$themeClassName.of(this).${_extensionOfType(type)}';
       case ExtensionTarget.themeData:
         return _extensionOfType(type);
       default:

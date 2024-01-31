@@ -1,61 +1,56 @@
 import 'dart:ui';
 
 import 'package:example/app_colors.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'main.tailor.dart';
 
-/// Tailor annotation
-/// It can also be called as "@tailor" that has default options visible below.
-/// By default 2 themes will be generated, "light" and "dark"
-/// Generator will use List values declared in the class to populate these themes
-/// Therefore it is expected for the lists to be filled and have proper lengths.
-///
-/// If you don't want to generate any themes and prefer to create them in a
-/// different way, use declaration like this:
-/// ```dart
-/// @Tailor(themes: [])
-/// ```
-///
-/// @Tailor also allows for generating extensions on BuildContext or ThemeData
+/// @TailorMixin allows for generating extensions on BuildContext or ThemeData
 /// for easier access of the theme properties.
-/// for more info check [Tailor] and [ThemeGetter] api documentation.
-///
-/// By default generated theme class is the name of the annotated class stripped
-/// from '$_' or '_$, in this case: SimpleTheme
-@Tailor(
-  themes: ['light', 'dark'],
+/// for more info check [TailorMixin] and [ThemeGetter] api documentation.
+@TailorMixin(
   themeGetter: ThemeGetter.onBuildContext,
-  generateStaticGetters: true,
 )
-class $_SimpleTheme {
-  /// Only List<> fields are turned into theme properties, h1Style and h2Style
-  /// won't be encoded directly in the theme.
+class SimpleTheme extends ThemeExtension<SimpleTheme>
+    with _$SimpleThemeTailorMixin {
+  SimpleTheme({
+    required this.background,
+    required this.appBar,
+    required this.h1,
+    required this.h2,
+  });
+
   static const h1Style = TextStyle(fontSize: 15, letterSpacing: 0.3);
   static final h2Style = const TextStyle(fontSize: 14).copyWith(
     fontFeatures: const [FontFeature.proportionalFigures()],
   );
 
-  /// Declaration of the fields of the theme, list values are default values
-  /// for the generated themes ['light', 'dark']
-  /// You can configure ammount of generated themes in the @Tailor "themes".
-  // static List<Color> background = [AppColors.white, Colors.grey.shade900];
-  // static List<Color> appBar = [Colors.amber, Colors.blueGrey.shade800];
-
-  static const List<Color> background = [AppColors.white, Colors.black];
-  static const List<Color> appBar = [Colors.amber, Colors.deepPurple];
-
-  static List<TextStyle> h1 = [
-    h1Style.copyWith(color: const Color.fromARGB(221, 25, 25, 25)),
-    h1Style.copyWith(color: Colors.grey.shade200),
-  ];
-  static List<TextStyle> h2 = [
-    h2Style.copyWith(color: Colors.amber.shade700),
-    h2Style.copyWith(color: Colors.blueGrey.shade300),
-  ];
+  @override
+  final Color background;
+  @override
+  final Color appBar;
+  @override
+  final TextStyle h1;
+  @override
+  final TextStyle h2;
 }
+
+final lightSimpleTheme = SimpleTheme(
+  background: AppColors.white,
+  appBar: Colors.amber,
+  h1: SimpleTheme.h1Style.copyWith(
+    color: const Color.fromARGB(221, 25, 25, 25),
+  ),
+  h2: SimpleTheme.h2Style.copyWith(color: Colors.amber.shade700),
+);
+
+final darkSimpleTheme = SimpleTheme(
+  background: Colors.black,
+  appBar: Colors.deepPurple,
+  h1: SimpleTheme.h1Style.copyWith(color: Colors.grey.shade200),
+  h2: SimpleTheme.h2Style.copyWith(color: Colors.blueGrey.shade300),
+);
 
 void main() {
   runApp(const MyApp());
@@ -77,15 +72,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     /// Theme Tailor generates theme extension and these should be included in the
     /// 'extensions' list from the ThemeData.
-    /// If you opted out from generating themes by setting Tailor's "themes" to []
-    /// You won't see SimpleTheme.light / SimpleTheme.dark
     final _lightThemeData = ThemeData(
       brightness: Brightness.light,
-      extensions: [SimpleTheme.light],
+      extensions: [lightSimpleTheme],
     );
     final _darkThemeData = ThemeData(
       brightness: Brightness.dark,
-      extensions: [SimpleTheme.dark],
+      extensions: [darkSimpleTheme],
     );
 
     return ValueListenableBuilder<ThemeMode>(

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:theme_tailor/src/generator/generator_annotation_matcher.dart';
 import 'package:theme_tailor/src/generator/tailor_mixin_generator.dart';

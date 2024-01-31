@@ -1,3 +1,8 @@
+# 2.1.0
+- Add `themeClassName` and `themeDataClassName` properties to `@TailorMixin`. This addition provides the flexibility for themeGetters to generate a custom theme getter for the extension.
+- Mark `@Tailor` and `@TailorComponent` annotations as deprecated
+- Bump dependencies versions
+
 # 2.0.2
 - Fix dependencies (Remove pubdev unknown platforms error)
 

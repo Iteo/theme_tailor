@@ -1,4 +1,4 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, deprecated_member_use_from_same_package
 
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
@@ -47,6 +49,8 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
       data.className,
       data.extensionData,
       data.fields,
+      data.themeClassName,
+      data.themeDataClassName,
     ));
 
   @override
@@ -57,6 +61,18 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
           ThemeGetter.values.byName(o.revive().accessor.split('.').last),
       orElse: () =>
           buildYamlConfig.themeGetter ?? ThemeGetter.onBuildContextProps,
+    );
+
+    final themeClassName = annotation.getFieldOrElse(
+      'themeClassName',
+      decode: (o) => o.stringValue,
+      orElse: () => buildYamlConfig.themeClassName ?? 'Theme',
+    );
+
+    final themeDataClassName = annotation.getFieldOrElse(
+      'themeDataClassName',
+      decode: (o) => o.stringValue,
+      orElse: () => buildYamlConfig.themeDataClassName,
     );
 
     final encoders = annotation.getFieldOrElse<Map<String, ThemeEncoderData>>(
@@ -73,6 +89,8 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
     return TailorMixinAnnotationData(
       themeGetter: themeGetter,
       encoders: encoders,
+      themeClassName: themeClassName,
+      themeDataClassName: themeDataClassName,
     );
   }
 
@@ -128,6 +146,8 @@ class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
       hasDiagnosticableMixin: libraryData.hasDiagnosticableMixin,
       extensionData: annotationData.themeGetter.extensionData,
       constructorData: element.constructorData(),
+      themeClassName: annotationData.themeClassName,
+      themeDataClassName: annotationData.themeDataClassName,
     );
   }
 
