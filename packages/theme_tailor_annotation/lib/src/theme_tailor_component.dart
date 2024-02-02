@@ -11,6 +11,7 @@ const tailorComponent = TailorComponent();
 @Deprecated('Use TailorMixinComponent instead')
 @Target({TargetKind.classType})
 class TailorComponent extends Tailor {
+  @Deprecated('Use TailorMixinComponent instead')
   const TailorComponent({
     super.themes,
     super.encoders,
