@@ -1,26 +1,25 @@
 class ThemeEncoderData {
   const ThemeEncoderData(
     this.accessString,
-    this.type,
-    this.lerpAddExclamation,
-  );
+    this.type, {
+    required this.lerpAddExclamation,
+  });
 
   factory ThemeEncoderData.className(
     String className,
     String accessor,
-    String type,
-    bool isGeneric,
-  ) {
-    final accessString =
-        'const $className${_withAccessor(accessor)}${_withType(isGeneric, type)}()';
-    return ThemeEncoderData(accessString, type, false);
+    String type, {
+    required bool isGeneric,
+  }) {
+    final accessString = 'const $className${_withAccessor(accessor)}${_withType(isGeneric, type)}()';
+    return ThemeEncoderData(accessString, type, lerpAddExclamation: false);
   }
 
   factory ThemeEncoderData.propertyAccess(
     String accessString,
     String type,
   ) {
-    return ThemeEncoderData(accessString, type, false);
+    return ThemeEncoderData(accessString, type, lerpAddExclamation: false);
   }
 
   final String accessString;
@@ -30,26 +29,24 @@ class ThemeEncoderData {
   String callLerp(String a, String b, String t) =>
       '$accessString.lerp($a, $b, $t)${_withExclamation(lerpAddExclamation)}';
 
-  static String _withExclamation(bool withExclamation) =>
-      withExclamation ? '!' : '';
+  static String _withExclamation(bool withExclamation) => withExclamation ? '!' : '';
 
-  static String _withAccessor(String accessor) =>
-      accessor.isEmpty ? '' : '.$accessor';
+  static String _withAccessor(String accessor) => accessor.isEmpty ? '' : '.$accessor';
 
-  static String _withType(bool isGeneric, String type) =>
-      isGeneric ? '<$type>' : '';
+  static String _withType(bool isGeneric, String type) => isGeneric ? '<$type>' : '';
 
   @override
-  String toString() =>
-      'accesStr: $accessString, lerpReturnsNullable: $lerpAddExclamation';
+  String toString() => 'accesStr: $accessString, lerpReturnsNullable: $lerpAddExclamation';
 }
 
 class _AnyEncoder extends ThemeEncoderData {
   const _AnyEncoder._(
     super.accessString,
     super.type,
-    super.lerpAddExclamation,
-  );
+    bool lerpAddExclamation,
+  ) : super(
+          lerpAddExclamation: lerpAddExclamation,
+        );
 
   static _AnyEncoder instance = const _AnyEncoder._('', '', true);
 
@@ -58,8 +55,6 @@ class _AnyEncoder extends ThemeEncoderData {
 }
 
 class ThemeEncoderManager {
-  const ThemeEncoderManager._(this.typeToEncoder, this.fieldNameToEncoder);
-
   factory ThemeEncoderManager(
     Map<String, ThemeEncoderData> typeToEncoder,
     Map<String, ThemeEncoderData> fieldNameToEncoder,
@@ -71,10 +66,28 @@ class ThemeEncoderManager {
     return ThemeEncoderManager._(encoders, fieldNameToEncoder);
   }
 
-  static const _color = ThemeEncoderData('Color', 'Color', true);
-  static const _colorNull = ThemeEncoderData('Color', 'Color?', false);
-  static const _tStyle = ThemeEncoderData('TextStyle', 'TextStyle', true);
-  static const _tStyleNull = ThemeEncoderData('TextStyle', 'TextStyle?', false);
+  const ThemeEncoderManager._(this.typeToEncoder, this.fieldNameToEncoder);
+
+  static const _color = ThemeEncoderData(
+    'Color',
+    'Color',
+    lerpAddExclamation: true,
+  );
+  static const _colorNull = ThemeEncoderData(
+    'Color',
+    'Color?',
+    lerpAddExclamation: false,
+  );
+  static const _tStyle = ThemeEncoderData(
+    'TextStyle',
+    'TextStyle',
+    lerpAddExclamation: true,
+  );
+  static const _tStyleNull = ThemeEncoderData(
+    'TextStyle',
+    'TextStyle?',
+    lerpAddExclamation: false,
+  );
 
   static const _defaultEncoders = {
     'Color': _color,
@@ -87,8 +100,6 @@ class ThemeEncoderManager {
   final Map<String, ThemeEncoderData> fieldNameToEncoder;
 
   ThemeEncoderData encoderFromField(String fieldName, String type) {
-    return fieldNameToEncoder[fieldName] ??
-        typeToEncoder[type] ??
-        _AnyEncoder.instance;
+    return fieldNameToEncoder[fieldName] ?? typeToEncoder[type] ?? _AnyEncoder.instance;
   }
 }

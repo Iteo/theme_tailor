@@ -41,15 +41,15 @@ class ThemeTailorTemplate extends Template {
       return '''
       const ${config.className}();
     
-      ${fieldsBuffer.toString()}
+      $fieldsBuffer
     ''';
     } else {
       return '''
       const ${config.className}({
-        ${constructorBuffer.toString()}
+        $constructorBuffer
       });
     
-      ${fieldsBuffer.toString()}
+      $fieldsBuffer
     ''';
     }
   }
@@ -75,8 +75,7 @@ class ThemeTailorTemplate extends Template {
   String _getterTemplate(String themeName) {
     final returnType = config.className;
 
-    return '''static $returnType get $themeName => kDebugMode ? _${themeName}Getter : _${themeName}Final;
-    \n''';
+    return '''static $returnType get $themeName => kDebugMode ? _${themeName}Getter : _${themeName}Final;\n\n''';
   }
 
   /// Template for one static theme
@@ -96,24 +95,23 @@ class ThemeTailorTemplate extends Template {
     if (config.constantThemes) {
       return '''
     static ${_themeModifier()} $returnType $themeName = $returnType(
-      ${buffer.toString()}
+      $buffer
     );\n
     ''';
     }
     return '''
     static $returnType get _${themeName}Getter => $returnType(
-      ${buffer.toString()}
+      $buffer
     );\n    
     static final $returnType _${themeName}Final = $returnType(
-      ${buffer.toString()}
+      $buffer
     );\n
     ''';
   }
 
   String _fromJsonFactory() {
     if (!config.hasJsonSerializable) return '';
-    return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>
-      _\$${config.className}FromJson(json);\n''';
+    return '''factory ${config.className}.fromJson(Map<String, dynamic> json) =>\n_\$${config.className}FromJson(json);\n''';
   }
 
   String _themeModifier() => config.constantThemes ? 'const' : 'final';

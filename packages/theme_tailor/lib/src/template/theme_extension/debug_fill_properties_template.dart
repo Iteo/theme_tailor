@@ -10,12 +10,13 @@ class DebugFillPropertiesTemplate extends Template {
   @override
   void write(StringBuffer buffer) {
     String prop(String name, String value) {
-      return "..add(DiagnosticsProperty($name, $value))";
+      return '..add(DiagnosticsProperty($name, $value))';
     }
 
     buffer
       ..writeln(
-          '@override void debugFillProperties(DiagnosticPropertiesBuilder properties) {')
+        '@override void debugFillProperties(DiagnosticPropertiesBuilder properties) {',
+      )
       ..writeln('super.debugFillProperties(properties);')
       ..writeln('properties')
       ..writeln(prop("'type'", "'$className'"))

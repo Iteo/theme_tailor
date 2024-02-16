@@ -16,10 +16,10 @@ void main() {
       expect(fun(test), 'CustomTheme');
 
       test = r'$_';
-      expect(fun(test), r'CustomTheme');
+      expect(fun(test), 'CustomTheme');
 
       test = r'$_TestClass2';
-      expect(fun(test), r'TestClass2');
+      expect(fun(test), 'TestClass2');
 
       test = r'$';
       expect(fun(test), r'$CustomTheme');
@@ -47,7 +47,7 @@ void main() {
       expect(fun(test), 'test');
 
       test = 'Test';
-      expect(fun(test), r'test');
+      expect(fun(test), 'test');
     });
 
     test('asPrivate', () {
@@ -69,7 +69,7 @@ void main() {
       expect(fun(test), '_test');
 
       test = 'Test';
-      expect(fun(test), r'_Test');
+      expect(fun(test), '_Test');
     });
 
     test('asNullableType', () {

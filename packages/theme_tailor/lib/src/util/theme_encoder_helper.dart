@@ -8,8 +8,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
 
-ThemeEncoderData? extractThemeEncoderData(
-    ElementAnnotation? annotation, DartObject constantValue) {
+ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObject constantValue) {
   final encoderClassElement = constantValue.type!.element as ClassElement?;
   if (encoderClassElement == null) return null;
 
@@ -18,8 +17,7 @@ ThemeEncoderData? extractThemeEncoderData(
   });
 
   if (encoderSuper == null) return null;
-  final genericTypeArg =
-      (constantValue.type as InterfaceType).typeArguments.firstOrNull;
+  final genericTypeArg = (constantValue.type! as InterfaceType).typeArguments.firstOrNull;
 
   final encoderType = genericTypeArg ?? encoderSuper.typeArguments[0];
 
@@ -43,8 +41,7 @@ ThemeEncoderData? extractThemeEncoderData(
 
   final reviver = ConstantReader(constantValue).revive();
 
-  if (reviver.namedArguments.isNotEmpty ||
-      reviver.positionalArguments.isNotEmpty) {
+  if (reviver.namedArguments.isNotEmpty || reviver.positionalArguments.isNotEmpty) {
     throw InvalidGenerationSourceError(
       'ThemeEncoders with constructor arguments are not supported',
       element: annotation?.element,
@@ -56,6 +53,6 @@ ThemeEncoderData? extractThemeEncoderData(
     constantValue.type!.element!.name!,
     reviver.accessor,
     encoderTypeStr,
-    genericTypeArg != null,
+    isGeneric: genericTypeArg != null,
   );
 }

@@ -26,7 +26,7 @@ enum ExtensionTarget {
         return '$themeClassName.of(this).${_extensionOfType(type)}';
       case ExtensionTarget.themeData:
         return _extensionOfType(type);
-      default:
+      case ExtensionTarget.none:
         throw UnimplementedError();
     }
   }

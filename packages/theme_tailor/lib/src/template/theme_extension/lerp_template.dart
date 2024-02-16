@@ -20,20 +20,23 @@ class LerpTemplate extends Template {
   @override
   void write(StringBuffer buffer) {
     buffer
-      ..writeln(
-          '@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
+      ..writeln('@override $className lerp(covariant ThemeExtension<$className>? other, double t) {')
       ..writeln('if (other is! $className) return this as $className;')
       ..writeln('return ')
-      ..writeln(ClassInstanceTemplate(
-        constructorName: constructorData?.constructorName ?? className,
-        fieldNameToParamType: constructorData?.parameterNameToType,
-        fieldNameToValue: fields.map((e) => MapEntry(
+      ..writeln(
+        ClassInstanceTemplate(
+          constructorName: constructorData?.constructorName ?? className,
+          fieldNameToParamType: constructorData?.parameterNameToType,
+          fieldNameToValue: fields.map(
+            (e) => MapEntry(
               e.name,
               e.isThemeExtension
                   ? _themeExtensionLerp(e.name, e.type, e.isNullable)
                   : _typeOrEncoderLerp(e.name, e.type),
-            )),
-      ))
+            ),
+          ),
+        ),
+      )
       ..writeln(';}');
   }
 

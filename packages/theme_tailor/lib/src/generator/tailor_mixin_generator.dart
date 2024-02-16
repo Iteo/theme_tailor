@@ -15,9 +15,9 @@ import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
+import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
 class TailorMixinGenerator
     extends GeneratorForAnnotatedClass<ImportsData, TailorMixinAnnotationData, TailorMixinConfig, TailorMixin> {
@@ -38,20 +38,24 @@ class TailorMixinGenerator
 
   @override
   void generateForData(StringBuffer buffer, TailorMixinConfig data) => buffer
-    ..template(TailorMixinTemplate(
-      data.className,
-      data.fields,
-      data.encoderDataManager,
-      data.hasDiagnosticableMixin,
-      data.constructorData,
-    ))
-    ..template(ContextExtensionTemplate(
-      data.className,
-      data.extensionData,
-      data.fields,
-      data.themeClassName,
-      data.themeDataClassName,
-    ));
+    ..template(
+      TailorMixinTemplate(
+        data.className,
+        data.fields,
+        data.encoderDataManager,
+        data.constructorData,
+        hasDiagnosticableMixin: data.hasDiagnosticableMixin,
+      ),
+    )
+    ..template(
+      ContextExtensionTemplate(
+        data.className,
+        data.extensionData,
+        data.fields,
+        data.themeClassName,
+        data.themeDataClassName,
+      ),
+    );
 
   @override
   TailorMixinAnnotationData parseAnnotation(ConstantReader annotation) {

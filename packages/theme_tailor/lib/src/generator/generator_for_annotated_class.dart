@@ -1,11 +1,10 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/generator/generator_annotation_matcher.dart';
 
-import 'generator_annotation_matcher.dart';
-
-abstract class GeneratorForAnnotatedClass<TLibraryData, TAnnotationData, TData,
-    TAnnotation> extends GeneratorToBuffer<TAnnotation> {
+abstract class GeneratorForAnnotatedClass<TLibraryData, TAnnotationData, TData, TAnnotation>
+    extends GeneratorToBuffer<TAnnotation> {
   const GeneratorForAnnotatedClass();
 
   @override

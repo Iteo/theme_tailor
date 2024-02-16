@@ -24,35 +24,38 @@ class ContextExtensionTemplate extends Template {
 
   @override
   void write(StringBuffer buffer) {
-    final fmt = StringFormat();
+    const fmt = StringFormat();
 
     if (!extensionData.shouldGenerate) return;
 
     final themeAccessor = fmt
         .typeAsVariableName(className, themeClassName)
-        .also((it) =>
-            extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
+        .also((it) => extensionData.hasPublicThemeGetter ? it : fmt.asPrivate(it));
 
     buffer
       ..writeln('extension $className${extensionData.shortName}')
       ..write(' on $extensionTarget {')
-      ..write(GetterTemplate(
-        type: className,
-        name: themeAccessor,
-        accessor: extensionData.target.themeExtensionAccessor(
+      ..write(
+        GetterTemplate(
           type: className,
-          themeClassName: themeClassName,
+          name: themeAccessor,
+          accessor: extensionData.target.themeExtensionAccessor(
+            type: className,
+            themeClassName: themeClassName,
+          ),
         ),
-      ));
+      );
 
     if (extensionData.hasGeneratedProps) {
       for (final field in fields) {
-        buffer.write(GetterTemplate(
-          type: field.type,
-          name: field.name,
-          accessor: '$themeAccessor.${field.name}',
-          documentationComment: field.documentation,
-        ));
+        buffer.write(
+          GetterTemplate(
+            type: field.type,
+            name: field.name,
+            accessor: '$themeAccessor.${field.name}',
+            documentationComment: field.documentation,
+          ),
+        );
       }
     }
 

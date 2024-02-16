@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, avoid_print
 
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -16,9 +16,9 @@ import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
 import 'package:theme_tailor/src/model/theme_class_config.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
+import 'package:theme_tailor/src/template/context_extension_template.dart';
 import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/template/theme_class_template.dart';
-import 'package:theme_tailor/src/template/context_extension_template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_annotation_extension.dart';
@@ -154,7 +154,7 @@ class TailorGenerator
       }
     }
 
-    for (var entry in tailorClassVisitor.hasInternalAnnotations.entries) {
+    for (final entry in tailorClassVisitor.hasInternalAnnotations.entries) {
       if (entry.value.isEmpty) continue;
 
       final astAnnotations = <String>[];
@@ -208,14 +208,16 @@ class TailorGenerator
 
   @override
   void generateForData(StringBuffer buffer, ThemeClassConfig data) => buffer
-    ..template(ThemeTailorTemplate(data, StringFormat()))
-    ..template(ContextExtensionTemplate(
-      data.className,
-      data.themeGetter,
-      data.fields.values.toList(),
-      data.themeClassName,
-      data.themeDataClassName,
-    ));
+    ..template(ThemeTailorTemplate(data, const StringFormat()))
+    ..template(
+      ContextExtensionTemplate(
+        data.className,
+        data.themeGetter,
+        data.fields.values.toList(),
+        data.themeClassName,
+        data.themeDataClassName,
+      ),
+    );
 
   Map<String, ThemeEncoderData> _typeToThemeEncoderDataFromAnnotation(
     ConstantReader annotation,
@@ -233,7 +235,7 @@ class TailorGenerator
   }
 }
 
-class _TailorClassVisitor extends SimpleElementVisitor {
+class _TailorClassVisitor extends SimpleElementVisitor<dynamic> {
   _TailorClassVisitor({
     required this.requireConstThemes,
     required this.generateStaticGetters,
@@ -245,7 +247,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   final Map<String, TailorField> fields = {};
   final Map<String, ThemeEncoderData> fieldLevelEncoders = {};
   final Map<String, List<bool>> hasInternalAnnotations = {};
-  var hasNonConstantElement = false;
+  bool hasNonConstantElement = false;
 
   final extensionAnnotationTypeChecker = TypeChecker.fromRuntime(themeExtension.runtimeType);
 
@@ -318,7 +320,7 @@ class _TailorClassVisitor extends SimpleElementVisitor {
   }
 }
 
-class _TailorClassASTVisitor extends SimpleAstVisitor {
+class _TailorClassASTVisitor extends SimpleAstVisitor<dynamic> {
   _TailorClassASTVisitor({
     required this.fieldNamesToCheck,
     required this.typeDefinitions,
@@ -356,7 +358,7 @@ class _TailorClassASTVisitor extends SimpleAstVisitor {
   }
 }
 
-class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
+class _TailorFieldInitializerVisitor extends SimpleAstVisitor<dynamic> {
   _TailorFieldInitializerVisitor({
     required this.themeCount,
     required this.fieldsToCheck,
@@ -366,7 +368,7 @@ class _TailorFieldInitializerVisitor extends SimpleAstVisitor {
   final List<String> fieldsToCheck;
 
   final Map<String, List<String>> fieldValues = {};
-  var hasValuesForAllFields = true;
+  bool hasValuesForAllFields = true;
 
   final _constKeyword = 'const';
 
@@ -467,7 +469,7 @@ ParsedLibraryResult? _getParsedLibraryResultFromElement(Element element) {
   }
 }
 
-class _TypeDefAstVisitor extends SimpleAstVisitor {
+class _TypeDefAstVisitor extends SimpleAstVisitor<dynamic> {
   final typeDefinitions = <String, TypeAnnotation>{};
 
   @override
