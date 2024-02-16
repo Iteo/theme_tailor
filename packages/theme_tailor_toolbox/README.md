@@ -33,10 +33,16 @@ and the Flutter guide for
 Set of theming utilities and classes that work with and enhance [theme_tailor] code generator.
 
 # Table of contents
+- [Table of contents](#table-of-contents)
 - [How to use](#how-to-use)
-    - [Install](#install)
-    - [Add imports and part directive](#add-imports-and-part-directive)
+  - [Install](#install)
+  - [Add imports and part directive](#add-imports-and-part-directive)
+          - [name.dart](#namedart)
+  - [Create Theme class](#create-theme-class)
 - [Encoders](#encoders)
+  - [Lerping encoders](#lerping-encoders)
+  - [Non-lerping encoders](#non-lerping-encoders)
+  - [Encoder usage](#encoder-usage)
 
 # How to use
 ## Install
@@ -111,7 +117,7 @@ In case of `NoLerpEncoder` it is possible to use it with any type `T` as `NoLerp
 /// Example of a class that only allows interpolation of selected fields
 /// Disabling interpolation provided by default for types like Color
 /// (Only foo and fooNullable will animate during theme changes)
-@tailor
+@tailorMixin
 @NoLerpEncoder<Color>
 @NoLerpEncoder<Color?>
 class _OnlyLerpFoo {
@@ -126,7 +132,7 @@ class _OnlyLerpFoo {
 
 /// Example of a class that disallows interpolation of selected fields
 /// (foo and fooNullable will not animate during theme changes)
-@tailor
+@tailorMixin
 class _DontLerpFoo {
     @NoLerpEncoder<Color>()
     static const List<Color> foo = [Colors.orange, Colors.blue];
@@ -143,7 +149,7 @@ Alternatively with EncoderToolbox:
 /// Example of a class that only allows interpolation of selected fields
 /// Disabling interpolation provided by default for types like Color
 /// (Only foo and fooNullable will animate during theme changes)
-@tailor
+@tailorMixin
 @EncoderToolbox.colorNoLerp
 @EncoderToolbox.colorNullableNoLerp
 class _OnlyLerpFoo {
@@ -158,7 +164,7 @@ class _OnlyLerpFoo {
 
 /// Example of a class that disallows interpolation of selected fields
 /// (foo and fooNullable will not animate during theme changes)
-@tailor
+@tailorMixin
 class _DontLerpFoo {
     @NoLerpEncoder<Color>()
     static const List<Color> foo = [Colors.orange, Colors.blue];

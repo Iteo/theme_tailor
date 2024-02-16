@@ -7,8 +7,8 @@
 /// [ThemeEncoder]s can be placed either on a class or a field
 ///
 /// If field is annotated with [ThemeEncoder] this encoder will be used,
-/// otherwise encoders from the @Tailor(encoders: [...])
-/// or annotations below @Tailor() annotation will be used.
+/// otherwise encoders from the @TailorMixin(encoders: [...])
+/// or annotations below @TailorMixin() annotation will be used.
 /// If no matching encoder for the type is found,
 /// default one (dynamic) will be used.
 ///
@@ -29,7 +29,7 @@
 ///   const CustomTextStyleEncoder();
 /// }
 ///
-/// @Tailor()
+/// @TailorMixin()
 /// class AppTheme {
 ///   static const List<Color> surface = [Colors.white, Colors.black];
 ///

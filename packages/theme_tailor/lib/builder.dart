@@ -8,7 +8,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 /// Function used by the build runner
 Builder themeTailorBuilder(BuilderOptions options) {
   return PartBuilder(
-    [TailorAnnotationsGenerator(Tailor.fromJson(options.config))],
+    [TailorAnnotationsGenerator(TailorMixin.fromJson(options.config))],
     '.tailor.dart',
     header: '''
     // coverage:ignore-file

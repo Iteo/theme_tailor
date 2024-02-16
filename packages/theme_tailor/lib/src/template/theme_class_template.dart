@@ -14,9 +14,7 @@ class ThemeTailorTemplate extends Template {
   final StringFormat fmt;
 
   String _classTypesDeclaration() {
-    final mixins = [
-      if (config.hasDiagnosticableMixin) 'DiagnosticableTreeMixin'
-    ];
+    final mixins = [if (config.hasDiagnosticableMixin) 'DiagnosticableTreeMixin'];
     final mixinsString = mixins.isEmpty ? '' : ' with ${mixins.join(',')}';
 
     return 'extends ThemeExtension<${config.className}>$mixinsString';
@@ -60,7 +58,7 @@ class ThemeTailorTemplate extends Template {
   String _generateThemes() {
     if (config.themes.isEmpty) return '';
     final buffer = StringBuffer();
-    if (config.staticGetters && !config.constantThemes) {
+    if (!config.constantThemes) {
       config.themes.forEachIndexed((_, e) {
         buffer.write(_getterTemplate(e));
       });
@@ -69,8 +67,7 @@ class ThemeTailorTemplate extends Template {
       buffer.write(_themeTemplate(i, e));
     });
     final themesList = config.themes.fold('', (p, theme) => '$p$theme,');
-    buffer.writeln(
-        'static ${_themeModifier()} ${config.themesFieldName} = [$themesList];');
+    buffer.writeln('static ${_themeModifier()} ${config.themesFieldName} = [$themesList];');
     return buffer.toString();
   }
 
@@ -92,12 +89,11 @@ class ThemeTailorTemplate extends Template {
       if (values != null) {
         buffer.write('${field.key}: ${values[index]},');
       } else {
-        buffer.write(
-            '${field.key}: ${config.baseClassName}.${field.key}[$index],');
+        buffer.write('${field.key}: ${config.baseClassName}.${field.key}[$index],');
       }
     }
 
-    if (config.constantThemes || !config.staticGetters) {
+    if (config.constantThemes) {
       return '''
     static ${_themeModifier()} $returnType $themeName = $returnType(
       ${buffer.toString()}

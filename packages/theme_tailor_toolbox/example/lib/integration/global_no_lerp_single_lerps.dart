@@ -5,7 +5,7 @@ import 'package:theme_tailor_toolbox/theme_tailor_toolbox.dart';
 
 part 'global_no_lerp_single_lerps.tailor.dart';
 
-@TailorComponent(themes: ['light'])
+@TailorMixinComponent()
 @NoLerpEncoder<Color>()
 @NoLerpEncoder<MaterialColor>()
 @NoLerpEncoder<MaterialAccentColor>()
