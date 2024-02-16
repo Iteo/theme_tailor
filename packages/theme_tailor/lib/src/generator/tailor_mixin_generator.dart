@@ -5,7 +5,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/field.dart';
 import 'package:theme_tailor/src/model/library_data.dart';
-import 'package:theme_tailor/src/model/tailor_annotation_data.dart';
+import 'package:theme_tailor/src/model/tailor_mixin_annotation_data.dart';
 import 'package:theme_tailor/src/model/tailor_mixin_classes.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor/src/model/theme_getter_data.dart';
