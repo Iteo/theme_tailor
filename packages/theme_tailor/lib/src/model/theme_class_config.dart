@@ -16,7 +16,6 @@ class ThemeClassConfig {
     required this.hasDiagnosticableMixin,
     required this.hasJsonSerializable,
     required this.constantThemes,
-    required this.staticGetters,
     required this.themeClassName,
     this.themeDataClassName,
   });
@@ -32,7 +31,6 @@ class ThemeClassConfig {
   final bool hasDiagnosticableMixin;
   final bool hasJsonSerializable;
   final bool constantThemes;
-  final bool staticGetters;
   final String themeClassName;
   final String? themeDataClassName;
 }

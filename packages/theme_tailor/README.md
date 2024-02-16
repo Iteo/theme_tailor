@@ -59,7 +59,7 @@ Flutter 3.0 introduces a new way of theming applications using theme extensions 
 All of that involves extra coding work that is time-consuming and error-prone, which is why it is advisable to use a generator.
 
 | No code generation    | @TailorMixin                     |
-|-----------------------|----------------------------------|
+| --------------------- | -------------------------------- |
 | ![before][img_before] | ![after][img_after_tailor_mixin] |
 
 The `@TailorMixin` annotation generates a mixin with an implementation of the ThemeExtension class. It adopts a syntax familiar to standard ThemeExtension classes, allowing for enhanced customization of the resulting class.
@@ -328,7 +328,7 @@ To serialize nested themes, declare your config classes as presented in the [Nes
 The generator will use properties from build.yaml or default values for null properties in the @TailorMixin annotation.
 
 | Build option          | Annotation property | Default                | Info                                                                                                                            |
-|-----------------------|---------------------|------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| --------------------- | ------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | theme_getter          | themeGetter         | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \ on_theme_data \ on_theme_data_props \ on_build_context \ on_build_context_props |
 | theme_class_name      | themeClassName      | null                   | <b>String</b> For custom Theme if you don't want<br>use Material's Theme. Example: FluentTheme                                  |
 | theme_data_class_name | themeDataClassName  | null                   | <b>String</b> For custom ThemeData if you don't want<br>use Material's ThemeData FluentThemeData                                |
@@ -410,7 +410,7 @@ The old theme extension class looked like this:
 ```dart
 part 'my_theme.tailor.dart';
 
-@Tailor(
+@TailorMixin(
   themes: ['light', 'dark'],
 )
 class $_MyTheme {

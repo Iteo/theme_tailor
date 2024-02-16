@@ -5,8 +5,6 @@ class TailorAnnotationData {
   const TailorAnnotationData({
     required this.themes,
     required this.encoders,
-    required this.requireStaticConst,
-    required this.generateStaticGetters,
     required this.themeGetter,
     required this.themeClassName,
     this.themeDataClassName,
@@ -14,8 +12,6 @@ class TailorAnnotationData {
 
   final List<String> themes;
   final Map<String, ThemeEncoderData> encoders;
-  final bool requireStaticConst;
-  final bool generateStaticGetters;
   final String themeClassName;
   final String? themeDataClassName;
   final ThemeGetter themeGetter;
