@@ -25,13 +25,15 @@ class CopyWithTemplate extends Template {
     buffer
       ..write(') {')
       ..writeln('return ')
-      ..template(ClassInstanceTemplate(
-        constructorName: constructorData?.constructorName ?? className,
-        fieldNameToParamType: constructorData?.parameterNameToType,
-        fieldNameToValue: fields.map((e) {
-          return MapEntry(e.name, '${e.name} ?? this.${e.name}');
-        }),
-      ))
+      ..template(
+        ClassInstanceTemplate(
+          constructorName: constructorData?.constructorName ?? className,
+          fieldNameToParamType: constructorData?.parameterNameToType,
+          fieldNameToValue: fields.map((e) {
+            return MapEntry(e.name, '${e.name} ?? this.${e.name}');
+          }),
+        ),
+      )
       ..write(';}');
   }
 }

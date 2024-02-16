@@ -3,8 +3,8 @@ class TailorField extends Field {
     required super.name,
     required super.type,
     required super.isThemeExtension,
-    super.documentation,
     required this.isTailorThemeExtension,
+    super.documentation,
     this.values,
   });
 

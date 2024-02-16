@@ -12,5 +12,5 @@ Future<void> main() async {
     'tailor_mixin_test_input.dart',
   );
 
-  testAnnotatedElements(reader, TailorMixinGenerator(TailorMixin()));
+  testAnnotatedElements(reader, const TailorMixinGenerator(TailorMixin()));
 }

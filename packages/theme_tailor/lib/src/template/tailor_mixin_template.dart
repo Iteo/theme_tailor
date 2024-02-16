@@ -12,9 +12,9 @@ class TailorMixinTemplate extends Template {
     this.name,
     this.fields,
     this.encoderManager,
-    this.hasDiagnosticableMixin,
-    this.constructorData,
-  );
+    this.constructorData, {
+    required this.hasDiagnosticableMixin,
+  });
 
   final String name;
   final List<Field> fields;

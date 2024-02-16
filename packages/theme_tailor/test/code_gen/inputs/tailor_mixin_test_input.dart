@@ -8,12 +8,15 @@ enum WrongAnnotationTarget {
   wrongTarget;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
     return CtorRequiredParametes(
       propA ?? this.propA,
       propB ?? this.propB,
     );
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.none)
 class CtorRequiredParametes {
   const CtorRequiredParametes(this.propA, this.propB);
@@ -22,12 +25,15 @@ class CtorRequiredParametes {
   final int propB;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
     return CtorPositionalParameters(
       propA ?? this.propA,
       propB ?? this.propB,
     );
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.none)
 class CtorPositionalParameters {
   const CtorPositionalParameters(this.propA, [this.propB = 0]);
@@ -36,12 +42,15 @@ class CtorPositionalParameters {
   final int propB;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
     return CtorNamedParameters(
       propA ?? this.propA,
       propB: propB ?? this.propB,
     );
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.none)
 class CtorNamedParameters {
   const CtorNamedParameters(this.propA, {required this.propB});
@@ -50,12 +59,15 @@ class CtorNamedParameters {
   final int propB;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
 extension OnBuildContextBuildContext on BuildContext {
   OnBuildContext get onBuildContext =>
       Theme.of(this).extension<OnBuildContext>()!;
 }
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.onBuildContext)
 class OnBuildContext {
   OnBuildContext({required this.prop});
@@ -63,13 +75,16 @@ class OnBuildContext {
   final int prop;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
 extension OnBuildContextPropsBuildContextProps on BuildContext {
   OnBuildContextProps get onBuildContextProps =>
       Theme.of(this).extension<OnBuildContextProps>()!;
   int get prop => onBuildContextProps.prop;
 }
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
 class OnBuildContextProps {
   OnBuildContextProps({required this.prop});
@@ -77,11 +92,14 @@ class OnBuildContextProps {
   final int prop;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
 extension OnThemeDataThemeData on ThemeData {
   OnThemeData get onThemeData => extension<OnThemeData>()!;
 }
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.onThemeData)
 class OnThemeData {
   OnThemeData({required this.prop});
@@ -89,12 +107,15 @@ class OnThemeData {
   final int prop;
 }
 
-@ShouldGenerate('''
+@ShouldGenerate(
+  '''
 extension OnThemeDataPropsThemeDataProps on ThemeData {
   OnThemeDataProps get onThemeDataProps => extension<OnThemeDataProps>()!;
   int get prop => onThemeDataProps.prop;
 }
-''', contains: true)
+''',
+  contains: true,
+)
 @TailorMixin(themeGetter: ThemeGetter.onThemeDataProps)
 class OnThemeDataProps {
   OnThemeDataProps(this.prop);

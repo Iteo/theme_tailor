@@ -4,8 +4,8 @@ import 'package:theme_tailor/src/util/recursive_import_locator.dart';
 
 extension LibraryElementExtension on LibraryElement {
   bool get hasFlutterDiagnosticableImport {
-    return allVisibleElements().any((element) =>
-        element.name == 'DiagnosticableTreeMixin' &&
-        element.isFromPackage('flutter'));
+    return allVisibleElements().any(
+      (element) => element.name == 'DiagnosticableTreeMixin' && element.isFromPackage('flutter'),
+    );
   }
 }

@@ -26,11 +26,13 @@ class _EqualTemplate extends Template {
     buffer
       ..writeln('@override bool operator ==(Object other) {')
       ..writeln(
-          'return identical(this, other) || ( other.runtimeType == runtimeType && other is $className');
+        'return identical(this, other) || ( other.runtimeType == runtimeType && other is $className',
+      );
 
     for (final field in fields) {
       buffer.writeln(
-          ' && const DeepCollectionEquality().equals(${field.name}, other.${field.name})');
+        ' && const DeepCollectionEquality().equals(${field.name}, other.${field.name})',
+      );
     }
 
     buffer.writeln(');}');

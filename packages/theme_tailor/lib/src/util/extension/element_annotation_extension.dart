@@ -16,8 +16,9 @@ extension ElementAnnotationExtension on ElementAnnotation {
 
   bool get isSourceGenAnnotation {
     final isShouldGenerate =
-        TypeChecker.fromRuntime(ShouldGenerate).isAssignableFromType(computeConstantValue()!.type!);
-    final isShouldThrow = TypeChecker.fromRuntime(ShouldThrow).isAssignableFromType(computeConstantValue()!.type!);
+        const TypeChecker.fromRuntime(ShouldGenerate).isAssignableFromType(computeConstantValue()!.type!);
+    final isShouldThrow =
+        const TypeChecker.fromRuntime(ShouldThrow).isAssignableFromType(computeConstantValue()!.type!);
     return isShouldGenerate || isShouldThrow;
   }
 }
