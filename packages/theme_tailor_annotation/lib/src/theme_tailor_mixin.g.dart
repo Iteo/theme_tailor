@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'theme_tailor.dart';
+part of 'theme_tailor_mixin.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

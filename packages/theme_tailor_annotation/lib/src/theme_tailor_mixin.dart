@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta_meta.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-part 'theme_tailor.g.dart';
+part 'theme_tailor_mixin.g.dart';
 
 const tailorMixin = TailorMixin();
 
@@ -18,7 +18,7 @@ const tailorMixin = TailorMixin();
   anyMap: true,
 )
 class TailorMixin {
-  /// {@macro theme_tailor.theme_tailor}
+  /// {@macro theme_tailor.tailor_mixin}
   const TailorMixin({
     this.themeGetter,
     this.encoders,
