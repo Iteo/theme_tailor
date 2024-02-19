@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_tailor_toolbox/src/util/color.dart';
-import 'package:theme_tailor_toolbox_example/integration/global_no_lerp_single_lerps.dart'
-    as toolbox;
+import 'package:theme_tailor_toolbox_example/integration/global_no_lerp_single_lerps.dart';
 
 void main() {
   const color1 = Colors.black;
@@ -12,7 +11,7 @@ void main() {
   const materialAColor1 = Colors.orangeAccent;
   const materialAColor2 = Colors.blueAccent;
 
-  const theme1 = toolbox.CustomTheme(
+  const theme1 = const CustomTheme(
     color: color1,
     colorNoLerp: color1,
     materialColor: materialColor1,
@@ -21,7 +20,7 @@ void main() {
     materialAccentColorNoLerp: materialAColor1,
   );
 
-  const theme2 = toolbox.CustomTheme(
+  const theme2 = const CustomTheme(
     color: color2,
     colorNoLerp: color2,
     materialColor: materialColor2,
@@ -33,14 +32,12 @@ void main() {
   test('Proper encoder is called per field / class', () {
     const t = 0.6;
 
-    final themeExpectedLerp = toolbox.CustomTheme(
+    final themeExpectedLerp = CustomTheme(
       color: Color.lerp(theme1.color, theme2.color, t)!,
       colorNoLerp: theme2.colorNoLerp,
-      materialColor:
-          lerpMaterialColor(theme1.materialColor, theme2.materialColor, t)!,
+      materialColor: lerpMaterialColor(theme1.materialColor, theme2.materialColor, t)!,
       materialColorNoLerp: theme2.materialColor,
-      materialAccentColor: lerpMaterialAccentColor(
-          theme1.materialAccentColor, theme2.materialAccentColor, t)!,
+      materialAccentColor: lerpMaterialAccentColor(theme1.materialAccentColor, theme2.materialAccentColor, t)!,
       materialAccentColorNoLerp: theme2.materialAccentColor,
     );
 

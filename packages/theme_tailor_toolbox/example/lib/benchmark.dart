@@ -27,8 +27,7 @@ class BenchmarkScoreEmitter extends ScoreEmitter {
 }
 
 class ColorEncoderBenchmark extends CustomBenchmarkBase {
-  ColorEncoderBenchmark()
-      : super('Encoder: Color', emitter: BenchmarkScoreEmitter());
+  ColorEncoderBenchmark() : super('Encoder: Color', emitter: BenchmarkScoreEmitter());
 
   final encoder = EncoderToolbox.colorLerp;
 
@@ -39,8 +38,7 @@ class ColorEncoderBenchmark extends CustomBenchmarkBase {
 }
 
 class ColorEncoderNullableBenchmark extends CustomBenchmarkBase {
-  ColorEncoderNullableBenchmark()
-      : super('Encoder: Color?', emitter: BenchmarkScoreEmitter());
+  ColorEncoderNullableBenchmark() : super('Encoder: Color?', emitter: BenchmarkScoreEmitter());
 
   final encoder = EncoderToolbox.colorNullableLerp;
 
@@ -51,8 +49,7 @@ class ColorEncoderNullableBenchmark extends CustomBenchmarkBase {
 }
 
 class MaterialColorEncoderBenchmark extends CustomBenchmarkBase {
-  MaterialColorEncoderBenchmark()
-      : super('Encoder: MaterialColor', emitter: BenchmarkScoreEmitter());
+  MaterialColorEncoderBenchmark() : super('Encoder: MaterialColor', emitter: BenchmarkScoreEmitter());
 
   final encoder = EncoderToolbox.materialColorLerp;
 
@@ -63,8 +60,7 @@ class MaterialColorEncoderBenchmark extends CustomBenchmarkBase {
 }
 
 class MaterialColorEncoderNullableBenchmark extends CustomBenchmarkBase {
-  MaterialColorEncoderNullableBenchmark()
-      : super('Encoder: MaterialColor?', emitter: BenchmarkScoreEmitter());
+  MaterialColorEncoderNullableBenchmark() : super('Encoder: MaterialColor?', emitter: BenchmarkScoreEmitter());
 
   final encoder = EncoderToolbox.materialColorNullableLerp;
 
@@ -75,8 +71,7 @@ class MaterialColorEncoderNullableBenchmark extends CustomBenchmarkBase {
 }
 
 class MaterialAccentColorEncoderBenchmark extends CustomBenchmarkBase {
-  MaterialAccentColorEncoderBenchmark()
-      : super('Encoder: MaterialAccentColor', emitter: BenchmarkScoreEmitter());
+  MaterialAccentColorEncoderBenchmark() : super('Encoder: MaterialAccentColor', emitter: BenchmarkScoreEmitter());
 
   final encoder = EncoderToolbox.materialAccentColorLerp;
 
@@ -88,8 +83,10 @@ class MaterialAccentColorEncoderBenchmark extends CustomBenchmarkBase {
 
 class MaterialAccentColorEncoderNullableBenchmark extends CustomBenchmarkBase {
   MaterialAccentColorEncoderNullableBenchmark()
-      : super('Encoder: MaterialAccentColor?',
-            emitter: BenchmarkScoreEmitter());
+      : super(
+          'Encoder: MaterialAccentColor?',
+          emitter: BenchmarkScoreEmitter(),
+        );
 
   final encoder = EncoderToolbox.materialAccentColorNullableLerp;
 

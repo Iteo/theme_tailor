@@ -1,19 +1,17 @@
+// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: unnecessary_import
 import 'dart:ui';
 
 import 'package:example/app_colors.dart';
-import 'package:flutter/material.dart';
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:example/diagnosticable_lib.dart';
 
 part 'main.tailor.dart';
 
 /// @TailorMixin allows for generating extensions on BuildContext or ThemeData
 /// for easier access of the theme properties.
 /// for more info check [TailorMixin] and [ThemeGetter] api documentation.
-@TailorMixin(
-  themeGetter: ThemeGetter.onBuildContext,
-)
-class SimpleTheme extends ThemeExtension<SimpleTheme>
-    with _$SimpleThemeTailorMixin {
+@TailorMixin(themeGetter: ThemeGetter.onBuildContext)
+class SimpleTheme extends ThemeExtension<SimpleTheme> with _$SimpleThemeTailorMixin {
   SimpleTheme({
     required this.background,
     required this.appBar,
@@ -72,11 +70,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     /// Theme Tailor generates theme extension and these should be included in the
     /// 'extensions' list from the ThemeData.
-    final _lightThemeData = ThemeData(
+    final lightThemeData = ThemeData(
       brightness: Brightness.light,
       extensions: [lightSimpleTheme],
     );
-    final _darkThemeData = ThemeData(
+    final darkThemeData = ThemeData(
       brightness: Brightness.dark,
       extensions: [darkSimpleTheme],
     );
@@ -86,8 +84,8 @@ class _MyAppState extends State<MyApp> {
       builder: (_, themeMode, __) {
         return MaterialApp(
           title: 'Flutter Demo',
-          theme: _lightThemeData,
-          darkTheme: _darkThemeData,
+          theme: lightThemeData,
+          darkTheme: darkThemeData,
           themeMode: themeMode,
           home: MyHomePage(
             title: 'Theme Tailor Demo',
@@ -168,17 +166,17 @@ class _MyHomePageState extends State<MyHomePage> {
           FloatingActionButton(
             onPressed: _increment,
             tooltip: 'Increment',
-            child: const Icon(Icons.add),
             backgroundColor: customTheme.appBar,
             foregroundColor: customTheme.h1.color,
+            child: const Icon(Icons.add),
           ),
           const SizedBox(width: 10),
           FloatingActionButton(
             onPressed: _swapTheme,
-            child: const Icon(Icons.color_lens),
             tooltip: 'Swap theme',
             backgroundColor: customTheme.appBar,
             foregroundColor: customTheme.h1.color,
+            child: const Icon(Icons.color_lens),
           ),
         ],
       ),

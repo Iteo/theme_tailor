@@ -26,7 +26,7 @@ class TailorMixin {
     this.themeDataClassName,
   });
 
-  factory TailorMixin.fromJson(Map json) => _$TailorMixinFromJson(json);
+  factory TailorMixin.fromJson(Map<String, dynamic> json) => _$TailorMixinFromJson(json);
 
   /// Create getters for the easy access of the theme properties
   /// In case of creating component/modular themes, set it to

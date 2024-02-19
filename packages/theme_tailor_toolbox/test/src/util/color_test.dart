@@ -32,7 +32,10 @@ MaterialAccentColor _randomMaterialAccentColor([Random? random]) {
 }
 
 SwatchMap _materialColorsLerpSwatchMap(
-    MaterialColor? a, MaterialColor? b, double t) {
+  MaterialColor? a,
+  MaterialColor? b,
+  double t,
+) {
   final map = {
     0: Color.lerp(a, b, t),
     50: Color.lerp(a?[50], b?[50], t),
@@ -44,7 +47,10 @@ SwatchMap _materialColorsLerpSwatchMap(
 }
 
 SwatchMap _materialAccentColorsLerpSwatchMap(
-    MaterialAccentColor? a, MaterialAccentColor? b, double t) {
+  MaterialAccentColor? a,
+  MaterialAccentColor? b,
+  double t,
+) {
   final map = {
     0: Color.lerp(a, b, t),
     100: Color.lerp(a?[100], b?[100], t),
@@ -83,9 +89,9 @@ void main() {
     expect(lerpMaterialColor(null, null, rnd.nextDouble()), null);
 
     for (var i = 0; i < 30; i++) {
-      var t = rnd.nextDouble();
-      var a = _randomMaterialColor(rnd);
-      var b = _randomMaterialColor(rnd);
+      final t = rnd.nextDouble();
+      final a = _randomMaterialColor(rnd);
+      final b = _randomMaterialColor(rnd);
 
       expect(
         _materialColorToSwatchMap(lerpMaterialColor(a, b, t)),
@@ -107,9 +113,9 @@ void main() {
     expect(lerpMaterialAccentColor(null, null, rnd.nextDouble()), null);
 
     for (var i = 0; i < 30; i++) {
-      var t = rnd.nextDouble();
-      var a = _randomMaterialAccentColor(rnd);
-      var b = _randomMaterialAccentColor(rnd);
+      final t = rnd.nextDouble();
+      final a = _randomMaterialAccentColor(rnd);
+      final b = _randomMaterialAccentColor(rnd);
 
       expect(
         _materialAccentColorToSwatchMap(lerpMaterialAccentColor(a, b, t)),

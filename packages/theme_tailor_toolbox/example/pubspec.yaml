@@ -27,11 +27,10 @@ dev_dependencies:
   theme_tailor: ^1.0.3
 
 dependency_overrides:
-  theme_tailor_annotation:
-    path: ../../theme_tailor_annotation
-
   theme_tailor:
     path: ../../theme_tailor
+  theme_tailor_annotation:
+    path: ../../theme_tailor_annotation
 
 flutter:
   uses-material-design: true
