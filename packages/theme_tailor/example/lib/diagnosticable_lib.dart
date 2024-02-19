@@ -1,5 +1,5 @@
 // ignore_for_file: directives_ordering
-
+///
 library diagnosticable;
 
 export 'package:flutter/animation.dart';

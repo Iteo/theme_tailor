@@ -11,8 +11,7 @@ typedef OtherThemeListType = List<OtherThemeExtension>;
 typedef ListOfColorsType = List<Color>;
 
 @tailorMixin
-class SimpleTheme extends ThemeExtension<SimpleTheme>
-    with _$SimpleThemeTailorMixin {
+class SimpleTheme extends ThemeExtension<SimpleTheme> with _$SimpleThemeTailorMixin {
   @themeExtension
   static AnotherThemeType anotherTheme = [
     AnotherTheme(
@@ -37,8 +36,7 @@ class SimpleTheme extends ThemeExtension<SimpleTheme>
 }
 
 @tailorMixin
-class AnotherTheme extends ThemeExtension<AnotherTheme>
-    with _$AnotherThemeTailorMixin {
+class AnotherTheme extends ThemeExtension<AnotherTheme> with _$AnotherThemeTailorMixin {
   AnotherTheme({
     required this.appBarColor,
     required this.floatingActionButtonColor,
@@ -58,18 +56,14 @@ class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {
 
   @override
   OtherThemeExtension copyWith({Color? floatingActionButtonColor}) {
-    return OtherThemeExtension(
-        floatingActionButtonColor:
-            floatingActionButtonColor ?? this.floatingActionButtonColor);
+    return OtherThemeExtension(floatingActionButtonColor: floatingActionButtonColor ?? this.floatingActionButtonColor);
   }
 
   @override
-  OtherThemeExtension lerp(
-      ThemeExtension<OtherThemeExtension>? other, double t) {
+  OtherThemeExtension lerp(ThemeExtension<OtherThemeExtension>? other, double t) {
     if (other is! OtherThemeExtension) return this;
     return OtherThemeExtension(
-      floatingActionButtonColor: Color.lerp(
-          floatingActionButtonColor, other.floatingActionButtonColor, t)!,
+      floatingActionButtonColor: Color.lerp(floatingActionButtonColor, other.floatingActionButtonColor, t)!,
     );
   }
 }

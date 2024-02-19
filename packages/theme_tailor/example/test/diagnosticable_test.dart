@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:example/diagnosticable.dart' as diagnosticable;
-import 'package:example/diagnosticable_barrel_import.dart'
-    as diagnosticable_barrel;
+import 'package:example/diagnosticable_barrel_import.dart' as diagnosticable_barrel;
 import 'package:example/diagnosticable_lib.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -21,20 +20,19 @@ void main() {
     expect(theme, isA<DiagnosticableTree>());
 
     expect(properties.properties, [
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'type')
           .having((d) => d.value, 'value', 'MyTheme'),
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'background')
           .having((d) => d.value, 'value', randomColor),
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'textStyle')
           .having((d) => d.value, 'value', textStyle),
     ]);
   });
 
-  test('has debugFillProperties if importing flutter#foundation from barrel',
-      () {
+  test('has debugFillProperties if importing flutter#foundation from barrel', () {
     final properties = DiagnosticPropertiesBuilder();
 
     final randomColor = Colors.accents[Random().nextInt(Colors.accents.length)];
@@ -48,13 +46,13 @@ void main() {
     expect(theme, isA<DiagnosticableTree>());
 
     expect(properties.properties, [
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'type')
           .having((d) => d.value, 'value', 'MyTheme'),
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'background')
           .having((d) => d.value, 'value', randomColor),
-      isA<DiagnosticsProperty>()
+      isA<DiagnosticsProperty<dynamic>>()
           .having((d) => d.name, 'name', 'textStyle')
           .having((d) => d.value, 'value', textStyle),
     ]);

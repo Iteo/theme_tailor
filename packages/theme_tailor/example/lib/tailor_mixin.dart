@@ -24,8 +24,7 @@ const _customNullColorEncoder = _CustomNullColorEncoder();
 
 @TailorMixin(themeGetter: ThemeGetter.onBuildContextProps)
 @_customNullColorEncoder
-class MixedTheme1 extends ThemeExtension<MixedTheme1>
-    with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
+class MixedTheme1 extends ThemeExtension<MixedTheme1> with DiagnosticableTreeMixin, _$MixedTheme1TailorMixin {
   const MixedTheme1({
     required this.foreground,
     required this.textStyle,
@@ -42,13 +41,12 @@ class MixedTheme1 extends ThemeExtension<MixedTheme1>
   /// This returns other ThemeExtension
   final MixedTheme2 ok;
 
-  static final some = 'Something ${2 + 2}';
+  static const some = 'Something ${2 + 2}';
   static const calculations = '4';
 }
 
 @TailorMixinComponent()
-class MixedTheme2 extends ThemeExtension<MixedTheme2>
-    with _$MixedTheme2TailorMixin {
+class MixedTheme2 extends ThemeExtension<MixedTheme2> with _$MixedTheme2TailorMixin {
   const MixedTheme2({
     required this.foreground,
   });

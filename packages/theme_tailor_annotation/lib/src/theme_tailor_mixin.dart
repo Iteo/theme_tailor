@@ -26,7 +26,7 @@ class TailorMixin {
     this.themeDataClassName,
   });
 
-  factory TailorMixin.fromJson(Map json) => _$TailorMixinFromJson(json);
+  factory TailorMixin.fromJson(Map<String, dynamic> json) => _$TailorMixinFromJson(json);
 
   /// Create getters for the easy access of the theme properties
   /// In case of creating component/modular themes, set it to
@@ -38,7 +38,7 @@ class TailorMixin {
   ///
   /// ```dart
   /// @TailorMixin(encoders: [CustomColorEncoder()])
-  /// class ExampleTheme {...}
+  /// class ExampleTheme extends ThemeExtension<ExampleTheme> with _$ExampleThemeTailorMixin {...}
   /// ```
   ///
   /// is equivalent to writing:
@@ -46,21 +46,21 @@ class TailorMixin {
   /// ```dart
   /// @TailorMixin()
   /// @CustomColorEncoder()
-  /// class ExampleTheme {...}
+  /// class ExampleTheme extends ThemeExtension<ExampleTheme> with _$ExampleThemeTailorMixin {...}
   /// ```
   ///
   /// It allows to reuse tailor annotation across several theme classes
   ///
   /// ```dart
-  /// const myCustomAnnotation = Tailor(
+  /// const myCustomAnnotation = TailorMixin(
   ///   encoders: [CustomColorEncoder()],
   /// );
   ///
   /// @myCustomAnnotation
-  /// class ExampleTheme {...}
+  /// class ExampleTheme extends ThemeExtension<ExampleTheme> with _$ExampleThemeTailorMixin {...}
   ///
   /// @myCustomAnnotation
-  /// class OtherExampleTheme {...}
+  /// class OtherExampleTheme extends ThemeExtension<OtherExampleTheme> with _$OtherExampleThemeTailorMixin {...}
   /// ```
   // ignore: deprecated_member_use
   @JsonKey(ignore: true)
@@ -80,8 +80,11 @@ class TailorMixin {
   ///   themeGetter: ThemeGetter.onBuildContext,
   ///   themeClassName: 'YourTheme',
   /// )
-  /// class _$MyThemes {
-  ///   static List<Color> background = [Colors.white, Colors.black];
+  /// class _$MyThemes extends ThemeExtension<_$MyThemes> with _$_$MyThemesTailorMixin {
+  ///   _$MyThemes({ required this.background });
+  ///
+  ///   @override
+  ///   final Color background;
   /// }
   /// ```
   ///
@@ -109,8 +112,11 @@ class TailorMixin {
   ///   themeGetter: ThemeGetter.onThemeData,
   ///   themeDataClassName: 'YourThemeData',
   /// )
-  /// class _$MyThemes {
-  ///   static List<Color> background = [Colors.white, Colors.black];
+  /// class _$MyThemes extends ThemeExtension<_$MyThemes> with _$_$MyThemesTailorMixin {
+  ///    _$MyThemes({ required this.background });
+  ///
+  ///    @override
+  ///    Color background;
   /// }
   /// ```
   ///

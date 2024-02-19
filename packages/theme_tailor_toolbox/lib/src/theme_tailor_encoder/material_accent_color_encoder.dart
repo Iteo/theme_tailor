@@ -23,13 +23,15 @@ class MaterialAccentColorEncoder extends ThemeEncoder<MaterialAccentColor> {
 /// The default implementations of the ThemeEncoder for MaterialAccentColor?
 ///
 /// {@macro tttoolbox.encoders.encoderUsage}
-class MaterialAccentColorNullableEncoder
-    extends ThemeEncoder<MaterialAccentColor?> {
+class MaterialAccentColorNullableEncoder extends ThemeEncoder<MaterialAccentColor?> {
   const MaterialAccentColorNullableEncoder();
 
   @override
   MaterialAccentColor? lerp(
-      MaterialAccentColor? a, MaterialAccentColor? b, double t) {
+    MaterialAccentColor? a,
+    MaterialAccentColor? b,
+    double t,
+  ) {
     return lerpMaterialAccentColor(a, b, t);
   }
 }

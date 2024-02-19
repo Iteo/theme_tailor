@@ -118,30 +118,49 @@ In case of `NoLerpEncoder` it is possible to use it with any type `T` as `NoLerp
 /// Disabling interpolation provided by default for types like Color
 /// (Only foo and fooNullable will animate during theme changes)
 @tailorMixin
-@NoLerpEncoder<Color>
-@NoLerpEncoder<Color?>
-class _OnlyLerpFoo {
-    @ColorEncoder()
-    static const List<Color> foo = [Colors.orange, Colors.blue];
-    static const List<Color> bar = [Colors.pink, Colors.red];
+@NoLerpEncoder<Color>()
+@NoLerpEncoder<Color?>()
+class _OnlyLerpFoo extends ThemeExtension<_OnlyLerpFoo> with _$_OnlyLerpFooTailorMixin {
+    _OnlyLerpFoo({
+    required this.foo,
+    required this.bar,
+    this.fooNullable,
+    this.barNullable,
+  });
 
+    @ColorEncoder()
+    final Color foo;
+    final Color bar;
     @ColorNullableEncoder()
-    static const List<Color?> fooNullable = [Colors.orange, Colors.blue];
-    static const List<Color?> barNullable = [Colors.pink, Colors.red];
+    final Color? fooNullable;
+    final Color? barNullable;
 }
+
+final orangePink = _OnlyLerpFoo(foo: Colors.orange, bar: Colors.pink, fooNullable: Colors.orange, barNullable: Colors.pink);
+final blueRed = _OnlyLerpFoo(foo: Colors.blue, bar: Colors.red, fooNullable: Colors.blue, barNullable: Colors.red);
 
 /// Example of a class that disallows interpolation of selected fields
 /// (foo and fooNullable will not animate during theme changes)
 @tailorMixin
-class _DontLerpFoo {
-    @NoLerpEncoder<Color>()
-    static const List<Color> foo = [Colors.orange, Colors.blue];
-    static const List<Color> bar = [Colors.pink, Colors.red];
+class _DontLerpFoo extends ThemeExtension<_DontLerpFoo> with _$_DontLerpFooTailorMixin {
+  _DontLerpFoo({
+    required this.foo,
+    required this.bar,
+    this.fooNullable,
+    this.barNullable,
+  });
 
+    @NoLerpEncoder<Color>()
+    final Color foo;
+    final Color bar;
     @NoLerpEncoder<Color?>()
-    static const List<Color?> fooNullable = [Colors.orange, Colors.blue];
-    static const List<Color?> barNullable = [Colors.pink, Colors.red];
+    final Color? fooNullable;
+    final Color? barNullable;
 }
+
+final orangePink = _DontLerpFoo(foo: Colors.orange, bar: Colors.pink, fooNullable: Colors.orange, barNullable: Colors.pink);
+final blueRed = _DontLerpFoo(foo: Colors.blue, bar: Colors.red, fooNullable: Colors.blue, barNullable: Colors.red);
+
 ```
 
 Alternatively with EncoderToolbox:
@@ -152,27 +171,45 @@ Alternatively with EncoderToolbox:
 @tailorMixin
 @EncoderToolbox.colorNoLerp
 @EncoderToolbox.colorNullableNoLerp
-class _OnlyLerpFoo {
-    @EncoderToolbox.colorLerp
-    static const List<Color> foo = [Colors.orange, Colors.blue];
-    static const List<Color> bar = [Colors.pink, Colors.red];
+class _OnlyLerpFoo extends ThemeExtension<_OnlyLerpFoo> with _$_OnlyLerpFooTailorMixin {
+    _OnlyLerpFoo({
+      required this.foo,
+      required this.bar,
+      this.fooNullable,
+      this.barNullable,
+    });
 
+    @EncoderToolbox.colorLerp
+    final List<Color> foo;
+    final List<Color> bar;
     @EncoderToolbox.colorNullableLerp
-    static const List<Color?> fooNullable = [Colors.orange, Colors.blue];
-    static const List<Color?> barNullable = [Colors.pink, Colors.red];
+    final List<Color?> fooNullable;
+    final List<Color?> barNullable;
 }
+
+final orangePink = _OnlyLerpFoo(foo: Colors.orange, bar: Colors.pink, fooNullable: Colors.orange, barNullable: Colors.pink);
+final blueRed = _OnlyLerpFoo(foo: Colors.blue, bar: Colors.red, fooNullable: Colors.blue, barNullable: Colors.red);
 
 /// Example of a class that disallows interpolation of selected fields
 /// (foo and fooNullable will not animate during theme changes)
 @tailorMixin
-class _DontLerpFoo {
-    @NoLerpEncoder<Color>()
-    static const List<Color> foo = [Colors.orange, Colors.blue];
-    static const List<Color> bar = [Colors.pink, Colors.red];
+class _DontLerpFoo extends ThemeExtension<_DontLerpFoo> with _$_DontLerpFooTailorMixin {
+    _DontLerpFoo({
+      required this.foo,
+      required this.bar,
+      this.fooNullable,
+      this.barNullable,
+    });
 
+    @NoLerpEncoder<Color>()
+    final Color foo;
+    final Color bar;
     @NoLerpEncoder<Color?>()
-    static const List<Color?> fooNullable = [Colors.orange, Colors.blue];
-    static const List<Color?> barNullable = [Colors.pink, Colors.red];
+    final Color? fooNullable;
+    final Color? barNullable;
 }
+
+final orangePink = _DontLerpFoo(foo: Colors.orange, bar: Colors.pink, fooNullable: Colors.orange, barNullable: Colors.pink);
+final blueRed = _DontLerpFoo(foo: Colors.blue, bar: Colors.red, fooNullable: Colors.blue, barNullable: Colors.red);
 ```
 

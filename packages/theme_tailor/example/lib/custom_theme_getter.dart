@@ -9,8 +9,7 @@ part 'custom_theme_getter.tailor.dart';
   themeGetter: ThemeGetter.onBuildContext,
   themeClassName: 'FluentTheme',
 )
-class GetterTheme extends ThemeExtension<GetterTheme>
-    with _$GetterThemeTailorMixin {
+class GetterTheme extends ThemeExtension<GetterTheme> with _$GetterThemeTailorMixin {
   GetterTheme({
     required this.background,
     required this.appBar,
@@ -26,8 +25,7 @@ class GetterTheme extends ThemeExtension<GetterTheme>
 }
 
 @TailorMixinComponent()
-class CartComponent extends ThemeExtension<CartComponent>
-    with _$CartComponentTailorMixin {
+class CartComponent extends ThemeExtension<CartComponent> with _$CartComponentTailorMixin {
   CartComponent({
     required this.color,
     required this.h2Style,

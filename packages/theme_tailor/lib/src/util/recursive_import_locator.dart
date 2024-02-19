@@ -32,9 +32,7 @@ extension FindAllAvailableTopLevelElements on LibraryElement {
   /// This function does not guarantees that the elements returned are unique.
   /// It is possible for the same object to be present multiple times in the list.
   Iterable<Element> allVisibleElements() {
-    final elements = libraryImports
-        .imports()
-        .expand((import) => import.library._visibleElements({}, import.key));
+    final elements = libraryImports.imports().expand((import) => import.library._visibleElements({}, import.key));
 
     return elements;
   }
@@ -50,9 +48,7 @@ extension FindAllAvailableTopLevelElements on LibraryElement {
         continue;
       }
 
-      yield* directive.library
-          ._visibleElements(visitedPaths, directive.key)
-          .where(directive.elementIsExported);
+      yield* directive.library._visibleElements(visitedPaths, directive.key).where(directive.elementIsExported);
     }
   }
 }
@@ -86,15 +82,9 @@ class _LibraryDirective {
     final library = export.exportedLibrary;
     if (library == null) return null;
 
-    final hideStatements = export.combinators
-        .whereType<HideElementCombinator>()
-        .expand((e) => e.hiddenNames)
-        .toSet();
+    final hideStatements = export.combinators.whereType<HideElementCombinator>().expand((e) => e.hiddenNames).toSet();
 
-    final showStatements = export.combinators
-        .whereType<ShowElementCombinator>()
-        .expand((e) => e.shownNames)
-        .toSet();
+    final showStatements = export.combinators.whereType<ShowElementCombinator>().expand((e) => e.shownNames).toSet();
 
     return _LibraryDirective(
       hideStatements: hideStatements,
@@ -107,15 +97,9 @@ class _LibraryDirective {
     final library = export.importedLibrary;
     if (library == null) return null;
 
-    final hideStatements = export.combinators
-        .whereType<HideElementCombinator>()
-        .expand((e) => e.hiddenNames)
-        .toSet();
+    final hideStatements = export.combinators.whereType<HideElementCombinator>().expand((e) => e.hiddenNames).toSet();
 
-    final showStatements = export.combinators
-        .whereType<ShowElementCombinator>()
-        .expand((e) => e.shownNames)
-        .toSet();
+    final showStatements = export.combinators.whereType<ShowElementCombinator>().expand((e) => e.shownNames).toSet();
 
     return _LibraryDirective(
       hideStatements: hideStatements,
@@ -159,13 +143,11 @@ class _LibraryKey {
   final String librarySource;
 
   @override
-  bool operator ==(Object? other) {
+  bool operator ==(Object other) {
     return other is _LibraryKey &&
         librarySource == other.librarySource &&
-        const SetEquality<String>()
-            .equals(hideStatements, other.hideStatements) &&
-        const SetEquality<String>()
-            .equals(showStatements, other.showStatements);
+        const SetEquality<String>().equals(hideStatements, other.hideStatements) &&
+        const SetEquality<String>().equals(showStatements, other.showStatements);
   }
 
   @override

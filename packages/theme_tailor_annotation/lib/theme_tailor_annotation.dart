@@ -1,3 +1,4 @@
+///
 library theme_tailor_annotation;
 
 export 'package:collection/collection.dart' show DeepCollectionEquality;
