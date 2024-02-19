@@ -38,27 +38,18 @@ and the Flutter guide for
 Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0! The generator helps to minimize the required boilerplate code.
 
 # Table of contents
-- [Table of contents](#table-of-contents)
 - [Motivation](#motivation)
 - [How to use](#how-to-use)
   - [Install](#install)
   - [Add imports and part directive](#add-imports-and-part-directive)
-          - [name.dart](#namedart)
   - [Run the code generator](#run-the-code-generator)
   - [Create Theme class](#create-theme-class)
-    - [@TailorMixin:](#tailormixin)
-          - [my\_theme.dart](#my_themedart)
   - [Change generated extensions](#change-generated-extensions)
   - [Nesting generated ThemeExtensions, Modular themes \&\& DesignSystems](#nesting-generated-themeextensions-modular-themes--designsystems)
-          - [Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.](#structure-of-the-applications-theme-data-and-its-extensions-chatcomponentstheme-has-nested-properties)
-    - [Example for @TailorMixin annotation:](#example-for-tailormixin-annotation)
   - [Custom types encoding](#custom-types-encoding)
-          - [my\_theme.dart](#my_themedart-1)
   - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
   - [Json serialization](#json-serialization)
   - [Build configuration](#build-configuration)
-    - [Material's theme\_getter](#materials-theme_getter)
-    - [Custom theme\_getter](#custom-theme_getter)
   - [Custom theme getter](#custom-theme-getter)
   - [Migration from Tailor to TailorMixin](#migration-from-tailor-to-tailormixin)
 
