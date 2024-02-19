@@ -38,20 +38,29 @@ and the Flutter guide for
 Welcome to Theme Tailor, a code generator and theming utility for supercharging Flutter ThemeExtension classes introduced in Flutter 3.0! The generator helps to minimize the required boilerplate code.
 
 # Table of contents
+- [Table of contents](#table-of-contents)
 - [Motivation](#motivation)
 - [How to use](#how-to-use)
-    - [Install](#install)
-    - [Add imports and part directive](#add-imports-and-part-directive)
-    - [Run the code generator](#run-the-code-generator)
-    - [Create Theme class](#create-theme-class)
-    - [Change generated extensions](#change-generated-extensions)
-    - [Nesting generated theme extensions, modular themes, design systems](#nesting-generated-themeextensions-modular-themes--designsystems)
-    - [Custom types encoding](#custom-types-encoding)
-    - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
-    - [Json serialization](#json-serialization)
-    - [Build configuration](#build-configuration)
-    - [Custom theme getter](#custom-theme-getter)
-    - [Migration from Tailor to TailorMixin](#migration-from-tailor-to-tailormixin)
+  - [Install](#install)
+  - [Add imports and part directive](#add-imports-and-part-directive)
+          - [name.dart](#namedart)
+  - [Run the code generator](#run-the-code-generator)
+  - [Create Theme class](#create-theme-class)
+    - [@TailorMixin:](#tailormixin)
+          - [my\_theme.dart](#my_themedart)
+  - [Change generated extensions](#change-generated-extensions)
+  - [Nesting generated ThemeExtensions, Modular themes \&\& DesignSystems](#nesting-generated-themeextensions-modular-themes--designsystems)
+          - [Structure of the application's theme data and its extensions. "chatComponentsTheme" has nested properties.](#structure-of-the-applications-theme-data-and-its-extensions-chatcomponentstheme-has-nested-properties)
+    - [Example for @TailorMixin annotation:](#example-for-tailormixin-annotation)
+  - [Custom types encoding](#custom-types-encoding)
+          - [my\_theme.dart](#my_themedart-1)
+  - [Flutter diagnosticable / debugFillProperties](#flutter-diagnosticable--debugfillproperties)
+  - [Json serialization](#json-serialization)
+  - [Build configuration](#build-configuration)
+    - [Material's theme\_getter](#materials-theme_getter)
+    - [Custom theme\_getter](#custom-theme_getter)
+  - [Custom theme getter](#custom-theme-getter)
+  - [Migration from Tailor to TailorMixin](#migration-from-tailor-to-tailormixin)
 
 # Motivation
 Flutter 3.0 introduces a new way of theming applications using theme extensions in ThemeData. To declare a theme extension, you need to create a class that extends ThemeData, define its constructor and fields, implement the "copyWith" and "lerp" methods, and optionally override the "hashCode," "==" operator, and implement the "debugFillProperties" method. Additionally you may want to create extensions on BuildContext or ThemeData to access newly created themes. 
@@ -410,7 +419,7 @@ The old theme extension class looked like this:
 ```dart
 part 'my_theme.tailor.dart';
 
-@TailorMixin(
+@Tailor(
   themes: ['light', 'dark'],
 )
 class $_MyTheme {

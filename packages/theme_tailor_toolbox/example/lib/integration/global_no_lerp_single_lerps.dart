@@ -10,16 +10,31 @@ part 'global_no_lerp_single_lerps.tailor.dart';
 @NoLerpEncoder<MaterialColor>()
 @NoLerpEncoder<MaterialAccentColor>()
 @NoLerpEncoder<TextStyle>()
-class _$CustomTheme {
+class CustomTheme extends ThemeExtension<CustomTheme> with _$CustomThemeTailorMixin {
+  CustomTheme({
+    required this.color,
+    required this.colorNoLerp,
+    required this.materialColor,
+    required this.materialColorNoLerp,
+    required this.materialAccentColor,
+    required this.materialAccentColorNoLerp,
+  });
+
   @EncoderToolbox.colorLerp
-  static const List<Color> color = [];
-  static const List<Color> colorNoLerp = [];
+  @override
+  final Color color;
+  @override
+  final Color colorNoLerp;
 
   @EncoderToolbox.materialColorLerp
-  static const List<MaterialColor> materialColor = [];
-  static const List<MaterialColor> materialColorNoLerp = [];
+  @override
+  final MaterialColor materialColor;
+  @override
+  final MaterialColor materialColorNoLerp;
 
   @EncoderToolbox.materialAccentColorLerp
-  static const List<MaterialAccentColor> materialAccentColor = [];
-  static const List<MaterialAccentColor> materialAccentColorNoLerp = [];
+  @override
+  final MaterialAccentColor materialAccentColor;
+  @override
+  final MaterialAccentColor materialAccentColorNoLerp;
 }

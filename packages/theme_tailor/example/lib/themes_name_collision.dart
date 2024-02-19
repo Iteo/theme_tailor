@@ -6,8 +6,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'themes_name_collision.tailor.dart';
 
 @tailorMixin
-class SimpleTheme extends ThemeExtension<SimpleTheme>
-    with _$SimpleThemeTailorMixin {
+class SimpleTheme extends ThemeExtension<SimpleTheme> with _$SimpleThemeTailorMixin {
   @themeExtension
   static List<AnotherTheme> anotherTheme = [
     const AnotherTheme(Colors.black),
@@ -16,8 +15,7 @@ class SimpleTheme extends ThemeExtension<SimpleTheme>
 }
 
 @tailorMixinComponent
-class AnotherTheme extends ThemeExtension<AnotherTheme>
-    with _$AnotherThemeTailorMixin {
+class AnotherTheme extends ThemeExtension<AnotherTheme> with _$AnotherThemeTailorMixin {
   const AnotherTheme(this.foreground);
 
   final Color foreground;

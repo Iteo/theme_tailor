@@ -1,6 +1,3 @@
-# 3.0.0
-- Removed `requireStaticConst` and `generateStaticGetters` 
-
 # 2.1.0
 - Add `themeClassName` and `themeDataClassName` properties to `@TailorMixin`. This addition provides the flexibility for themeGetters to generate a custom theme getter for the extension.
 - Add migration example from `@Tailor` / `@TailorComponent` to `@TailorMixin` / `@TailorMixinComponent`.

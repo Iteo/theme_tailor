@@ -3,8 +3,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-abstract class GeneratorToBuffer<TAnnotation>
-    extends GeneratorForAnnotation<TAnnotation> {
+abstract class GeneratorToBuffer<TAnnotation> extends GeneratorForAnnotation<TAnnotation> {
   const GeneratorToBuffer();
 
   @override
@@ -21,8 +20,7 @@ abstract class GeneratorToBuffer<TAnnotation>
   );
 }
 
-abstract class GeneratorAnnotationMatcher<TAnnotation>
-    extends GeneratorForAnnotation<TAnnotation> {
+abstract class GeneratorAnnotationMatcher<TAnnotation> extends GeneratorForAnnotation<TAnnotation> {
   const GeneratorAnnotationMatcher();
 
   @override
@@ -36,8 +34,7 @@ abstract class GeneratorAnnotationMatcher<TAnnotation>
     final library = await buildStep.resolver.libraryFor(assetId);
 
     final buffer = StringBuffer();
-    final tailorAnnotatedElements =
-        library.topLevelElements.where(typeChecker.hasAnnotationOf);
+    final tailorAnnotatedElements = library.topLevelElements.where(typeChecker.hasAnnotationOf);
 
     for (final element in tailorAnnotatedElements) {
       getGeneratorFrom(element).generateToBuffer(

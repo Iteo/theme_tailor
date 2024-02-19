@@ -8,8 +8,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'diagnosticable.tailor.dart';
 
 @TailorMixin()
-class MyTheme extends ThemeExtension<MyTheme>
-    with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
+class MyTheme extends ThemeExtension<MyTheme> with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
   MyTheme({
     required this.background,
     required this.textStyle,
@@ -20,5 +19,4 @@ class MyTheme extends ThemeExtension<MyTheme>
 }
 
 @TailorMixin()
-class EmptyTheme extends ThemeExtension<EmptyTheme>
-    with _$EmptyThemeTailorMixin {}
+class EmptyTheme extends ThemeExtension<EmptyTheme> with _$EmptyThemeTailorMixin {}

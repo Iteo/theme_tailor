@@ -1,3 +1,4 @@
+///
 library theme_tailor_toolbox;
 
 export 'package:flutter/foundation.dart';

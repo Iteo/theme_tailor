@@ -7,8 +7,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'nullable_params.tailor.dart';
 
 @tailorMixin
-class NullableParams extends ThemeExtension<NullableParams>
-    with _$NullableParamsTailorMixin {
+class NullableParams extends ThemeExtension<NullableParams> with _$NullableParamsTailorMixin {
   NullableParams({
     required this.background,
     this.appBar,
@@ -23,8 +22,7 @@ final nullableParams = NullableParams(
 );
 
 @TailorMixin()
-class MyTheme extends ThemeExtension<MyTheme>
-    with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
+class MyTheme extends ThemeExtension<MyTheme> with DiagnosticableTreeMixin, _$MyThemeTailorMixin {
   MyTheme(this.iconColor);
 
   final Color iconColor;

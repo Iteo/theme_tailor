@@ -30,20 +30,25 @@
 /// }
 ///
 /// @TailorMixin()
-/// class AppTheme {
-///   static const List<Color> surface = [Colors.white, Colors.black];
+/// class AppTheme extends ThemeExtension<AppTheme> with _$AppThemeTailorMixin {
+///   AppTheme({
+///     required this.background,
+///     required this.surface,
+///     required this.someColors,
+///     required this.h1,
+///   });
 ///
 ///   @CustomColorEncoder()
-///   static const List<Color> background = [Colors.blue, Colors.purple];
+///   final Color background;
 ///
 ///   /// This will use the default encoder for Color
-///   static const List<Color> surface = [Colors.blue, Colors.purple];
+///   final Color surface;
 ///
 ///   /// This will the dynamic encoder since the type of the list is dynamic
-///   static const List someColors = [Colors.blue, Colors.purple];
+///   final Color someColors;
 ///
 ///   @CustomTextStyleEncoder()
-///   static const List<TextStyle> h1 = [TextStyle(), TextStyle()];
+///   final TextStyle h1;
 /// }
 /// ```
 /// {@endtemplate}

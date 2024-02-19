@@ -7,20 +7,15 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 part 'theme_extension_in_field.tailor.dart';
 
 @tailorMixin
-class SomeTheme extends ThemeExtension<SomeTheme>
-    with DiagnosticableTreeMixin, _$SomeThemeTailorMixin {
+class SomeTheme extends ThemeExtension<SomeTheme> with DiagnosticableTreeMixin, _$SomeThemeTailorMixin {
   SomeTheme(this.appBackground);
 
   final Color appBackground;
 
   @themeExtension
-  static AnotherThemePart anotherThemePartGeneratedConstructor =
-      AnotherThemePart(Colors.green);
+  static AnotherThemePart anotherThemePartGeneratedConstructor = AnotherThemePart(Colors.green);
 
-  static List<OtherThemeExtension> otherThemeExtension = [
-    OtherThemeExtension(),
-    OtherThemeExtension()
-  ];
+  static List<OtherThemeExtension> otherThemeExtension = [OtherThemeExtension(), OtherThemeExtension()];
 
   @themeExtension
   static List<AnotherThemePart?> nullablePart = List.filled(2, null);
@@ -29,8 +24,7 @@ class SomeTheme extends ThemeExtension<SomeTheme>
 }
 
 @tailorMixinComponent
-class AnotherThemePart extends ThemeExtension<AnotherThemePart>
-    with _$AnotherThemePartTailorMixin {
+class AnotherThemePart extends ThemeExtension<AnotherThemePart> with _$AnotherThemePartTailorMixin {
   AnotherThemePart(this.navBarBackground);
 
   final Color navBarBackground;
@@ -45,18 +39,14 @@ class OtherThemeExtension extends ThemeExtension<OtherThemeExtension> {
 
   @override
   OtherThemeExtension copyWith({Color? floatingActionButtonColor}) {
-    return OtherThemeExtension(
-        floatingActionButtonColor:
-            floatingActionButtonColor ?? this.floatingActionButtonColor);
+    return OtherThemeExtension(floatingActionButtonColor: floatingActionButtonColor ?? this.floatingActionButtonColor);
   }
 
   @override
-  OtherThemeExtension lerp(
-      ThemeExtension<OtherThemeExtension>? other, double t) {
+  OtherThemeExtension lerp(ThemeExtension<OtherThemeExtension>? other, double t) {
     if (other is! OtherThemeExtension) return this;
     return OtherThemeExtension(
-      floatingActionButtonColor: Color.lerp(
-          floatingActionButtonColor, other.floatingActionButtonColor, t)!,
+      floatingActionButtonColor: Color.lerp(floatingActionButtonColor, other.floatingActionButtonColor, t)!,
     );
   }
 }
