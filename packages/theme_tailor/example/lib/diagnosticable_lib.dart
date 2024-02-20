@@ -1,5 +1,6 @@
 // ignore_for_file: directives_ordering
-///
+
+/// A library to provide diagnosticable class
 library diagnosticable;
 
 export 'package:flutter/animation.dart';
