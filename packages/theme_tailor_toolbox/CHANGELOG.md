@@ -1,3 +1,7 @@
+# 1.0.3
+- Remove depricated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
+- Added linteo package to the project.
+
 # 1.0.2
 - Fix dependencies (Remove pubdev unknown platforms error)
 
