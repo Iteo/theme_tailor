@@ -1,3 +1,6 @@
+# 3.0.1
+- Bump dependencies versions
+
 # 3.0.0
 - Remove depricated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
 - Added linteo package to the project.
