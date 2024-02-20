@@ -21,7 +21,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.3.2
-  linteo: 1.3.0
+  linteo: ^1.3.0
   theme_tailor: ^1.2.0
 
 dependency_overrides:
