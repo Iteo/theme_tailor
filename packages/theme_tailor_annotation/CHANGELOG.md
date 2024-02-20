@@ -1,3 +1,7 @@
+# 3.0.0
+- Remove depricated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
+- Added linteo package to the project.
+
 # 2.1.0
 - Add `themeClassName` and `themeDataClassName` properties to `@TailorMixin`. This addition provides the flexibility for themeGetters to generate a custom theme getter for the extension.
 - Mark `@Tailor` and `@TailorComponent` annotations as deprecated
