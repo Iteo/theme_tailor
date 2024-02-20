@@ -180,11 +180,11 @@ class _OnlyLerpFoo extends ThemeExtension<_OnlyLerpFoo> with _$_OnlyLerpFooTailo
     });
 
     @EncoderToolbox.colorLerp
-    final List<Color> foo;
-    final List<Color> bar;
+    final Color foo;
+    final Color bar;
     @EncoderToolbox.colorNullableLerp
-    final List<Color?> fooNullable;
-    final List<Color?> barNullable;
+    final Color? fooNullable;
+    final Color? barNullable;
 }
 
 final orangePink = _OnlyLerpFoo(foo: Colors.orange, bar: Colors.pink, fooNullable: Colors.orange, barNullable: Colors.pink);

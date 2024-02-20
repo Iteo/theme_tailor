@@ -20,13 +20,13 @@ void main() {
     expect(theme, isA<DiagnosticableTree>());
 
     expect(properties.properties, [
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<String>>()
           .having((d) => d.name, 'name', 'type')
           .having((d) => d.value, 'value', 'MyTheme'),
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<Color>>()
           .having((d) => d.name, 'name', 'background')
           .having((d) => d.value, 'value', randomColor),
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<TextStyle>>()
           .having((d) => d.name, 'name', 'textStyle')
           .having((d) => d.value, 'value', textStyle),
     ]);
@@ -46,13 +46,13 @@ void main() {
     expect(theme, isA<DiagnosticableTree>());
 
     expect(properties.properties, [
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<String>>()
           .having((d) => d.name, 'name', 'type')
           .having((d) => d.value, 'value', 'MyTheme'),
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<Color>>()
           .having((d) => d.name, 'name', 'background')
           .having((d) => d.value, 'value', randomColor),
-      isA<DiagnosticsProperty<dynamic>>()
+      isA<DiagnosticsProperty<TextStyle>>()
           .having((d) => d.name, 'name', 'textStyle')
           .having((d) => d.value, 'value', textStyle),
     ]);
