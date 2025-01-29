@@ -1,4 +1,4 @@
-// ignore_for_file: annotate_overrides
+// ignore_for_file: annotate_overrides, deprecated_member_use
 
 import 'package:example/encoder_example.dart';
 import 'package:flutter/material.dart';
@@ -22,15 +22,13 @@ class JsonColorConverter implements JsonConverter<Color, int> {
 @JsonSerializable(explicitToJson: true)
 @CustomColorEncoder()
 @JsonColorConverter()
-class SerializableTheme extends ThemeExtension<SerializableTheme>
-    with _$SerializableThemeTailorMixin {
+class SerializableTheme extends ThemeExtension<SerializableTheme> with _$SerializableThemeTailorMixin {
   SerializableTheme({
     required this.fooNumber,
     this.barColor = Colors.black,
   });
 
-  factory SerializableTheme.fromJson(Map<String, dynamic> json) =>
-      _$SerializableThemeFromJson(json);
+  factory SerializableTheme.fromJson(Map<String, dynamic> json) => _$SerializableThemeFromJson(json);
 
   @JsonKey(name: 'foo_number', defaultValue: 10)
   final int fooNumber;

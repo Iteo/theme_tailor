@@ -31,7 +31,6 @@ dependency_overrides:
     path: ../../theme_tailor
   theme_tailor_annotation:
     path: ../../theme_tailor_annotation
-  frontend_server_client: ^4.0.0
 
 flutter:
   uses-material-design: true
