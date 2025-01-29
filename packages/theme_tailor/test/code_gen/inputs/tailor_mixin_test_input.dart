@@ -9,12 +9,7 @@ enum WrongAnnotationTarget {
 }
 
 @ShouldGenerate(
-  '''
-    return CtorRequiredParametes(
-      propA ?? this.propA,
-      propB ?? this.propB,
-    );
-''',
+  'return CtorRequiredParametes(propA ?? this.propA, propB ?? this.propB);',
   contains: true,
 )
 @TailorMixin(themeGetter: ThemeGetter.none)
@@ -26,12 +21,7 @@ class CtorRequiredParametes {
 }
 
 @ShouldGenerate(
-  '''
-    return CtorPositionalParameters(
-      propA ?? this.propA,
-      propB ?? this.propB,
-    );
-''',
+  'return CtorPositionalParameters(propA ?? this.propA, propB ?? this.propB);',
   contains: true,
 )
 @TailorMixin(themeGetter: ThemeGetter.none)
@@ -43,12 +33,7 @@ class CtorPositionalParameters {
 }
 
 @ShouldGenerate(
-  '''
-    return CtorNamedParameters(
-      propA ?? this.propA,
-      propB: propB ?? this.propB,
-    );
-''',
+  'return CtorNamedParameters(propA ?? this.propA, propB: propB ?? this.propB);',
   contains: true,
 )
 @TailorMixin(themeGetter: ThemeGetter.none)
@@ -128,20 +113,14 @@ mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
   int get prop;
 
   @override
-  SomeClass copyWith({
-    int? prop,
-  }) {
-    return SomeClass(
-      prop: prop ?? this.prop,
-    );
+  SomeClass copyWith({int? prop}) {
+    return SomeClass(prop: prop ?? this.prop);
   }
 
   @override
   SomeClass lerp(covariant ThemeExtension<SomeClass>? other, double t) {
     if (other is! SomeClass) return this as SomeClass;
-    return SomeClass(
-      prop: t < 0.5 ? prop : other.prop,
-    );
+    return SomeClass(prop: t < 0.5 ? prop : other.prop);
   }
 
   @override
