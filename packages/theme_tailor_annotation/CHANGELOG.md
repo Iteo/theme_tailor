@@ -1,3 +1,9 @@
+# 3.0.2
+- Support analyzer 7.0.0
+- Support source_gen 2.0.0
+- Require json_annotation ^4.8.0
+- Require Dart >=3.0.0
+
 # 3.0.1
 - Bump dependencies versions
 

@@ -1,17 +1,17 @@
 name: theme_tailor_toolbox
 description: >
   Theming utilities and additional annotations for ThemeTailor code generator
-version: 1.0.4
+version: 1.0.5
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   json_annotation: ^4.8.0
-  theme_tailor_annotation: ^3.0.1
+  theme_tailor_annotation: ^3.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.1

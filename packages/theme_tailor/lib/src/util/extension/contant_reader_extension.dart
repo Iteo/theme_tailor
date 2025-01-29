@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
@@ -14,11 +13,10 @@ extension ConstandReaderExtension on ConstantReader {
   }
 
   List<String>? toStringList() {
-    return listValue.map((e) => e.toStringValue()).whereNotNull().toList();
+    return listValue.map((e) => e.toStringValue()).nonNulls.toList();
   }
 
   E? toEnum<E extends Enum>(E? Function(String name) fromName) {
     return revive().accessor.split('.').last.let(fromName);
-    // stringValue.split('.').last.let(fromName);
   }
 }

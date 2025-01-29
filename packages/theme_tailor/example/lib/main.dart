@@ -1,7 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-// ignore_for_file: unnecessary_import
-import 'dart:ui';
-
 import 'package:example/app_colors.dart';
 import 'package:example/diagnosticable_lib.dart';
 
@@ -118,9 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _swapTheme() {
     final currentTheme = widget.themeModeNotifier.value;
-    currentTheme == ThemeMode.light
-        ? widget.themeModeNotifier.value = ThemeMode.dark
-        : widget.themeModeNotifier.value = ThemeMode.light;
+    currentTheme == ThemeMode.light ? widget.themeModeNotifier.value = ThemeMode.dark : widget.themeModeNotifier.value = ThemeMode.light;
   }
 
   @override

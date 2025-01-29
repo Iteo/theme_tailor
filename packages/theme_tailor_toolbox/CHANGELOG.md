@@ -1,3 +1,7 @@
+# 1.0.5
+- Support analyzer 7.0.0
+- Support source_gen 2.0.0
+
 # 1.0.4
 - Bump dependencies versions
 

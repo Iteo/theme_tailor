@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:collection/collection.dart';
 import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 
 extension DartObjectExtension on DartObject {
@@ -14,7 +13,7 @@ extension DartObjectExtension on DartObject {
   }
 
   List<String>? toStringList() {
-    return toListValue()?.map((e) => e.toStringValue()).whereNotNull().toList();
+    return toListValue()?.map((e) => e.toStringValue()).nonNulls.toList();
   }
 
   E? toEnum<E extends Enum>(E? Function(String name) fromName) {

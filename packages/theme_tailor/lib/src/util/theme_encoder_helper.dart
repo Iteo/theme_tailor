@@ -25,7 +25,7 @@ ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObj
 
   final annotationElement = annotation?.element;
   if (annotationElement is PropertyAccessorElement) {
-    final enclosing = annotationElement.enclosingElement;
+    final enclosing = annotationElement.enclosingElement3;
 
     var accessString = annotationElement.name;
 

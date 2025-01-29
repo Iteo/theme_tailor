@@ -26,59 +26,68 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 
 extension FindAllAvailableTopLevelElements on LibraryElement {
+  bool isFromPackage(String packageName) {
+    return librarySource.fullName.startsWith('/$packageName/');
+  }
+
   /// Recursively loops at the import/export directives to know what is available
   /// in the library.
   ///
   /// This function does not guarantees that the elements returned are unique.
   /// It is possible for the same object to be present multiple times in the list.
-  Iterable<Element> allVisibleElements() {
-    final elements = libraryImports.imports().expand((import) => import.library._visibleElements({}, import.key));
-
-    return elements;
+  Iterable<Element> findAllAvailableTopLevelElements() {
+    return _findAllAvailableTopLevelElements(
+      {},
+      checkExports: false,
+      key: _LibraryKey(
+        hideStatements: {},
+        showStatements: {},
+        librarySource: librarySource.fullName,
+      ),
+    );
   }
 
-  Iterable<Element> _visibleElements(
-    Set<String> visitedPaths,
-    _LibraryKey key,
-  ) sync* {
+  Iterable<Element> _findAllAvailableTopLevelElements(
+    Set<_LibraryKey> visitedLibraryPaths, {
+    required bool checkExports,
+    required _LibraryKey key,
+  }) sync* {
     yield* topLevelElements;
 
-    for (final directive in libraryExports.exports()) {
-      if (!visitedPaths.add(key.toString() + directive.key.toString())) {
+    final librariesToCheck = checkExports
+        ? units.expand((e) => e.libraryExports).map(_LibraryDirectives.fromExport).nonNulls
+        : units.expand((e) => e.libraryImports).map(_LibraryDirectives.fromImport).nonNulls;
+
+    for (final directive in librariesToCheck) {
+      if (!visitedLibraryPaths.add(directive.key)) {
         continue;
       }
 
-      yield* directive.library._visibleElements(visitedPaths, directive.key).where(directive.elementIsExported);
+      yield* directive.library
+          ._findAllAvailableTopLevelElements(
+        visitedLibraryPaths,
+        checkExports: true,
+        key: directive.key,
+      )
+          .where(
+        (element) {
+          return (directive.showStatements.isEmpty && directive.hideStatements.isEmpty) ||
+              (directive.hideStatements.isNotEmpty && !directive.hideStatements.contains(element.name)) ||
+              directive.showStatements.contains(element.name);
+        },
+      );
     }
   }
 }
 
-extension on List<LibraryExportElement> {
-  Iterable<_LibraryDirective> exports() {
-    return map(_LibraryDirective.fromExport).whereNotNull();
-  }
-}
-
-extension on List<LibraryImportElement> {
-  Iterable<_LibraryDirective> imports() {
-    return map(_LibraryDirective.fromImport).whereNotNull();
-  }
-}
-
-class _LibraryDirective {
-  _LibraryDirective({
+class _LibraryDirectives {
+  _LibraryDirectives({
     required this.hideStatements,
     required this.showStatements,
     required this.library,
   });
 
-  bool elementIsExported(Element element) {
-    return (showStatements.isEmpty && hideStatements.isEmpty) ||
-        (hideStatements.isNotEmpty && !hideStatements.contains(element.name)) ||
-        showStatements.contains(element.name);
-  }
-
-  static _LibraryDirective? fromExport(LibraryExportElement export) {
+  static _LibraryDirectives? fromExport(LibraryExportElement export) {
     final library = export.exportedLibrary;
     if (library == null) return null;
 
@@ -86,14 +95,14 @@ class _LibraryDirective {
 
     final showStatements = export.combinators.whereType<ShowElementCombinator>().expand((e) => e.shownNames).toSet();
 
-    return _LibraryDirective(
+    return _LibraryDirectives(
       hideStatements: hideStatements,
       showStatements: showStatements,
       library: library,
     );
   }
 
-  static _LibraryDirective? fromImport(LibraryImportElement export) {
+  static _LibraryDirectives? fromImport(LibraryImportElement export) {
     final library = export.importedLibrary;
     if (library == null) return null;
 
@@ -101,7 +110,7 @@ class _LibraryDirective {
 
     final showStatements = export.combinators.whereType<ShowElementCombinator>().expand((e) => e.shownNames).toSet();
 
-    return _LibraryDirective(
+    return _LibraryDirectives(
       hideStatements: hideStatements,
       showStatements: showStatements,
       library: library,
