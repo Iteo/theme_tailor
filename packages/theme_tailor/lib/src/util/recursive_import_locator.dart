@@ -1,5 +1,5 @@
-// Based on:
-// From Freezed 2.3.2 packages/freezed/lib/src/tools/recursive_import_locator.dart
+// Based on Freezed 49b3b930eab79381570967e9f4cbb9f8cd1cc30a
+// packages/freezed/lib/src/tools/recursive_import_locator.dart
 // MIT License
 //
 // Copyright (c) 2020 Remi Rousselet
