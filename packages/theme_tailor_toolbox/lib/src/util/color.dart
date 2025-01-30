@@ -3,63 +3,25 @@
 import 'package:flutter/material.dart';
 
 /// @nodoc
-Color colorAlphaScale(Color color, double factor) {
-  return color.withAlpha((color.a * factor).round().clamp(0, 255));
-}
-
-/// @nodoc
 MaterialColor? lerpMaterialColor(MaterialColor? a, MaterialColor? b, double t) {
-  if (b == null) {
-    if (a == null) {
-      return null;
-    }
-    return MaterialColor(
-      colorAlphaScale(a, 1 - t).value,
-      {
-        50: colorAlphaScale(a.shade50, 1 - t),
-        100: colorAlphaScale(a.shade100, 1 - t),
-        200: colorAlphaScale(a.shade200, 1 - t),
-        300: colorAlphaScale(a.shade300, 1 - t),
-        400: colorAlphaScale(a.shade400, 1 - t),
-        500: colorAlphaScale(a.shade500, 1 - t),
-        600: colorAlphaScale(a.shade600, 1 - t),
-        700: colorAlphaScale(a.shade700, 1 - t),
-        800: colorAlphaScale(a.shade800, 1 - t),
-        900: colorAlphaScale(a.shade900, 1 - t),
-      },
-    );
-  }
-  if (a == null) {
-    return MaterialColor(
-      colorAlphaScale(b, t).value,
-      {
-        50: colorAlphaScale(b.shade50, t),
-        100: colorAlphaScale(b.shade100, t),
-        200: colorAlphaScale(b.shade200, t),
-        300: colorAlphaScale(b.shade300, t),
-        400: colorAlphaScale(b.shade400, t),
-        500: colorAlphaScale(b.shade500, t),
-        600: colorAlphaScale(b.shade600, t),
-        700: colorAlphaScale(b.shade700, t),
-        800: colorAlphaScale(b.shade800, t),
-        900: colorAlphaScale(b.shade900, t),
-      },
-    );
-  }
+  if (a == null && b == null) return null;
+
+  final MaterialColor first = a ?? b!;
+  final MaterialColor second = b ?? a!;
 
   return MaterialColor(
-    Color.lerp(a, b, t)!.value,
+    Color.lerp(first, second, t)!.value,
     {
-      50: Color.lerp(a.shade50, b.shade50, t)!,
-      100: Color.lerp(a.shade100, b.shade100, t)!,
-      200: Color.lerp(a.shade200, b.shade200, t)!,
-      300: Color.lerp(a.shade300, b.shade300, t)!,
-      400: Color.lerp(a.shade400, b.shade400, t)!,
-      500: Color.lerp(a.shade500, b.shade500, t)!,
-      600: Color.lerp(a.shade600, b.shade600, t)!,
-      700: Color.lerp(a.shade700, b.shade700, t)!,
-      800: Color.lerp(a.shade800, b.shade800, t)!,
-      900: Color.lerp(a.shade900, b.shade900, t)!,
+      50: Color.lerp(first.shade50, second.shade50, t)!,
+      100: Color.lerp(first.shade100, second.shade100, t)!,
+      200: Color.lerp(first.shade200, second.shade200, t)!,
+      300: Color.lerp(first.shade300, second.shade300, t)!,
+      400: Color.lerp(first.shade400, second.shade400, t)!,
+      500: Color.lerp(first.shade500, second.shade500, t)!,
+      600: Color.lerp(first.shade600, second.shade600, t)!,
+      700: Color.lerp(first.shade700, second.shade700, t)!,
+      800: Color.lerp(first.shade800, second.shade800, t)!,
+      900: Color.lerp(first.shade900, second.shade900, t)!,
     },
   );
 }
@@ -70,39 +32,18 @@ MaterialAccentColor? lerpMaterialAccentColor(
   MaterialAccentColor? b,
   double t,
 ) {
-  if (b == null) {
-    if (a == null) {
-      return null;
-    }
-    return MaterialAccentColor(
-      colorAlphaScale(a, 1 - t).value,
-      {
-        100: colorAlphaScale(a.shade100, 1 - t),
-        200: colorAlphaScale(a.shade200, 1 - t),
-        400: colorAlphaScale(a.shade400, 1 - t),
-        700: colorAlphaScale(a.shade700, 1 - t),
-      },
-    );
-  }
-  if (a == null) {
-    return MaterialAccentColor(
-      colorAlphaScale(b, t).value,
-      {
-        100: colorAlphaScale(b.shade100, t),
-        200: colorAlphaScale(b.shade200, t),
-        400: colorAlphaScale(b.shade400, t),
-        700: colorAlphaScale(b.shade700, t),
-      },
-    );
-  }
+  if (a == null && b == null) return null;
+
+  final MaterialAccentColor first = a ?? b!;
+  final MaterialAccentColor second = b ?? a!;
 
   return MaterialAccentColor(
-    Color.lerp(a, b, t)!.value,
+    Color.lerp(first, second, t)!.value,
     {
-      100: Color.lerp(a.shade100, b.shade100, t)!,
-      200: Color.lerp(a.shade200, b.shade200, t)!,
-      400: Color.lerp(a.shade400, b.shade400, t)!,
-      700: Color.lerp(a.shade700, b.shade700, t)!,
+      100: Color.lerp(first.shade100, second.shade100, t)!,
+      200: Color.lerp(first.shade200, second.shade200, t)!,
+      400: Color.lerp(first.shade400, second.shade400, t)!,
+      700: Color.lerp(first.shade700, second.shade700, t)!,
     },
   );
 }
