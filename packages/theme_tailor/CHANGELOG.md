@@ -1,3 +1,8 @@
+# 3.0.2
+- Support analyzer 7.0.0
+- Support source_gen 2.0.0
+- Require Dart >=3.0.0
+
 # 3.0.1
 - Bump dependencies versions
 
@@ -77,7 +82,7 @@
 - Add support for json_serializable,
 - Add support for nested the extension with `@themeExtension` annotation,
 - Add support for Flutter's DiagnosticableTreeMixin (debugFillProperties)
-- Generated class will overwrite the `hashCode` and `==` operator. The equality operator will deeply compare collections in the class 
+- Generated class will overwrite the `hashCode` and `==` operator. The equality operator will deeply compare collections in the class
 
 # 1.0.1
 - Fix README.md
