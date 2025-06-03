@@ -17,17 +17,17 @@
 [img_before]: https://github.com/Iteo/theme_tailor/raw/main/resources/before.png
 [img_after]: https://github.com/Iteo/theme_tailor/raw/main/resources/after.png
 
-<!-- 
+<!--
 This README describes the package. If you publish this package to pub.dev,
 this README's contents appear on the landing page for your package.
 
 For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
 
 For general information about developing packages, see the Dart guide for
 [creating packages](https://dart.dev/guides/libraries/create-library-packages)
 and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
+[developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
 Set of theming utilities and classes that work with and enhance [theme_tailor] code generator.
@@ -78,7 +78,7 @@ Encoders have 2 implementations per type:
 - lerping (field animates per theme change)
 - nonLerping (field does not animate but changes instantly in the middle of changing theme when t == 0.5)
 
-## Lerping encoders  
+## Lerping encoders
 Naming convention is following:\
 Non-nullable `foo` -> FooEncoder || EncoderToolbox.fooLerp\
 Nullable type `Bar?` -> BarNullableEncoder || EncoderToolbox.barNullableLerp
@@ -93,6 +93,12 @@ Nullable type `Bar?` -> BarNullableEncoder || EncoderToolbox.barNullableLerp
 | `MaterialColor?`       | `MaterialColorNullableEncoder`       | `EncoderToolbox.materialColorNullableLerp`       |
 | `TextStyle`            | `TextStyleEncoder`                   | `EncoderToolbox.textStyleLerp`                   |
 | `TextStyle?`           | `TextStyleNullableEncoder`           | `EncoderToolbox.textStyleNullableLerp`           |
+| `LinearGradient`       | `LinearGradientEncoder`              | `EncoderToolbox.linearGradientLerp`              |
+| `LinearGradient?`      | `LinearGradientNullableEncoder`      | `EncoderToolbox.linearGradientNullableLerp`      |
+| `SweepGradient`        | `SweepGradientEncoder`               | `EncoderToolbox.sweepGradientLerp`               |
+| `SweepGradient?`       | `SweepGradientNullableEncoder`       | `EncoderToolbox.sweepGradientNullableLerp`       |
+| `RadialGradient`       | `RadialGradientEncoder`              | `EncoderToolbox.radialGradientLerp`              |
+| `RadialGradient?`      | `RadialGradientNullableEncoder`      | `EncoderToolbox.radialGradientNullableLerp`      |
 
 ## Non-lerping encoders
 Naming convention is following (examples):\
@@ -111,6 +117,12 @@ In case of `NoLerpEncoder` it is possible to use it with any type `T` as `NoLerp
 | `MaterialColor?`       | `NoLerpEncoder<MaterialColor?>`       | `.materialColorNullableNoLerp`       |
 | `TextStyle`            | `NoLerpEncoder<TextStyle?>`           | `.textStyleNoLerp`                   |
 | `TextStyle?`           | `NoLerpEncoder<TextStyle?>`           | `.textStyleNullableNoLerp`           |
+| `LinearGradient`       | `NoLerpEncoder<LinearGradient?>`      | `.linearGradientNoLerp`              |
+| `LinearGradient?`      | `NoLerpEncoder<LinearGradient?>`      | `.linearGradientNullableNoLerp`      |
+| `SweepGradient`        | `NoLerpEncoder<SweepGradient?>`       | `.sweepGradientNoLerp`               |
+| `SweepGradient?`       | `NoLerpEncoder<SweepGradient?>`       | `.sweepGradientNullableNoLerp`       |
+| `RadialGradient`       | `NoLerpEncoder<RadialGradient?>`      | `.radialGradientNoLerp`              |
+| `RadialGradient?`      | `NoLerpEncoder<RadialGradient?>`      | `.radialGradientNullableNoLerp`      |
 
 ## Encoder usage
 ```dart

@@ -16,6 +16,17 @@ class LinearGradientEncoder extends ThemeEncoder<LinearGradient> {
   LinearGradient lerp(LinearGradient a, LinearGradient b, double t) => LinearGradient.lerp(a, b, t)!;
 }
 
+/// ### LinearGradientNullableEncoder
+/// The default implementations of the ThemeEncoder for `LinearGradient?`
+///
+/// {@macro tttoolbox.encoders.encoderUsage}
+class LinearGradientNullableEncoder extends ThemeEncoder<LinearGradient?> {
+  const LinearGradientNullableEncoder();
+
+  @override
+  LinearGradient? lerp(LinearGradient? a, LinearGradient? b, double t) => LinearGradient.lerp(a, b, t);
+}
+
 /// ### SweepGradientEncoder
 /// The default implementations of the ThemeEncoder for `SweepGradient`
 ///
@@ -31,6 +42,17 @@ class SweepGradientEncoder extends ThemeEncoder<SweepGradient> {
   SweepGradient lerp(SweepGradient a, SweepGradient b, double t) => SweepGradient.lerp(a, b, t)!;
 }
 
+/// ### SweepGradientNullableEncoder
+/// The default implementations of the ThemeEncoder for `SweepGradient?`
+///
+/// {@macro tttoolbox.encoders.encoderUsage}
+class SweepGradientNullableEncoder extends ThemeEncoder<SweepGradient?> {
+  const SweepGradientNullableEncoder();
+
+  @override
+  SweepGradient? lerp(SweepGradient? a, SweepGradient? b, double t) => SweepGradient.lerp(a, b, t);
+}
+
 /// ### RadialGradientEncoder
 /// The default implementations of the ThemeEncoder for `RadialGradient`
 ///
@@ -44,4 +66,15 @@ class RadialGradientEncoder extends ThemeEncoder<RadialGradient> {
 
   @override
   RadialGradient lerp(RadialGradient a, RadialGradient b, double t) => RadialGradient.lerp(a, b, t)!;
+}
+
+/// ### RadialGradientNullableEncoder
+/// The default implementations of the ThemeEncoder for `RadialGradient?`
+///
+/// {@macro tttoolbox.encoders.encoderUsage}
+class RadialGradientNullableEncoder extends ThemeEncoder<RadialGradient?> {
+  const RadialGradientNullableEncoder();
+
+  @override
+  RadialGradient? lerp(RadialGradient? a, RadialGradient? b, double t) => RadialGradient.lerp(a, b, t);
 }
