@@ -1,8 +1,12 @@
 name: theme_tailor_toolbox
 description: >
   Theming utilities and additional annotations for ThemeTailor code generator
+repository: https://github.com/Iteo/theme_tailor
+issue_tracker: https://github.com/Iteo/theme_tailor/issues
+homepage: https://github.com/Iteo/theme_tailor
+documentation: https://github.com/Iteo/theme_tailor/blob/main/packages/theme_tailor/README.md
+
 version: 1.0.6
-publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
