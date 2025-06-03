@@ -65,6 +65,9 @@ abstract class EncoderToolbox {
   /// Non-interpolating encoder for `TextStyle?`
   static const textStyleNullableNoLerp = NoLerpEncoder<TextStyle?>();
 
+  /// Interpolating encoder for `LinearGradient`
+  static const linearGradientLerp = NoLerpEncoder<LinearGradient>();
+
   /// Non-interpolating encoder for `LinearGradient`
   static const linearGradientNoLerp = NoLerpEncoder<LinearGradient>();
 
@@ -74,6 +77,9 @@ abstract class EncoderToolbox {
   /// Non-interpolating encoder for `LinearGradient?`
   static const linearGradientNullableNoLerp = NoLerpEncoder<LinearGradient?>();
 
+  /// Interpolating encoder for `SweepGradient`
+  static const sweepGradientGradientLerp = NoLerpEncoder<SweepGradient>();
+
   /// Non-interpolating encoder for `SweepGradient`
   static const sweepGradientNoLerp = NoLerpEncoder<SweepGradient>();
 
@@ -82,6 +88,9 @@ abstract class EncoderToolbox {
 
   /// Non-interpolating encoder for `SweepGradient?`
   static const sweepGradientNullableNoLerp = NoLerpEncoder<SweepGradient?>();
+
+  /// Interpolating encoder for `RadialGradient`
+  static const radialGradientGradientLerp = NoLerpEncoder<RadialGradient>();
 
   /// Non-interpolating encoder for `RadialGradient`
   static const radialGradientNoLerp = NoLerpEncoder<RadialGradient>();
