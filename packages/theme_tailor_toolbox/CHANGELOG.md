@@ -1,3 +1,8 @@
+# 1.0.6
+- Added LinearGradientEncoder
+- Added SweepGradientEncoder
+- Added RadialGradientEncoder
+
 # 1.0.5
 - Support analyzer 7.0.0
 - Support source_gen 2.0.0
