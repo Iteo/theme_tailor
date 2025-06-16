@@ -1,3 +1,6 @@
+# 3.0.3
+- Fix `lerp` mixin implementation adding unnecessary type casts
+
 # 3.0.2
 - Support analyzer 7.0.0
 - Support source_gen 2.0.0
@@ -7,7 +10,7 @@
 - Bump dependencies versions
 
 # 3.0.0
-- Remove depricated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
+- Remove deprecated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
 - Added linteo package to the project.
 
 # 2.1.0
