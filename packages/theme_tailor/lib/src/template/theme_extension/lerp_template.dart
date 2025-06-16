@@ -41,7 +41,7 @@ class LerpTemplate extends Template {
   }
 
   String _themeExtensionLerp(String name, String type, bool isNullable) {
-    return "$name${isNullable ? '?' : ''}.lerp(other.$name, t) as $type";
+    return "$name${isNullable ? '?' : ''}.lerp(other.$name, t)";
   }
 
   String _typeOrEncoderLerp(String name, String type) {
