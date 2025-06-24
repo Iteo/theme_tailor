@@ -19,8 +19,8 @@ import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-class TailorMixinGenerator
-    extends GeneratorForAnnotatedClass<ImportsData, TailorMixinAnnotationData, TailorMixinConfig, TailorMixin> {
+class TailorMixinGenerator extends GeneratorForAnnotatedClass<ImportsData,
+    TailorMixinAnnotationData, TailorMixinConfig, TailorMixin> {
   const TailorMixinGenerator(this.buildYamlConfig);
 
   final TailorMixin buildYamlConfig;
@@ -61,8 +61,10 @@ class TailorMixinGenerator
   TailorMixinAnnotationData parseAnnotation(ConstantReader annotation) {
     final themeGetter = annotation.getFieldOrElse(
       'themeGetter',
-      decode: (o) => ThemeGetter.values.byName(o.revive().accessor.split('.').last),
-      orElse: () => buildYamlConfig.themeGetter ?? ThemeGetter.onBuildContextProps,
+      decode: (o) =>
+          ThemeGetter.values.byName(o.revive().accessor.split('.').last),
+      orElse: () =>
+          buildYamlConfig.themeGetter ?? ThemeGetter.onBuildContextProps,
     );
 
     final themeClassName = annotation.getFieldOrElse(
@@ -130,13 +132,18 @@ class TailorMixinGenerator
 
     /// Fields
     final fields = nonStaticFields.map((e) {
-      final isThemeExtension = e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
+      final isThemeExtension =
+          e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
 
       return Field(
         isThemeExtension: isThemeExtension,
         name: e.displayName,
         type: e.type.getDisplayString(withNullability: true),
         documentation: e.documentationComment,
+        annotations: e.metadata
+            .where((m) => m.toSource().startsWith('@Deprecated'))
+            .map((m) => m.toSource())
+            .toList(growable: false),
       );
     }).toList(growable: false);
 
