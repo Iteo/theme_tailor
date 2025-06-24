@@ -111,16 +111,23 @@ class OnThemeDataProps {
 @ShouldGenerate(r'''
 mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
   int get prop;
+  int get deprecatedProp;
 
   @override
-  SomeClass copyWith({int? prop}) {
-    return SomeClass(prop: prop ?? this.prop);
+  SomeClass copyWith({int? prop, @Deprecated('message') int? deprecatedProp}) {
+    return SomeClass(
+      prop: prop ?? this.prop,
+      deprecatedProp: deprecatedProp ?? this.deprecatedProp,
+    );
   }
 
   @override
   SomeClass lerp(covariant ThemeExtension<SomeClass>? other, double t) {
     if (other is! SomeClass) return this as SomeClass;
-    return SomeClass(prop: t < 0.5 ? prop : other.prop);
+    return SomeClass(
+      prop: t < 0.5 ? prop : other.prop,
+      deprecatedProp: t < 0.5 ? deprecatedProp : other.deprecatedProp,
+    );
   }
 
   @override
@@ -128,7 +135,11 @@ mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is SomeClass &&
-            const DeepCollectionEquality().equals(prop, other.prop));
+            const DeepCollectionEquality().equals(prop, other.prop) &&
+            const DeepCollectionEquality().equals(
+              deprecatedProp,
+              other.deprecatedProp,
+            ));
   }
 
   @override
@@ -136,13 +147,17 @@ mixin _$SomeClassTailorMixin on ThemeExtension<SomeClass> {
     return Object.hash(
       runtimeType.hashCode,
       const DeepCollectionEquality().hash(prop),
+      const DeepCollectionEquality().hash(deprecatedProp),
     );
   }
 }
 ''')
 @TailorMixin(themeGetter: ThemeGetter.none)
 class SomeClass {
-  const SomeClass({required this.prop});
+  const SomeClass({required this.prop, @Deprecated('message') this.deprecatedProp = 0});
 
   final int prop;
+
+  @Deprecated('message')
+  final int deprecatedProp;
 }

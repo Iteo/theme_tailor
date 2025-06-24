@@ -18,7 +18,11 @@ class CopyWithTemplate extends Template {
     if (fields.isNotEmpty) {
       buffer
         ..write('{')
-        ..writeAll(fields.map((e) => '${e.type.asNullableType} ${e.name},'))
+        ..writeAll(fields.map((e) {
+          final annotation = e.annotations.join(' ');
+          final preparedAnnotation = annotation.isEmpty ? '' : '$annotation ';
+          return '${preparedAnnotation}${e.type.asNullableType} ${e.name},';
+        }))
         ..write('}');
     }
 

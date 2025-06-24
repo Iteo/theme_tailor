@@ -18,12 +18,14 @@ class Field implements Comparable<Field> {
     required this.type,
     required this.documentation,
     required this.isThemeExtension,
+    this.annotations = const [],
   });
 
   String name;
   String type;
   bool isThemeExtension;
   String? documentation;
+  List<String> annotations;
 
   bool get isNullable => type.contains('?');
   bool get isDynamic => type == 'dynamic';
