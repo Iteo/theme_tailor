@@ -11,7 +11,7 @@ extension DartTypeExtension on DartType {
 
   bool get isThemeExtensionType {
     return typeImplementations.any(
-      (e) => e.getDisplayString(withNullability: false).startsWith('ThemeExtension'),
+      (e) => e.getDisplayString().startsWith('ThemeExtension'),
     );
   }
 }

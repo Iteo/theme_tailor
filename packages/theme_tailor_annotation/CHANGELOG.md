@@ -1,3 +1,11 @@
+# 3.1.0
+- Support build 3.0.0.
+- Support source_gen 3.0.0.
+- Require Dart 3.8.0
+- Require analyzer >= 7.5.9
+- Require meta 1.9.1
+- Use the same versioning for other theme_tailor packages
+
 # 3.0.2
 - Support analyzer 7.0.0
 - Support source_gen 2.0.0

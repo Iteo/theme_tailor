@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -8,14 +8,14 @@ abstract class GeneratorToBuffer<TAnnotation> extends GeneratorForAnnotation<TAn
 
   @override
   String generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   );
 
   void generateToBuffer(
     StringBuffer buffer,
-    Element element,
+    Element2 element,
     ConstantReader annotation,
   );
 }
@@ -34,7 +34,7 @@ abstract class GeneratorAnnotationMatcher<TAnnotation> extends GeneratorForAnnot
     final library = await buildStep.resolver.libraryFor(assetId);
 
     final buffer = StringBuffer();
-    final tailorAnnotatedElements = library.topLevelElements.where(typeChecker.hasAnnotationOf);
+    final tailorAnnotatedElements = library.classes.where(typeChecker.hasAnnotationOf);
 
     for (final element in tailorAnnotatedElements) {
       getGeneratorFrom(element).generateToBuffer(
@@ -49,12 +49,12 @@ abstract class GeneratorAnnotationMatcher<TAnnotation> extends GeneratorForAnnot
 
   @override
   String generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
     return '';
   }
 
-  GeneratorToBuffer<TAnnotation> getGeneratorFrom(Element element);
+  GeneratorToBuffer<TAnnotation> getGeneratorFrom(Element2 element);
 }

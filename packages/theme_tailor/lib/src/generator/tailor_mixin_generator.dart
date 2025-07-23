@@ -1,6 +1,4 @@
-// ignore_for_file: deprecated_member_use
-
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/field.dart';
@@ -15,7 +13,6 @@ import 'package:theme_tailor/src/template/template.dart';
 import 'package:theme_tailor/src/util/extension/contant_reader_extension.dart';
 import 'package:theme_tailor/src/util/extension/dart_type_extension.dart';
 import 'package:theme_tailor/src/util/extension/element_extension.dart';
-import 'package:theme_tailor/src/util/extension/scope_extension.dart';
 import 'package:theme_tailor/src/util/theme_encoder_helper.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
@@ -26,8 +23,8 @@ class TailorMixinGenerator
   final TailorMixin buildYamlConfig;
 
   @override
-  ClassElement ensureClassElement(Element element) {
-    if (element is ClassElement && element is! Enum) return element;
+  ClassElement2 ensureClassElement(Element2 element) {
+    if (element is ClassElement2 && element is! Enum) return element;
 
     throw InvalidGenerationSourceError(
       '@TailorMixin can only annotate classes',
@@ -100,26 +97,38 @@ class TailorMixinGenerator
   TailorMixinConfig parseData(
     ImportsData libraryData,
     TailorMixinAnnotationData annotationData,
-    ClassElement element,
+    ClassElement2 element,
   ) {
-    final nonStaticFields = element.fields.where((e) => !e.isStatic).toList();
+    final nonStaticFields = element.fields2.where((e) => !e.isStatic).toList();
 
     /// Encoders processing
     final encodersTypeNameToEncoder = annotationData.encoders;
-    for (final annotation in element.metadata) {
-      extractThemeEncoderData(
+    for (final annotation in element.metadata2.annotations) {
+      final annotationConstValue = annotation.computeConstantValue();
+      if (annotationConstValue == null) continue;
+
+      final encoder = extractThemeEncoderData(
         annotation,
-        annotation.computeConstantValue()!,
-      )?.let((encoder) => encodersTypeNameToEncoder[encoder.type] = encoder);
+        annotationConstValue,
+      );
+      if (encoder == null) continue;
+
+      encodersTypeNameToEncoder[encoder.type] = encoder;
     }
 
     final encodersFieldNameToEncoder = <String, ThemeEncoderData>{};
     for (final field in nonStaticFields) {
-      for (final annotation in field.metadata) {
-        extractThemeEncoderData(
+      for (final annotation in field.metadata2.annotations) {
+        final fieldName = field.name3;
+        if (fieldName == null) continue;
+
+        final encoder = extractThemeEncoderData(
           annotation,
           annotation.computeConstantValue()!,
-        )?.let((encoder) => encodersFieldNameToEncoder[field.name] = encoder);
+        );
+        if (encoder == null) continue;
+
+        encodersFieldNameToEncoder[fieldName] = encoder;
       }
     }
 
@@ -135,7 +144,7 @@ class TailorMixinGenerator
       return Field(
         isThemeExtension: isThemeExtension,
         name: e.displayName,
-        type: e.type.getDisplayString(withNullability: true),
+        type: e.type.getDisplayString(),
         documentation: e.documentationComment,
       );
     }).toList(growable: false);
@@ -154,8 +163,8 @@ class TailorMixinGenerator
 
   @override
   ImportsData parseLibraryData(
-    LibraryElement library,
-    ClassElement element,
+    LibraryElement2 library,
+    ClassElement2 element,
   ) {
     final isDiagnosticable = element.hasMixinNamed('DiagnosticableTreeMixin');
     return ImportsData(hasDiagnosticableMixin: isDiagnosticable);
