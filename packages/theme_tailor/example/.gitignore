@@ -2,3 +2,4 @@
 *.g.dart
 *.freezed.dart
 *.tailor.dart
+pubspec.lock
