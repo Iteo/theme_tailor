@@ -1,3 +1,9 @@
+# 3.1.0
+- Support build 3.0.0.
+- Support source_gen 3.0.0.
+- Require Dart 3.8.0
+- Require analyzer >= 7.5.9
+
 # 3.0.3
 - Fix `lerp` mixin implementation adding unnecessary type casts
 

@@ -1,4 +1,4 @@
-// Based on Freezed 49b3b930eab79381570967e9f4cbb9f8cd1cc30a
+// Based on Freezed 562b66a
 // packages/freezed/lib/src/tools/recursive_import_locator.dart
 // MIT License
 //
@@ -22,12 +22,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:collection/collection.dart';
 
-extension FindAllAvailableTopLevelElements on LibraryElement {
+extension FindAllAvailableTopLevelElements on LibraryElement2 {
   bool isFromPackage(String packageName) {
-    return librarySource.fullName.startsWith('/$packageName/');
+    return firstFragment.source.fullName.startsWith('/$packageName/');
   }
 
   /// Recursively loops at the import/export directives to know what is available
@@ -35,28 +35,28 @@ extension FindAllAvailableTopLevelElements on LibraryElement {
   ///
   /// This function does not guarantees that the elements returned are unique.
   /// It is possible for the same object to be present multiple times in the list.
-  Iterable<Element> findAllAvailableTopLevelElements() {
+  Iterable<Element2> findAllAvailableTopLevelElements() {
     return _findAllAvailableTopLevelElements(
       {},
       checkExports: false,
       key: _LibraryKey(
         hideStatements: {},
         showStatements: {},
-        librarySource: librarySource.fullName,
+        librarySource: firstFragment.source.fullName,
       ),
     );
   }
 
-  Iterable<Element> _findAllAvailableTopLevelElements(
+  Iterable<Element2> _findAllAvailableTopLevelElements(
     Set<_LibraryKey> visitedLibraryPaths, {
     required bool checkExports,
     required _LibraryKey key,
   }) sync* {
-    yield* topLevelElements;
+    yield* children2;
 
     final librariesToCheck = checkExports
-        ? units.expand((e) => e.libraryExports).map(_LibraryDirectives.fromExport).nonNulls
-        : units.expand((e) => e.libraryImports).map(_LibraryDirectives.fromImport).nonNulls;
+        ? fragments.expand((e) => e.libraryExports2).map(_LibraryDirectives.fromExport).nonNulls
+        : fragments.expand((e) => e.libraryImports2).map(_LibraryDirectives.fromImport).nonNulls;
 
     for (final directive in librariesToCheck) {
       if (!visitedLibraryPaths.add(directive.key)) {
@@ -69,13 +69,11 @@ extension FindAllAvailableTopLevelElements on LibraryElement {
         checkExports: true,
         key: directive.key,
       )
-          .where(
-        (element) {
-          return (directive.showStatements.isEmpty && directive.hideStatements.isEmpty) ||
-              (directive.hideStatements.isNotEmpty && !directive.hideStatements.contains(element.name)) ||
-              directive.showStatements.contains(element.name);
-        },
-      );
+          .where((element) {
+        return (directive.showStatements.isEmpty && directive.hideStatements.isEmpty) ||
+            (directive.hideStatements.isNotEmpty && !directive.hideStatements.contains(element.name3)) ||
+            directive.showStatements.contains(element.name3);
+      });
     }
   }
 }
@@ -87,8 +85,8 @@ class _LibraryDirectives {
     required this.library,
   });
 
-  static _LibraryDirectives? fromExport(LibraryExportElement export) {
-    final library = export.exportedLibrary;
+  static _LibraryDirectives? fromExport(LibraryExport export) {
+    final library = export.exportedLibrary2;
     if (library == null) return null;
 
     final hideStatements = export.combinators.whereType<HideElementCombinator>().expand((e) => e.hiddenNames).toSet();
@@ -102,8 +100,8 @@ class _LibraryDirectives {
     );
   }
 
-  static _LibraryDirectives? fromImport(LibraryImportElement export) {
-    final library = export.importedLibrary;
+  static _LibraryDirectives? fromImport(LibraryImport export) {
+    final library = export.importedLibrary2;
     if (library == null) return null;
 
     final hideStatements = export.combinators.whereType<HideElementCombinator>().expand((e) => e.hiddenNames).toSet();
@@ -119,13 +117,13 @@ class _LibraryDirectives {
 
   final Set<String> hideStatements;
   final Set<String> showStatements;
-  final LibraryElement library;
+  final LibraryElement2 library;
 
   _LibraryKey get key {
     return _LibraryKey(
       hideStatements: hideStatements,
       showStatements: showStatements,
-      librarySource: library.source.fullName,
+      librarySource: library.firstFragment.source.fullName,
     );
   }
 }
@@ -155,8 +153,14 @@ class _LibraryKey {
   bool operator ==(Object other) {
     return other is _LibraryKey &&
         librarySource == other.librarySource &&
-        const SetEquality<String>().equals(hideStatements, other.hideStatements) &&
-        const SetEquality<String>().equals(showStatements, other.showStatements);
+        const SetEquality<String>().equals(
+          hideStatements,
+          other.hideStatements,
+        ) &&
+        const SetEquality<String>().equals(
+          showStatements,
+          other.showStatements,
+        );
   }
 
   @override

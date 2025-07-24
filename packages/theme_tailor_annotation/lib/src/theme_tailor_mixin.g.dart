@@ -7,11 +7,10 @@ part of 'theme_tailor_mixin.dart';
 // **************************************************************************
 
 TailorMixin _$TailorMixinFromJson(Map json) => TailorMixin(
-      themeGetter:
-          $enumDecodeNullable(_$ThemeGetterEnumMap, json['theme_getter']),
-      themeClassName: json['theme_class_name'] as String?,
-      themeDataClassName: json['theme_data_class_name'] as String?,
-    );
+  themeGetter: $enumDecodeNullable(_$ThemeGetterEnumMap, json['theme_getter']),
+  themeClassName: json['theme_class_name'] as String?,
+  themeDataClassName: json['theme_data_class_name'] as String?,
+);
 
 const _$ThemeGetterEnumMap = {
   ThemeGetter.none: 'none',
