@@ -1,96 +1,39 @@
-name: Bug Report
+name: Bug report
 description: File a bug report
 title: "[Bug]: "
-labels: []
-projects: []
-assignees: []
+labels: [bug]
 body:
   - type: markdown
     attributes:
       value: |
         ## Thanks for taking the time to fill out this bug report!
-  - type: textarea
-    id: what-happened
+  - type: input
+    id: dart_version
     attributes:
-      label: Desctibe the bug
-      description: "A clear and concise description of what the bug is."
-      placeholder: "I was trying to..."
+      label: Dart version
+      description: Dart SDK version you are using.
+      placeholder: "3.8.1"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      description: ThemeTailor generator version you are using.
+      placeholder: "3.1.0"
     validations:
       required: true
   - type: textarea
     id: repro
     attributes:
-      label: Reproduction steps
-      description: "How do you trigger this bug? Please walk us through it step by step."
-      placeholder: |
-        1.
-        2.
-        ...
+      label: Actual behaviour
+      description: "What did you observe that was not expected?"
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
       label: Expected behaviour
-      description: "What effect do you expect after fix?"
-      placeholder: "I expect to see..."
-    validations:
-      required: true
-  - type: input
-    id: dart_version
-    attributes:
-      label: Dart version
-      description: What version of dart are you using?
-      placeholder: "2.19.0, 3.0.0, 3.1.0, etc."
-    validations:
-      required: true
-  - type: dropdown
-    id: version
-    attributes:
-      label: Package version
-      description: What version of our package are you using?
-      options:
-        - "1.0.0"
-        - "1.0.1"
-        - "1.0.2"
-        - "1.0.3"
-        - "1.0.4"
-        - "1.0.5"
-        - "1.0.6"
-        - "1.0.7"
-        - "1.0.8"
-        - "1.1.0"
-        - "1.1.1"
-        - "1.1.2"
-        - "1.2.0"
-        - "2.0.0"
-        - "2.0.1"
-        - "2.0.2"
-        - "2.1.0"
-        - "3.0.0"
-        - "3.0.1"
-    validations:
-      required: true
-  - type: dropdown
-    id: platform
-    attributes:
-      label: What platform are you seeing the problem on?
-      multiple: true
-      options:
-        - iOS
-        - Android
-        - Web
-        - Windows
-        - macOS
-        - Linux
-    validations:
-      required: true
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      placeholder: "Paste logs here or tell us about not having any logs."
-      render: shell
+      description: "What did you expect to happen?"
     validations:
       required: true
