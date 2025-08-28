@@ -332,6 +332,7 @@ The generator will use properties from build.yaml or default values for null pro
 | theme_getter          | themeGetter         | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \ on_theme_data \ on_theme_data_props \ on_build_context \ on_build_context_props |
 | theme_class_name      | themeClassName      | null                   | <b>String</b> For custom Theme if you don't want<br>use Material's Theme. Example: FluentTheme                                  |
 | theme_data_class_name | themeDataClassName  | null                   | <b>String</b> For custom ThemeData if you don't want<br>use Material's ThemeData FluentThemeData                                |
+| format                | format              | true                   | <b>Bool</b> Enable/disable dart formatting for generated code                                                                   |
 
 ### Material's theme_getter
 ```yaml
