@@ -3,12 +3,13 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/model/constructor_data.dart';
+import 'package:theme_tailor/src/model/referenced_packages.dart';
 import 'package:theme_tailor/src/util/extension/parameter_element_extension.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 extension ElementExtension on Element2 {
   bool get hasJsonSerializableAnnotation {
-    const checker = TypeChecker.fromRuntime(JsonSerializable);
+    const checker = TypeChecker.typeNamed(JsonSerializable, inPackage: ReferencedPackages.jsonSerializable);
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
 
@@ -17,12 +18,12 @@ extension ElementExtension on Element2 {
   }
 
   bool get hasTailorMixinAnnotation {
-    const checker = TypeChecker.fromRuntime(TailorMixin);
+    const checker = TypeChecker.typeNamed(TailorMixin, inPackage: ReferencedPackages.jsonSerializable);
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
 
   bool get hasThemeExtensionAnnotation {
-    final checker = TypeChecker.fromRuntime(themeExtension.runtimeType);
+    const checker = TypeChecker.typeNamed(TailorThemeExtension, inPackage: ReferencedPackages.themeTailorAnnotation);
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
 }
@@ -44,9 +45,7 @@ extension ClassElementExtensions on ClassElement2 {
 
     return ConstructorData(
       constructorName: ctor!.displayName,
-      parameterNameToType: Map.fromEntries(
-        parameters.map((e) => MapEntry(e.name3!, e.parameterType)),
-      ),
+      parameterNameToType: Map.fromEntries(parameters.map((e) => MapEntry(e.name3!, e.parameterType))),
     );
   }
 }

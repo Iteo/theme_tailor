@@ -420,18 +420,18 @@ packages:
     dependency: transitive
     description:
       name: source_gen
-      sha256: fc787b1f89ceac9580c3616f899c9a447413cbdac1df071302127764c023a134
+      sha256: "800f12fb87434defa13432ab37e33051b43b290a174e15259563b043cda40c46"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "4.0.0"
   source_helper:
     dependency: transitive
     description:
       name: source_helper
-      sha256: "4f81479fe5194a622cdd1713fe1ecb683a6e6c85cd8cec8e2e35ee5ab3fdf2a1"
+      sha256: "6a3c6cc82073a8797f8c4dc4572146114a39652851c157db37e964d9c7038723"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.6"
+    version: "1.3.8"
   source_span:
     dependency: transitive
     description:
@@ -494,21 +494,21 @@ packages:
       path: "../../theme_tailor"
       relative: true
     source: path
-    version: "3.1.0"
+    version: "3.1.1"
   theme_tailor_annotation:
     dependency: "direct main"
     description:
       path: "../../theme_tailor_annotation"
       relative: true
     source: path
-    version: "3.1.0"
+    version: "3.1.1"
   theme_tailor_toolbox:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "3.1.0"
+    version: "3.1.1"
   timing:
     dependency: transitive
     description:

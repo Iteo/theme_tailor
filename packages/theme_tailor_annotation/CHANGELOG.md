@@ -1,5 +1,7 @@
 # 3.1.1
 - Compatibility with theme_tailor 3.1.1
+- _ThemeExtension is now TailorThemeExtension, this class is annotation class and is exposed only for analyzer purposes. It is now possible to use @TailorThemeExtension instead @themeExtension, but using latter is recommended.
+- Use the same versioning for other theme_tailor packages
 
 # 3.1.0
 - Support build 3.0.0.

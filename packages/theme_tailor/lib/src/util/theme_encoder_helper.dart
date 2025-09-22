@@ -3,10 +3,11 @@ import 'package:analyzer/dart/element/element2.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:theme_tailor/src/model/referenced_packages.dart';
 import 'package:theme_tailor/src/model/theme_encoder_data.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-const themeEncoderChecker = TypeChecker.fromRuntime(ThemeEncoder);
+const themeEncoderChecker = TypeChecker.typeNamed(ThemeEncoder, inPackage: ReferencedPackages.themeTailorAnnotation);
 
 ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObject constantValue) {
   final encoderClassElement = constantValue.type!.element3 as ClassElement2?;
@@ -33,10 +34,7 @@ ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObj
       accessString = '${enclosing.name3}.$accessString';
     }
 
-    return ThemeEncoderData.propertyAccess(
-      accessString!,
-      encoderTypeStr,
-    );
+    return ThemeEncoderData.propertyAccess(accessString!, encoderTypeStr);
   }
 
   final reviver = ConstantReader(constantValue).revive();
