@@ -1,3 +1,7 @@
+# 3.1.1
+- Support build 3.0.0 and ^4.0.0
+- Support source_gen 3.0.0 and ^4.0.0
+
 # 3.1.0
 - Support build 3.0.0.
 - Support source_gen 3.0.0.

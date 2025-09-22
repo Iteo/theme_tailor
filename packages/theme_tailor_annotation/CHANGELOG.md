@@ -1,3 +1,6 @@
+# 3.1.1
+- Compatibility with theme_tailor 3.1.1
+
 # 3.1.0
 - Support build 3.0.0.
 - Support source_gen 3.0.0.
