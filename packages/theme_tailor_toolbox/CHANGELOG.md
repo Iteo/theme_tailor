@@ -1,3 +1,7 @@
+# 3.1.1
+- Compatibility with theme_tailor 3.1.1
+- Use the same versioning for other theme_tailor packages
+
 # 3.1.0
 - Require Dart 3.8.0
 - Use the same versioning for other theme_tailor packages

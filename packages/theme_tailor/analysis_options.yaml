@@ -4,3 +4,6 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.tailor.dart"
+  errors:
+    # Remove when we require analyzer >=8
+    deprecated_member_use: ignore
