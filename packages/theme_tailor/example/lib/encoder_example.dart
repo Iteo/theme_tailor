@@ -1,7 +1,6 @@
 // ignore_for_file: annotate_overrides
 
-import 'package:flutter/material.dart';
-import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
+import 'package:example/diagnosticable_lib.dart';
 
 part 'encoder_example.tailor.dart';
 
@@ -9,16 +8,14 @@ class TextStyleEncoder extends ThemeEncoder<TextStyle> {
   const TextStyleEncoder();
 
   @override
-  TextStyle lerp(TextStyle a, TextStyle b, double t) =>
-      TextStyle.lerp(a, b, t)!;
+  TextStyle lerp(TextStyle a, TextStyle b, double t) => TextStyle.lerp(a, b, t)!;
 }
 
 class TextStyleNullableEncoder extends ThemeEncoder<TextStyle?> {
   const TextStyleNullableEncoder();
 
   @override
-  TextStyle? lerp(TextStyle? a, TextStyle? b, double t) =>
-      TextStyle.lerp(a, b, t);
+  TextStyle? lerp(TextStyle? a, TextStyle? b, double t) => TextStyle.lerp(a, b, t);
 }
 
 class CustomColorEncoder extends ThemeEncoder<Color> {
@@ -32,12 +29,7 @@ class CustomColorEncoder extends ThemeEncoder<Color> {
 /// quantity of themes than the default 2 (light and dark)
 @TailorMixin()
 class Theme1 extends ThemeExtension<Theme1> with _$Theme1TailorMixin {
-  Theme1({
-    required this.background,
-    required this.iconColor,
-    required this.h1,
-    required this.h2,
-  });
+  Theme1({required this.background, required this.iconColor, required this.h1, required this.h2});
 
   @CustomColorEncoder()
   final Color background;
@@ -50,20 +42,9 @@ class Theme1 extends ThemeExtension<Theme1> with _$Theme1TailorMixin {
   final TextStyle? h2;
 }
 
-@TailorMixin(
-  encoders: [
-    CustomColorEncoder(),
-    TextStyleEncoder(),
-    TextStyleNullableEncoder(),
-  ],
-)
+@TailorMixin(encoders: [CustomColorEncoder(), TextStyleEncoder(), TextStyleNullableEncoder()])
 class Theme2 extends ThemeExtension<Theme2> with _$Theme2TailorMixin {
-  Theme2({
-    required this.background,
-    required this.iconColor,
-    required this.h1,
-    required this.h2,
-  });
+  Theme2({required this.background, required this.iconColor, required this.h1, required this.h2});
 
   final Color background;
   final Color iconColor;
@@ -76,12 +57,7 @@ class Theme2 extends ThemeExtension<Theme2> with _$Theme2TailorMixin {
 @TextStyleEncoder()
 @TextStyleNullableEncoder()
 class Theme3 extends ThemeExtension<Theme3> with _$Theme3TailorMixin {
-  Theme3({
-    required this.background,
-    required this.iconColor,
-    required this.h1,
-    required this.h2,
-  });
+  Theme3({required this.background, required this.iconColor, required this.h1, required this.h2});
 
   final Color background;
   final Color iconColor;
@@ -96,12 +72,7 @@ const appTailorMixin = TailorMixin(themeGetter: ThemeGetter.onBuildContext);
 @TextStyleEncoder()
 @TextStyleNullableEncoder()
 class Theme4 extends ThemeExtension<Theme4> with _$Theme4TailorMixin {
-  Theme4({
-    required this.background,
-    required this.iconColor,
-    required this.h1,
-    required this.h2,
-  });
+  Theme4({required this.background, required this.iconColor, required this.h1, required this.h2});
 
   final Color background;
   final Color iconColor;

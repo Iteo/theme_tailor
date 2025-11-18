@@ -2,9 +2,14 @@ targets:
   $default:
     builders:
       theme_tailor:
-        # generate_for: ["lib/tailor_mixin.dart"]
         options:
           themes: [light, dark]
           theme_getter: on_theme_data
           require_static_const: false
           generate_static_getters: false
+          format: false
+
+global_options:
+  flutter_gen_runner:
+    runs_before:
+      - theme_tailor:theme_tailor
