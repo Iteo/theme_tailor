@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/generator_for_annotated_class.dart';
 import 'package:theme_tailor/src/model/field.dart';
@@ -23,8 +23,8 @@ class TailorMixinGenerator
   final TailorMixin buildYamlConfig;
 
   @override
-  ClassElement2 ensureClassElement(Element2 element) {
-    if (element is ClassElement2 && element is! Enum) return element;
+  ClassElement ensureClassElement(Element element) {
+    if (element is ClassElement && element is! Enum) return element;
 
     throw InvalidGenerationSourceError(
       '@TailorMixin can only annotate classes',
@@ -94,23 +94,16 @@ class TailorMixinGenerator
   }
 
   @override
-  TailorMixinConfig parseData(
-    ImportsData libraryData,
-    TailorMixinAnnotationData annotationData,
-    ClassElement2 element,
-  ) {
-    final nonStaticFields = element.fields2.where((e) => !e.isStatic).toList();
+  TailorMixinConfig parseData(ImportsData libraryData, TailorMixinAnnotationData annotationData, ClassElement element) {
+    final nonStaticFields = element.fields.where((e) => !e.isStatic).toList();
 
     /// Encoders processing
     final encodersTypeNameToEncoder = annotationData.encoders;
-    for (final annotation in element.metadata2.annotations) {
+    for (final annotation in element.metadata.annotations) {
       final annotationConstValue = annotation.computeConstantValue();
       if (annotationConstValue == null) continue;
 
-      final encoder = extractThemeEncoderData(
-        annotation,
-        annotationConstValue,
-      );
+      final encoder = extractThemeEncoderData(annotation, annotationConstValue);
       if (encoder == null) continue;
 
       encodersTypeNameToEncoder[encoder.type] = encoder;
@@ -118,36 +111,32 @@ class TailorMixinGenerator
 
     final encodersFieldNameToEncoder = <String, ThemeEncoderData>{};
     for (final field in nonStaticFields) {
-      for (final annotation in field.metadata2.annotations) {
-        final fieldName = field.name3;
+      for (final annotation in field.metadata.annotations) {
+        final fieldName = field.name;
         if (fieldName == null) continue;
 
-        final encoder = extractThemeEncoderData(
-          annotation,
-          annotation.computeConstantValue()!,
-        );
+        final encoder = extractThemeEncoderData(annotation, annotation.computeConstantValue()!);
         if (encoder == null) continue;
 
         encodersFieldNameToEncoder[fieldName] = encoder;
       }
     }
 
-    final encoderManager = ThemeEncoderManager(
-      encodersTypeNameToEncoder,
-      encodersFieldNameToEncoder,
-    );
+    final encoderManager = ThemeEncoderManager(encodersTypeNameToEncoder, encodersFieldNameToEncoder);
 
     /// Fields
-    final fields = nonStaticFields.map((e) {
-      final isThemeExtension = e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
+    final fields = nonStaticFields
+        .map((e) {
+          final isThemeExtension = e.type.isThemeExtensionType || e.hasThemeExtensionAnnotation;
 
-      return Field(
-        isThemeExtension: isThemeExtension,
-        name: e.displayName,
-        type: e.type.getDisplayString(),
-        documentation: e.documentationComment,
-      );
-    }).toList(growable: false);
+          return Field(
+            isThemeExtension: isThemeExtension,
+            name: e.displayName,
+            type: e.type.getDisplayString(),
+            documentation: e.documentationComment,
+          );
+        })
+        .toList(growable: false);
 
     return TailorMixinConfig(
       className: element.displayName,
@@ -162,10 +151,7 @@ class TailorMixinGenerator
   }
 
   @override
-  ImportsData parseLibraryData(
-    LibraryElement2 library,
-    ClassElement2 element,
-  ) {
+  ImportsData parseLibraryData(LibraryElement library, ClassElement element) {
     final isDiagnosticable = element.hasMixinNamed('DiagnosticableTreeMixin');
     return ImportsData(hasDiagnosticableMixin: isDiagnosticable);
   }

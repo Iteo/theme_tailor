@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 import 'package:source_gen/source_gen.dart';
@@ -7,14 +7,14 @@ import 'package:theme_tailor/src/model/referenced_packages.dart';
 import 'package:theme_tailor/src/util/extension/parameter_element_extension.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
-extension ElementExtension on Element2 {
+extension ElementExtension on Element {
   bool get hasJsonSerializableAnnotation {
     const checker = TypeChecker.typeNamed(JsonSerializable, inPackage: ReferencedPackages.jsonSerializable);
     return checker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
 
   bool isFromPackage(String package) {
-    return library2?.firstFragment.source.fullName.startsWith('/$package/') ?? false;
+    return library?.firstFragment.source.fullName.startsWith('/$package/') ?? false;
   }
 
   bool get hasTailorMixinAnnotation {
@@ -28,13 +28,13 @@ extension ElementExtension on Element2 {
   }
 }
 
-extension ClassElementExtensions on ClassElement2 {
+extension ClassElementExtensions on ClassElement {
   bool hasMixinNamed(String mixin) {
-    return mixins.map((e) => e.element3.name3).contains(mixin);
+    return mixins.map((e) => e.element.name).contains(mixin);
   }
 
-  ConstructorElement2? get _defaultCtor {
-    return constructors2.firstWhereOrNull((ctor) => ctor.name3 == 'new');
+  ConstructorElement? get _defaultCtor {
+    return constructors.firstWhereOrNull((ctor) => ctor.name == 'new');
   }
 
   ConstructorData? constructorData() {
@@ -45,7 +45,7 @@ extension ClassElementExtensions on ClassElement2 {
 
     return ConstructorData(
       constructorName: ctor!.displayName,
-      parameterNameToType: Map.fromEntries(parameters.map((e) => MapEntry(e.name3!, e.parameterType))),
+      parameterNameToType: Map.fromEntries(parameters.map((e) => MapEntry(e.name!, e.parameterType))),
     );
   }
 }
