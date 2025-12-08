@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:theme_tailor/src/model/constructor_parameter_type.dart';
 
 extension ParameterElementExtension on FormalParameterElement {
@@ -6,7 +6,7 @@ extension ParameterElementExtension on FormalParameterElement {
     return isNamed
         ? CtorParamType.named
         : isRequired
-            ? CtorParamType.required
-            : CtorParamType.optional;
+        ? CtorParamType.required
+        : CtorParamType.optional;
   }
 }

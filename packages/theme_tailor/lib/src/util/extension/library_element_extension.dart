@@ -1,10 +1,10 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:theme_tailor/src/util/recursive_import_locator.dart';
 
-extension LibraryElementExtension on LibraryElement2 {
+extension LibraryElementExtension on LibraryElement {
   bool get hasFlutterDiagnosticableImport {
     return findAllAvailableTopLevelElements().any((element) {
-      return element.name3 == 'DiagnosticableTreeMixin' && (element.library2?.isFromPackage('flutter') ?? false);
+      return element.name == 'DiagnosticableTreeMixin' && (element.library?.isFromPackage('flutter') ?? false);
     });
   }
 }

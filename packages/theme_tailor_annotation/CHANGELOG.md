@@ -1,15 +1,19 @@
+# 3.1.2
+- Use the same versioning for other theme_tailor packages
+- Require `dart sdk 3.9.0`
+
 # 3.1.1
+- Use the same versioning for other theme_tailor packages
 - Compatibility with theme_tailor 3.1.1
 - _ThemeExtension is now TailorThemeExtension, this class is annotation class and is exposed only for analyzer purposes. It is now possible to use @TailorThemeExtension instead @themeExtension, but using latter is recommended.
-- Use the same versioning for other theme_tailor packages
 
 # 3.1.0
+- Use the same versioning for other theme_tailor packages
 - Support build 3.0.0.
 - Support source_gen 3.0.0.
 - Require Dart 3.8.0
 - Require analyzer >= 7.5.9
 - Require meta 1.9.1
-- Use the same versioning for other theme_tailor packages
 
 # 3.0.2
 - Support analyzer 7.0.0

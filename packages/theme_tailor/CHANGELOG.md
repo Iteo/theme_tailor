@@ -1,8 +1,20 @@
+# 3.1.2
+- Use the same versioning for other theme_tailor packages
+- Require `dart sdk 3.9.0`
+- Require `analyzer: ^9.0.0`
+- Require `build: ^4.0.3`
+- Require `build_config: ^1.2.0`
+- Require `collection: ^1.19.0`
+- Require `dart_style: ^3.1.3`
+- Require `meta: ^1.16.0`
+- Require `source_gen: ^4.1.1`
+- Require `source_helper: ^1.3.9`
+
 # 3.1.1
+- Use the same versioning for other theme_tailor packages
 - Support analyzer: ">=7.5.9 <9.0.0"
 - Support build 3.0.0 and ^4.0.0
 - Support source_gen 3.0.0 and ^4.0.0
-- Use the same versioning for other theme_tailor packages
 
 # 3.1.0
 - Support build 3.0.0.

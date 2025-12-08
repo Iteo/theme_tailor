@@ -1,10 +1,14 @@
-# 3.1.1
-- Compatibility with theme_tailor 3.1.1
+# 3.1.2
 - Use the same versioning for other theme_tailor packages
+- Require `dart sdk 3.9.0`
+
+# 3.1.1
+- Use the same versioning for other theme_tailor packages
+- Compatibility with `theme_tailor 3.1.1`
 
 # 3.1.0
-- Require Dart 3.8.0
 - Use the same versioning for other theme_tailor packages
+- Require `dart sdk 3.8.0`
 
 # 1.0.6
 - Added LinearGradientEncoder
@@ -12,15 +16,15 @@
 - Added RadialGradientEncoder
 
 # 1.0.5
-- Support analyzer 7.0.0
-- Support source_gen 2.0.0
+- Require `analyzer 7.0.0`
+- Require `source_gen 2.0.0`
 
 # 1.0.4
 - Bump dependencies versions
 
 # 1.0.3
-- Remove depricated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
-- Added linteo package to the project.
+- Remove deprecated `@Tailor` / `@TailorComponent` annotation and code adjustment for mixins.
+- Added linteo package.
 
 # 1.0.2
 - Fix dependencies (Remove pubdev unknown platforms error)

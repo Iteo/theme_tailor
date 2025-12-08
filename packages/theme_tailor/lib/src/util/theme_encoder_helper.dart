@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:source_gen/source_gen.dart';
@@ -10,7 +10,7 @@ import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 const themeEncoderChecker = TypeChecker.typeNamed(ThemeEncoder, inPackage: ReferencedPackages.themeTailorAnnotation);
 
 ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObject constantValue) {
-  final encoderClassElement = constantValue.type!.element3 as ClassElement2?;
+  final encoderClassElement = constantValue.type!.element as ClassElement?;
   if (encoderClassElement == null) return null;
 
   final encoderSuper = encoderClassElement.allSupertypes.singleWhereOrNull((e) {
@@ -24,14 +24,14 @@ ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObj
 
   final encoderTypeStr = encoderType.toString();
 
-  final annotationElement = annotation?.element2;
-  if (annotationElement is PropertyAccessorElement2) {
-    final enclosing = annotationElement.enclosingElement2;
+  final annotationElement = annotation?.element;
+  if (annotationElement is PropertyAccessorElement) {
+    final enclosing = annotationElement.enclosingElement;
 
-    var accessString = annotationElement.name3;
+    var accessString = annotationElement.name;
 
-    if (enclosing is ClassElement2) {
-      accessString = '${enclosing.name3}.$accessString';
+    if (enclosing is ClassElement) {
+      accessString = '${enclosing.name}.$accessString';
     }
 
     return ThemeEncoderData.propertyAccess(accessString!, encoderTypeStr);
@@ -42,13 +42,13 @@ ThemeEncoderData? extractThemeEncoderData(ElementAnnotation? annotation, DartObj
   if (reviver.namedArguments.isNotEmpty || reviver.positionalArguments.isNotEmpty) {
     throw InvalidGenerationSourceError(
       'ThemeEncoders with constructor arguments are not supported',
-      element: annotation?.element2,
-      todo: 'Remove constructor parameters from ${annotation?.element2}',
+      element: annotation?.element,
+      todo: 'Remove constructor parameters from ${annotation?.element}',
     );
   }
 
   return ThemeEncoderData.className(
-    constantValue.type!.element3!.name3!,
+    constantValue.type!.element!.name!,
     reviver.accessor,
     encoderTypeStr,
     isGeneric: genericTypeArg != null,
