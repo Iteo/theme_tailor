@@ -1,3 +1,6 @@
+# 3.1.3
+- Support analyzer ">=9.0.0 <11.0.0"
+
 # 3.1.2
 - Use the same versioning for other theme_tailor packages
 - Require `dart sdk 3.9.0`
