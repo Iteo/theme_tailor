@@ -1,20 +1,20 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:build/build.dart';
-import 'package:dart_style/dart_style.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:theme_tailor/src/generator/tailor_annotations_generator.dart';
+import 'package:theme_tailor/src/util/format_output.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 /// Function used by the build runner
 Builder themeTailorBuilder(BuilderOptions options) {
   return PartBuilder(
     [TailorAnnotationsGenerator(TailorMixin.fromJson(options.config))],
-    formatOutput: (str, version) {
-      if (options.config['format'] == false) return str;
-
-      return DartFormatter(languageVersion: version).format(str);
-    },
+    formatOutput: (str, version) => formatTailorGeneratedOutput(
+      str,
+      languageVersion: version,
+      format: options.config['format'] != false,
+    ),
     '.tailor.dart',
     header: '''
 // coverage:ignore-file
