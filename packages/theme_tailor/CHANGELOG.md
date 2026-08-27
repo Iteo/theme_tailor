@@ -1,3 +1,6 @@
+# 3.2.0
+- Support analyzer ">=9.0.0 <13.0.0"
+
 # 3.1.3
 - Support analyzer ">=9.0.0 <11.0.0"
 
