@@ -3,52 +3,29 @@ import 'package:example/diagnosticable_lib.dart';
 
 part 'main.tailor.dart';
 
-/// @TailorMixin allows for generating extensions on BuildContext or ThemeData
-/// for easier access of the theme properties.
-/// for more info check [TailorMixin] and [ThemeGetter] api documentation.
-@TailorMixin(themeGetter: ThemeGetter.onBuildContext)
-class SimpleTheme extends ThemeExtension<SimpleTheme> with _$SimpleThemeTailorMixin {
-  SimpleTheme({
-    required this.background,
-    required this.appBar,
-    required this.h1,
-    required this.h2,
-  });
-
-  static const h1Style = TextStyle(fontSize: 15, letterSpacing: 0.3);
-  static final h2Style = const TextStyle(fontSize: 14).copyWith(
-    fontFeatures: const [FontFeature.proportionalFigures()],
+@TailorMixin()
+class const SimpleTheme({
+  @override required final Color background,
+  @override required final Color appBar,
+  @override required final TextStyle h1,
+  @override required final TextStyle h2,
+}) extends ThemeExtension<SimpleTheme> with _$SimpleThemeTailorMixin {
+  static const light = SimpleTheme(
+    background: AppColors.white,
+    appBar: Colors.amber,
+    h1: TextStyle(fontSize: 15, color: Colors.black87),
+    h2: TextStyle(fontSize: 14, color: Colors.amber),
   );
 
-  @override
-  final Color background;
-  @override
-  final Color appBar;
-  @override
-  final TextStyle h1;
-  @override
-  final TextStyle h2;
+  static const dark = SimpleTheme(
+    background: Colors.black,
+    appBar: Colors.indigo,
+    h1: TextStyle(fontSize: 15, color: Colors.white),
+    h2: TextStyle(fontSize: 14, color: Colors.lightBlueAccent),
+  );
 }
 
-final lightSimpleTheme = SimpleTheme(
-  background: AppColors.white,
-  appBar: Colors.amber,
-  h1: SimpleTheme.h1Style.copyWith(
-    color: const Color.fromARGB(221, 25, 25, 25),
-  ),
-  h2: SimpleTheme.h2Style.copyWith(color: Colors.amber.shade700),
-);
-
-final darkSimpleTheme = SimpleTheme(
-  background: Colors.black,
-  appBar: Colors.deepPurple,
-  h1: SimpleTheme.h1Style.copyWith(color: Colors.grey.shade200),
-  h2: SimpleTheme.h2Style.copyWith(color: Colors.blueGrey.shade300),
-);
-
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -58,21 +35,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  /// Notifier for handling theme mode changes
-  /// replace it with your own state management
   final themeModeNotifier = ValueNotifier(ThemeMode.light);
 
   @override
   Widget build(BuildContext context) {
-    /// Theme Tailor generates theme extension and these should be included in the
-    /// 'extensions' list from the ThemeData.
     final lightThemeData = ThemeData(
       brightness: Brightness.light,
-      extensions: [lightSimpleTheme],
+      extensions: const [SimpleTheme.light],
     );
     final darkThemeData = ThemeData(
       brightness: Brightness.dark,
-      extensions: [darkSimpleTheme],
+      extensions: const [SimpleTheme.dark],
     );
 
     return ValueListenableBuilder<ThemeMode>(
@@ -93,16 +66,11 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    required this.title,
-    required this.themeModeNotifier,
-    super.key,
-  });
-
-  final String title;
-  final ValueNotifier<ThemeMode> themeModeNotifier;
-
+class const MyHomePage({
+  required final String title,
+  required final ValueNotifier<ThemeMode> themeModeNotifier,
+  super.key,
+}) extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -114,7 +82,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _swapTheme() {
     final currentTheme = widget.themeModeNotifier.value;
-    currentTheme == ThemeMode.light ? widget.themeModeNotifier.value = ThemeMode.dark : widget.themeModeNotifier.value = ThemeMode.light;
+    currentTheme == ThemeMode.light
+        ? widget.themeModeNotifier.value = ThemeMode.dark
+        : widget.themeModeNotifier.value = ThemeMode.light;
   }
 
   @override
@@ -138,13 +108,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 20,
           children: <Widget>[
             Text(
               'You have pushed the button\nthis many times:',
               textAlign: TextAlign.center,
               style: customTheme.h1,
             ),
-            const SizedBox(height: 20),
             ValueListenableBuilder<int>(
               valueListenable: counter,
               builder: (_, count, __) {
@@ -156,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 10,
         children: [
           FloatingActionButton(
             onPressed: _increment,
@@ -164,7 +135,6 @@ class _MyHomePageState extends State<MyHomePage> {
             foregroundColor: customTheme.h1.color,
             child: const Icon(Icons.add),
           ),
-          const SizedBox(width: 10),
           FloatingActionButton(
             onPressed: _swapTheme,
             tooltip: 'Swap theme',
