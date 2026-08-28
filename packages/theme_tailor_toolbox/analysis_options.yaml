@@ -5,3 +5,4 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.tailor.dart"
     - "example/**"
+    - build/**
