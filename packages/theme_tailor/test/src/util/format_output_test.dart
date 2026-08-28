@@ -4,10 +4,10 @@ import 'package:test/test.dart';
 import 'package:theme_tailor/src/util/format_output.dart';
 
 void main() {
-  final languageVersion = Version(3, 9, 0);
+  final languageVersion = Version(3, 13, 2);
 
   group('formatTailorGeneratedOutput', () {
-    test('returns source unchanged when format is disabled', () {
+    test('prepends a format-off directive when formatting is disabled', () {
       const source = 'final  x=1;';
 
       expect(
@@ -16,11 +16,11 @@ void main() {
           languageVersion: languageVersion,
           format: false,
         ),
-        source,
+        '$tailorFormatOffDirective\n$source',
       );
     });
 
-    test('formats source and prepends dart format off directive', () {
+    test('formats source without prepending a format-off directive', () {
       const source = 'final  x=1;';
 
       final result = formatTailorGeneratedOutput(
@@ -28,14 +28,14 @@ void main() {
         languageVersion: languageVersion,
       );
 
-      expect(result, startsWith('$tailorFormatOffDirective\n'));
       expect(
-        result.substring(tailorFormatOffDirective.length + 1),
+        result,
         DartFormatter(languageVersion: languageVersion).format(source),
       );
+      expect(result, isNot(startsWith('$tailorFormatOffDirective\n')));
     });
 
-    test('preserves formatted output when re-formatted with format off at top', () {
+    test('formats output normally when no formatting option is supplied', () {
       const source = '''
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
@@ -52,13 +52,11 @@ class Example {
         languageVersion: languageVersion,
       );
 
-      expect(result, startsWith('$tailorFormatOffDirective\n'));
-
-      final withoutDirective = result.substring(tailorFormatOffDirective.length + 1);
       expect(
-        DartFormatter(languageVersion: languageVersion).format(withoutDirective),
-        withoutDirective,
+        result,
+        DartFormatter(languageVersion: languageVersion).format(source),
       );
+      expect(result, isNot(startsWith('$tailorFormatOffDirective\n')));
     });
   });
 }

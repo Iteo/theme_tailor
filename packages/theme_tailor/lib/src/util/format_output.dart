@@ -3,15 +3,17 @@ import 'package:pub_semver/pub_semver.dart';
 
 const tailorFormatOffDirective = '// dart format off';
 
-/// Formats generated tailor output and prepends a format-off directive so
-/// project-wide `dart format` runs do not reformat `.tailor.dart` files.
+/// Formats generated tailor output.
+///
+/// When formatting is disabled, prepends a format-off directive so
+/// project-wide `dart format` runs do not reformat the raw `.tailor.dart`
+/// output.
 String formatTailorGeneratedOutput(
   String source, {
   required Version languageVersion,
   bool format = true,
 }) {
-  if (!format) return source;
+  if (!format) return '$tailorFormatOffDirective\n$source';
 
-  final formatted = DartFormatter(languageVersion: languageVersion).format(source);
-  return '$tailorFormatOffDirective\n$formatted';
+  return DartFormatter(languageVersion: languageVersion).format(source);
 }

@@ -13,6 +13,8 @@ Builder themeTailorBuilder(BuilderOptions options) {
     formatOutput: (str, version) => formatTailorGeneratedOutput(
       str,
       languageVersion: version,
+      // Formatting is enabled by default; `format: false` preserves the raw
+      // output and adds a `dart format off` directive.
       format: options.config['format'] != false,
     ),
     '.tailor.dart',
