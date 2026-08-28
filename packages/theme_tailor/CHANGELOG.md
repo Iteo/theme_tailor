@@ -1,3 +1,7 @@
+# 4.0.0
+- Support primary constructors
+- Support analyzer 13.0.0
+
 # 3.1.3
 - Support analyzer ">=9.0.0 <11.0.0"
 
