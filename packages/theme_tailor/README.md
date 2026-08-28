@@ -332,6 +332,7 @@ The generator will use properties from build.yaml or default values for null pro
 | theme_getter          | themeGetter         | on_build_context_props | <b>String</b> (ThemeGetter.name):<br><br>none \ on_theme_data \ on_theme_data_props \ on_build_context \ on_build_context_props |
 | theme_class_name      | themeClassName      | null                   | <b>String</b> For custom Theme if you don't want<br>use Material's Theme. Example: FluentTheme                                  |
 | theme_data_class_name | themeDataClassName  | null                   | <b>String</b> For custom ThemeData if you don't want<br>use Material's ThemeData FluentThemeData                                |
+| format                | —                   | true                   | <b>bool</b> Formats generated `.tailor.dart` output. Set to `false` to leave the output unformatted and add `// dart format off`, so later project-wide formatting does not change it. |
 
 ### Material's theme_getter
 ```yaml

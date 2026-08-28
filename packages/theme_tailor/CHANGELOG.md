@@ -1,6 +1,7 @@
 # 4.0.0
 - Support primary constructors
 - Support analyzer 13.0.0
+- Added support for disabling formatter for generated files, now codegen will add `// dart format off` when formatting is set to false and subsequent `dart format` calls won't change generated output. Adding this flag to `build.yaml` configuration affects whole project and cannot be changed per file.
 
 # 3.1.3
 - Support analyzer ">=9.0.0 <11.0.0"

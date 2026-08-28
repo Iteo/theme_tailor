@@ -4,6 +4,7 @@ targets:
       theme_tailor:
         # generate_for: ["lib/tailor_mixin.dart"]
         options:
+          # format: false
           themes: [light, dark]
           theme_getter: on_theme_data
           require_static_const: false
