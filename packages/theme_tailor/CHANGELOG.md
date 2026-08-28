@@ -1,3 +1,6 @@
+# Unreleased
+- Add `// dart format off` to generated `.tailor.dart` files when formatting is enabled so project-wide `dart format` runs do not reformat generated output.
+
 # 3.1.3
 - Support analyzer ">=9.0.0 <11.0.0"
 
