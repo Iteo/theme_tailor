@@ -1,3 +1,6 @@
+# 4.0.1
+- Updated example code on pub.dev
+
 # 4.0.0
 - Support primary constructors
 - Support analyzer 13.0.0
