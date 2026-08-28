@@ -28,3 +28,4 @@ pubspec.lock
 .dart_tool/
 .packages
 build/
+.failed_tracker
