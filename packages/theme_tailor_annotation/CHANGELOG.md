@@ -1,3 +1,6 @@
+# 4.0.2
+- Use the same versioning for other theme_tailor packages
+
 # 4.0.0
 - Support primary constructors
 - Support analyzer 13.0.0

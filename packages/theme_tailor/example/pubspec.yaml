@@ -16,7 +16,7 @@ dependencies:
     path: ../../theme_tailor_annotation
 
 dev_dependencies:
-  build_runner: ^2.3.3
+  build_runner: ^2.17.1
   flutter_test:
     sdk: flutter
   json_serializable: ^6.11.3
