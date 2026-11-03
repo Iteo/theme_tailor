@@ -1,3 +1,8 @@
+# 4.0.2
+- Support analyzer ">=13.0.0 <15.0.0"
+- Support build ">=4.0.3 <6.0.0" (compatible with `build_runner >=2.17.1`)
+- Fix generated constructor calls using `Class.new` with analyzer 14
+
 # 4.0.1
 - Updated example code on pub.dev
 

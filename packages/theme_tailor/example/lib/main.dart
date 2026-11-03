@@ -3,7 +3,10 @@ import 'package:example/diagnosticable_lib.dart';
 
 part 'main.tailor.dart';
 
-@TailorMixin()
+/// @TailorMixin allows for generating extensions on BuildContext or ThemeData
+/// for easier access of the theme properties.
+/// for more info check [TailorMixin] and [ThemeGetter] api documentation.
+@TailorMixin(themeGetter: ThemeGetter.onBuildContext)
 class const SimpleTheme({
   @override required final Color background,
   @override required final Color appBar,
