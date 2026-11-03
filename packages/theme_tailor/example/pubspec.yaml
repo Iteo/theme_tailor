@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  fluent_ui: ^4.8.5
+  fluent_ui: ">=4.8.5 <4.17.0"
   flutter:
     sdk: flutter
   json_annotation: ^4.8.0
