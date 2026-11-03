@@ -44,7 +44,7 @@ extension ClassElementExtensions on ClassElement {
     if (parameters == null || parameters.isEmpty) return null;
 
     return ConstructorData(
-      constructorName: ctor!.displayName,
+      constructorName: name!,
       parameterNameToType: Map.fromEntries(parameters.map((e) => MapEntry(e.name!, e.parameterType))),
     );
   }
