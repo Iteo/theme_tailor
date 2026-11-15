@@ -131,12 +131,12 @@ The following code snippet defines the "_$MyThemeTailorMixin" theme extension mi
 - Implements "lerp" from ThemeExtension, with the default lerping method for the "Color" type
 - Overrites "hashCode" and "==" operator
 
-Additionally [theme_tailor_annotation] by default generates extension on ThemeData (to change that set themeGetter to ThemeGetter.none or use `@TailorMixinComponent` annotation)
-- "MyThemeThemeDataProps" extension on "ThemeData" is generated
-- getter on "background" of type "Color" is added directly to "ThemeData"
+Additionally [theme_tailor_annotation] by default generates extension on BuildContext (to change that set themeGetter to another ThemeGetter value, such as ThemeGetter.none, or use `@TailorMixinComponent` annotation)
+- "MyThemeBuildContextProps" extension on "BuildContext" is generated
+- getter on "background" of type "Color" is added directly to "BuildContext"
 
 ## Change generated extensions
-By default, "@tailorMixin" will generate an extension on "ThemeData" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@TailorMixin" or using the "@TailorMixinComponent" annotation.
+By default, "@tailorMixin" will generate an extension on "BuildContext" and expand theme properties as getters. If this is an undesired behavior, you can disable it by changing the "themeGetter" property in the "@TailorMixin" or using the "@TailorMixinComponent" annotation.
 
 ```dart
 @TailorMixin(themeGetter: ThemeGetter.none)
